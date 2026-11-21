@@ -2,7 +2,7 @@
 
 재밌는 상상을 하나씩 끝까지 따져 보는 사고 실험 모음.
 
-페이지: https://corekin.github.io/thought-experiments/
+페이지: https://corekin.github.io/thought-experiments/ (목록은 루트 `index.html`)
 
 | 주제 | 질문 |
 |---|---|
