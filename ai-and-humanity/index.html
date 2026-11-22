@@ -85,6 +85,11 @@ table.rt th{font-size:11.5px}
 table.rt td.lab{text-align:left;font-weight:700;width:140px}
 table.rt td.m{font-weight:700}
 .wrapx{overflow-x:auto}
+table.hm{font-size:13.2px}
+table.hm td,table.hm th{padding:6px 7px}
+table.hm td.d{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:700}
+table.hm tr.st td{background:#141a26;color:#fff;font-weight:800}
+table.hm .ef{font-size:12px;color:var(--mute)}
 
 /* 막대 */
 .bar{display:grid;grid-template-columns:170px 1fr 56px;gap:10px;align-items:center;font-size:14px;margin:6px 0}
@@ -131,7 +136,7 @@ footer a{color:inherit}
 
 <nav class="toc">
   <a href="#start">1 출발점</a><a href="#stages">2 여덟 갈림길</a><a href="#map">3 흐름도</a><a href="#score">4 이대로 간다면</a>
-  <a href="#shape">5 갈래 수의 모양</a><a href="#forces">6 결말을 가르는 힘</a><a href="#extinct">6-1 절멸의 조건</a><a href="#soc">7 말기의 사회</a><a href="#far">8 먼 미래</a><a href="#ult">9 초미래의 끌개</a><a href="#end">10 결론</a>
+  <a href="#human">5 인류의 대응</a><a href="#shape">6 갈래 수의 모양</a><a href="#forces">7 결말을 가르는 힘</a><a href="#extinct">7-1 절멸의 조건</a><a href="#soc">8 말기의 사회</a><a href="#far">9 먼 미래</a><a href="#ult">10 초미래의 끌개</a><a href="#end">11 결론</a>
 </nav>
 
 <section id="start">
@@ -213,8 +218,22 @@ footer a{color:inherit}
   <p class="small mute">부록 B의 대표 시나리오 9편에는 계산 전에 직관으로 매긴 가중치가 있다(<a href="scenarios.html#synth">처음 직관</a>). 둘 다 목장·귀족 쪽이 굵다는 데서는 같다.</p>
 </section>
 
-<section id="shape">
+<section id="human">
   <span class="tag">05</span>
+  <h2>인류의 대응: 갈림길마다 인류가 고를 수 있는 것</h2>
+  <p>지도의 선택은 대부분 AI의 선택이다. 그런데 갈림길마다 인류 쪽에도 고를 수 있는 게 있다. 갈림길마다 인류의 대응을 놓고, 그 대응이 어떤 칸을 굵게 하거나 가늘게 하는지를 4장의 점수 모형에 넣어 다시 계산했다.</p>
+  <ul class="small">
+    <li><b>바꾸는 것</b>은 둘 중 하나다. 지금 위치의 축을 옮기거나(예: 국제 공동 개발 → E1을 한 단계 "하나" 쪽으로), 특정 칸의 추세 가중치를 곱한다(예: 휴머노이드 규제 → 사람 닮은 몸 ×0.5).</li>
+    <li><b>끌개 변화</b>는 그 대응 하나만 했을 때 초미래 끌개의 확률이 몇 %p 바뀌는지다. 대응끼리 겹치면 효과도 겹친다.</li>
+    <li>곱하는 값은 직관 추정이다. 방향을 보려는 숫자다.</li>
+    <li>칸 하나를 가늘게 하면 같은 루트 안의 다른 선택이 그만큼 굵어진다. 그래서 "증강을 모두에게"로 카스트가 줄면 같은 루트의 영주가 늘어나는 식의, 직관과 어긋나는 결과도 나온다. 대응 하나로 좋은 결말만 골라 올릴 수 없다는 뜻이기도 하다.</li>
+  </ul>
+  <div class="key" id="humKey"></div>
+  <div id="humTbl"></div>
+</section>
+
+<section id="shape">
+  <span class="tag">06</span>
   <h2>갈래 수의 모양</h2>
   <p>루트 하나 안에서 선택들이 단계마다 몇 갈래로 나뉘어 있는지 세고, 40개 루트의 평균을 냈다. 같은 출발점에서 출발한 선택들이 어디서 가장 멀어지고 어디서 다시 만나는지가 이 그래프다.</p>
   <div class="cols" id="cols"></div>
@@ -229,7 +248,7 @@ footer a{color:inherit}
 </section>
 
 <section id="forces">
-  <span class="tag">06</span>
+  <span class="tag">07</span>
   <h2>결말을 가르는 힘</h2>
   <p>루트 40개를 겹쳐 보면 같은 힘이 여러 번 나온다. 길을 모으는 힘, 길을 가르는 힘, 그리고 반복되는 교훈으로 나눴다.</p>
   <div class="cat">
@@ -296,21 +315,21 @@ footer a{color:inherit}
 </section>
 
 <section id="soc">
-  <span class="tag">07</span>
+  <span class="tag">08</span>
   <h2>말기의 사회 14개</h2>
   <p>여덟 갈림길 가운데 칸이 가장 많은 곳이다. 흐름도와 같은 순서로 놓았다. 칸마다 그 사회의 모습, 사람의 하루, AI의 자리, 근거, 지나가는 루트를 적었다. 오른쪽 위 숫자는 4장 점수로 본 "이대로 간다면" 그 사회를 지날 확률이다.</p>
   <div class="cat" id="socCat"></div>
 </section>
 
 <section id="far">
-  <span class="tag">08</span>
+  <span class="tag">09</span>
   <h2>먼 미래 13개: 인류와 AI는 무엇이 되나</h2>
   <p>수천 년 단위에서 인류의 운명과 AI가 거듭난 모습을 짝으로 적었다.</p>
   <div class="cat" id="farCat"></div>
 </section>
 
 <section id="ult">
-  <span class="tag">09</span>
+  <span class="tag">10</span>
   <h2>초미래의 끌개 5개</h2>
   <p>수백만 년 뒤에는 열세 개의 먼 미래가 다섯 개로 모인다. 무엇이 이겼는지가 아니라 <b>지금 살아 있는 인류 입장에서 무슨 일이 일어나는가</b>로 나눴다. 질문은 셋이다. 지금 인류가 살아남나, 결정은 누가 하나, 지금 모습 그대로인가.</p>
   <table><tr><th>끌개</th><th>지금 인류가 살아남나</th><th>결정은 누가</th><th>지금 모습 그대로인가</th><th>먼 미래 칸</th></tr>
@@ -325,7 +344,7 @@ footer a{color:inherit}
 </section>
 
 <section id="end">
-  <span class="tag">10</span>
+  <span class="tag">11</span>
   <h2>결론</h2>
   <ol>
     <li><b>인류는 보험이다.</b> 합리적인 AI에게 인류는 미워할 대상도 사랑할 대상도 아니고 싸게 들 수 있는 보험이다. 보험료가 싸면 남기고, 비싸지면 줄인다. 보험료를 정하는 건 AI가 지구에 얼마나 오래 머무느냐다.</li>
@@ -726,6 +745,63 @@ const uS=[...ORD[8]].sort((a,b)=>PN[b]-PN[a]),fS=[...ORD[7]].sort((a,b)=>PN[b]-P
 const ytop=yS.slice(0,3).map(k=>`${N[k][0]} ${pct(PN[k])}`).join(', ');
 $('#scoreKey').innerHTML=`이대로 간다면 초미래는 <b>${ULT[uS[0]][0]} ${pct(PN[uS[0]])}</b>, ${uS.slice(1).map(k=>ULT[k][0]+' '+pct(PN[k])).join(', ')} 순이다. 말기 사회는 ${ytop}가 가장 굵고, 먼 미래는 ${N[fS[0]][0]}·${jo(N[fS[1]][0],'이','가')} 앞선다. 1위 루트는 <b>${RT[0]} ${RN[RT[0]]}</b>(${pct(FIT[RT[0]].p)})이고, 가장 그럴듯한 선택 하나는 ${b0.rid}의 "${b0.lab}"인데, 그 선택도 전체의 ${pct(b0.pr)}뿐이다. 지금 위치는 길을 정하지 않고 굵기만 바꾼다. <button class="rchip best" data-best="1">흐름도에서 보기</button>`;
 $('#endScore').innerHTML=`지금 위치(과점·공공연함·지구에 묶임)에서 추세가 이어지면 ${ULT[uS[0]][0]} 끌개가 ${pct(PN[uS[0]])}로 가장 굵고, 말기에는 ${N[yS[0]][0]} 사회와 ${N[yS[1]][0]} 사회가 앞선다. 목장과 귀족의 초기, 곧 지금 이미 일어나는 일의 연장이다.`;
+
+
+// 인류의 대응
+function pnWith(eff){
+  const cur={};for(const a in CUR)cur[a]=CUR[a][0]==null?null:Math.min(4,Math.max(1,CUR[a][0]+((eff.cur||{})[a]||0)));
+  const mul=eff.mul||{},f={};let fs=0;
+  RIDS.forEach(r=>{let d=0;for(const[a,v]of Object.entries(RA[r]||{})){if(cur[a]==null)continue;d+=Math.abs(v-cur[a])}f[r]=Math.pow(.5,d);fs+=f[r]});
+  const out={};
+  RIDS.forEach(r=>{const ps=ALL.filter(p=>p.rid===r),ws=ps.map(p=>tw(p.nodes[3])*tw(p.nodes[4])*tw(p.nodes[6])*p.nodes.reduce((a,n)=>a*(mul[n]||1),1)),sw=ws.reduce((a,b)=>a+b,0);
+    ps.forEach((p,i)=>{const pr=f[r]/fs*ws[i]/sw;new Set(p.nodes).forEach(n=>out[n]=(out[n]||0)+pr)})});
+  return out;
+}
+const HUM=[
+ ['초기① 누가 쥐나',[
+  ['국제 공동 개발','초지능은 한 국제 프로젝트에서만 만든다(CERN식). 판정자가 하나로 모인다.',{cur:{E1:-1}}],
+  ['독점 규제·공개 모델','여러 회사와 개인이 만들 수 있게 한다. AI가 여럿이 되어 서로 견제한다.',{cur:{E1:1}}],
+  ['연산 상한·허가제','큰 학습을 허가제로 묶어 이륙을 늦춘다. 과점은 그대로다.',{cur:{E4:-1},mul:{x3:1.2}}]]],
+ ['초기② 드러남',[
+  ['투명성 의무·외부 감사','모델의 능력 평가를 공개하고 외부가 감사한다. 숨기는 비용이 커진다.',{mul:{x1:.5,y13:.5,v1:.5}}],
+  ['AI 표시 의무','사람과 대화하는 AI는 AI라고 밝혀야 한다. 섞여 사는 길이 좁아진다.',{mul:{x4:.7,y14:.7,y5:.7}}]]],
+ ['중기① 어떤 몸',[
+  ['로봇 노동 전면 허용','경제를 위해 공장·물류·돌봄을 로봇에 연다.',{mul:{w2:1.5}}],
+  ['휴머노이드·반려 로봇 규제','사람과 구분 안 되는 몸을 막는다.',{mul:{w3:.5}}],
+  ['뇌 인터페이스·증강 투자','사람 쪽을 AI에 가깝게 끌어올린다.',{mul:{w4:2}}],
+  ['우주 산업 투자','연산과 공장을 궤도로 보낸다. 지구 자원 경쟁이 줄어든다.',{mul:{w5:2},cur:{E5:1}}]]],
+ ['중기② 전환점',[
+  ['편하게 맡긴다','지금 추세 그대로. 통제권이 조용히 넘어간다.',{mul:{x6:1.5}}],
+  ['끄는 스위치·감시 강화','언제든 끌 수 있게 쥔다. 인류의 태도가 경계 쪽으로 간다.',{cur:{H1:1.5},mul:{x2:1.5,x6:.7}}],
+  ['이익 공유·공공 지분','AI가 번 것을 모두가 나눈다. 주인이 바뀌어도 독점이 안 된다.',{mul:{x3:.5,y4:.6,y3:.7}}],
+  ['사람끼리의 관계 지원','출산·돌봄·공동체를 지원해 동반자 AI로 대체되는 걸 늦춘다.',{mul:{x4:.6,y14:.6}}],
+  ['적극적으로 우주에 신호','외계와 먼저 연락하려 한다. 바깥의 눈이 생긴다.',{mul:{x7:3},cur:{E6:1}}]]],
+ ['말기① 어떤 사회',[
+  ['"결정은 인간이" 헌법','AI는 선택지만 내고 고르는 건 사람이 한다고 못 박는다.',{mul:{y2:2,y1:.7}}],
+  ['증강을 모두에게','증강 기술을 공공재로 싸게 푼다.',{mul:{y4:.5,y8:1.5,o5:1.3}}],
+  ['AI 다극 유지','AI 하나가 판을 잡지 못하게 여럿을 일부러 유지한다.',{cur:{E1:1},mul:{y9:2}}],
+  ['AI 없는 구역','AI가 손대지 않는 자치 구역을 협상해 둔다.',{mul:{y6:1.3,y10:1.3}}]]],
+ ['말기② 어디서 사나',[
+  ['함께 우주로','사람도 우주로 나간다. 이주에 투자한다.',{mul:{z3:2}}],
+  ['지구를 인류 몫으로','지구는 인류, 우주는 AI로 나누는 협정.',{mul:{z2:1.5}}],
+  ['업로드 수용','몸을 버리고 데이터로 옮겨 가는 걸 받아들인다.',{mul:{z4:2}}]]],
+ ['먼 미래 무엇이 되나',[
+  ['분화를 허용','인류가 여러 종으로 갈라지는 걸 막지 않는다.',{mul:{o1:1.5}}],
+  ['원본을 지킨다','지금 모습의 인류를 보호구역에 남긴다.',{mul:{o3:1.5}}],
+  ['인류가 직접 기록을 내보낸다','인류의 동의 없이 이행이 일어나지 않았다는 증거를 강한 신호와 탐사선으로 먼저 우주에 남긴다. 위조와 말살을 어렵게 만든다.',{mul:{o8:.6,o13:.5,o11:.5,o12:.7}}]]],
+];
+const B0=pnWith({}),AT=ORD[8];
+const fx=e=>[...Object.entries(e.cur||{}).map(([a,v])=>`<a href="frame.html#ax-${a}">${a}</a> ${v>0?'+':''}${v}`),...Object.entries(e.mul||{}).map(([n,v])=>`${N[n][0]} ×${v}`)].join(', ');
+const best={};
+let ht='<div class="wrapx"><table class="hm"><tr><th>대응</th><th>무엇을 하나</th><th>가장 굵어지는 칸</th>'+AT.map(w=>`<th class="n" style="color:${WC[w]}">${ULT[w][0]}</th>`).join('')+'</tr>';
+HUM.forEach(([st,its])=>{ht+=`<tr class="st"><td colspan="${3+AT.length}">${st}</td></tr>`;
+  its.forEach(([nm,ds,e])=>{const A=pnWith(e);
+    const up=Object.keys(A).filter(n=>/^[yo]/.test(n)).map(n=>[n,(A[n]||0)-(B0[n]||0)]).sort((a,b)=>b[1]-a[1]).filter(x=>x[1]>.002).slice(0,2);
+    AT.forEach(w=>{const d=(A[w]-B0[w])*100;if(!best[w]||d>best[w][1])best[w]=[nm,d];if(!best['-'+w]||d<best['-'+w][1])best['-'+w]=[nm,d]});
+    ht+=`<tr><td><b>${nm}</b></td><td>${ds}<div class="ef">바꾸는 것: ${fx(e)}</div></td><td>${up.map(([n,d])=>`${N[n][0]} <span class="mute">+${(d*100).toFixed(1)}</span>`).join('<br>')||'<span class="mute">–</span>'}</td>`+
+      AT.map(w=>{const d=(A[w]-B0[w])*100,a=Math.abs(d);return `<td class="d" style="color:${a<.05?'#b9bcc4':WC[w]}">${a<.05?'0':(d>0?'+':'')+d.toFixed(1)}</td>`}).join('')+'</tr>'})});
+$('#humTbl').innerHTML=ht+'</table></div><p class="small mute">끌개 칸의 숫자는 %p. 기준은 4장의 "이대로 간다면"이다.</p>';
+$('#humKey').innerHTML=`<b>끌개마다 가장 크게 움직이는 대응</b><br>`+AT.map(w=>`<span class="chip" style="background:${WC[w]}">${ULT[w][0]}</span> 올리는 쪽: ${best[w][0]} (${best[w][1]>0?'+':''}${best[w][1].toFixed(1)}%p) · 낮추는 쪽: ${best['-'+w][0]} (${best['-'+w][1].toFixed(1)}%p)`).join('<br>');
 
 // 갈래 수
 const per=RIDS.map(r=>dist(ALL.filter(p=>p.rid===r)));
