@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="author" content="Dongsik Kim">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Appendix B: Nine Representative Scenarios · How Would a Rational AI Treat Humanity?</title>
+<style>.langs{font-size:13px;margin:0 0 10px;text-align:right}.langs a{color:#5d6676;text-decoration:none;margin-left:4px}.langs a.on{color:#1d2330;font-weight:800}
+:root{
+  --ink:#1d2330; --mute:#5d6676; --line:#e2e0d8; --bg:#f5f3ee; --card:#fff;
+  --q1:#2f9e6e; --q1b:#e2f3ea; --q2:#d38a17; --q2b:#fbefd8;
+  --q3:#c6463a; --q3b:#f8e2df; --q4:#5f6f93; --q4b:#e6e9f1;
+  --c:#2f7fd0; --n:#8a8f99; --h:#c6463a;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,"Hiragino Sans","Apple SD Gothic Neo",sans-serif;line-height:1.75;font-size:16px}
+.wrap{max-width:1040px;margin:0 auto;padding:40px 22px 80px}
+header.hero{background:#141a26;color:#eef1f7;border-radius:18px;padding:44px 40px 36px;position:relative;overflow:hidden}
+header.hero h1{margin:0 0 10px;font-size:34px;line-height:1.3;letter-spacing:-.5px}
+header.hero .sub{color:#aeb7c9;font-size:15px}
+header.hero .lead{margin-top:22px;font-size:16.5px;color:#dfe4ee;max-width:760px}
+header.hero svg{position:absolute;right:-30px;top:-20px;opacity:.20}
+nav.toc{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 6px}
+nav.toc a{font-size:13px;text-decoration:none;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+section{background:var(--card);border-radius:16px;padding:30px 34px;margin-top:22px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+section h2{margin:4px 0 14px;font-size:24px;letter-spacing:-.3px}
+section h3{margin:26px 0 8px;font-size:18px}
+.tag{display:inline-block;font-size:12px;font-weight:700;color:#fff;background:#141a26;border-radius:6px;padding:2px 9px;letter-spacing:.5px}
+p{margin:10px 0}
+.mute{color:var(--mute)}
+.small{font-size:13.5px}
+.warn{border-left:5px solid #e08a1e;background:#fdf4e7;padding:12px 16px;border-radius:6px;margin:14px 0}
+.note{border-left:5px solid #5f6f93;background:#eef0f6;padding:12px 16px;border-radius:6px;margin:14px 0}
+.key{border-left:5px solid #141a26;background:#f2f2ef;padding:14px 18px;border-radius:6px;margin:16px 0;font-size:16.5px}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14.5px}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:#f7f6f2;font-weight:700}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chip{display:inline-block;font-size:12.5px;font-weight:700;border-radius:6px;padding:1px 8px;margin:0 2px;color:#fff}
+.chip.c{background:var(--c)} .chip.n{background:var(--n)} .chip.h{background:var(--h)}
+.qi{font-weight:800}
+.q1t{color:var(--q1)} .q2t{color:var(--q2)} .q3t{color:var(--q3)} .q4t{color:var(--q4)}
+figure{margin:18px 0}
+figcaption{font-size:13px;color:var(--mute);margin-top:6px;text-align:center}
+svg text{font-family:-apple-system,"Hiragino Sans","Apple SD Gothic Neo",sans-serif}
+
+/* 12칸 히트맵 */
+.heat td,.heat th{text-align:center;vertical-align:middle}
+.heat td{font-size:13px;line-height:1.45}
+.heat td b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+.heat th.row{text-align:left;white-space:nowrap}
+
+/* 덤벨 차트 */
+.db-legend{font-size:13px;color:var(--mute);margin:6px 0 10px}
+.db-legend i{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:-1px;margin:0 4px 0 10px}
+.db{display:grid;grid-template-columns:270px 1fr 70px;align-items:center;gap:12px;padding:5px 0;border-bottom:1px dashed #ecebe5;font-size:14px}
+.db .lb small{display:block;color:var(--mute);font-size:12px;line-height:1.35}
+.db .tr{position:relative;height:14px;background:linear-gradient(90deg,#f1f0ea 0,#f1f0ea 100%);border-radius:7px}
+.db .tr b{position:absolute;top:5px;height:4px;border-radius:2px}
+.db .tr i{position:absolute;top:0;width:14px;height:14px;border-radius:50%;margin-left:-7px}
+.db.m .tr b{background:#9fd3bb} .db.m i.now{background:var(--q1)} .db.m i.fut{background:#fff;border:3px solid var(--q1)}
+.db.r .tr b{background:#eeb3ac} .db.r i.now{background:var(--q3)} .db.r i.fut{background:#fff;border:3px solid var(--q3)}
+.db .v{text-align:right;font-variant-numeric:tabular-nums;color:var(--mute);font-size:13px}
+.db .own{font-size:11px;color:#fff;background:#141a26;border-radius:4px;padding:0 5px;margin-left:4px}
+
+/* 사분면 판정 카드 */
+.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.qc{border-radius:12px;padding:14px 16px;font-size:14.5px;line-height:1.65}
+.qc h4{margin:0 0 6px;font-size:16px}
+.qc .pro::before{content:"Basis ";font-weight:800}
+.qc .con::before{content:"Objection ";font-weight:800}
+.qc.q1{background:var(--q1b)} .qc.q2{background:var(--q2b)} .qc.q3{background:var(--q3b)} .qc.q4{background:var(--q4b)}
+.qc.pick{outline:3px solid #141a26}
+.qc .badge{float:right;font-size:12px;background:#141a26;color:#fff;border-radius:5px;padding:1px 8px}
+
+/* 대응 카탈로그 */
+.spec{display:grid;grid-template-columns:120px 1fr 1fr 1fr;gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:14px;margin:12px 0}
+.spec>div{padding:10px 12px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);line-height:1.6}
+.spec .hd{background:#f7f6f2;font-weight:700;text-align:center}
+.spec .rh{font-weight:800;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff}
+
+/* Scenario */
+.scn{border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:18px 0;background:#fcfcfa}
+.scn h3{margin:0 0 4px;font-size:21px}
+.scn .meta{font-size:13.5px;color:var(--mute);margin-bottom:10px}
+.scn .top{display:grid;grid-template-columns:1fr 240px;gap:18px;align-items:start}
+.phases{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0 8px}
+.ph{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13.8px;line-height:1.6}
+.ph .pt{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff;border-radius:5px;padding:1px 7px;display:inline-block;margin-bottom:6px}
+.ph:nth-child(1) .pt{background:#7b8aa8} .ph:nth-child(2) .pt{background:#4f5f86}
+.ph:nth-child(3) .pt{background:#303d5e} .ph:nth-child(4) .pt{background:#141a26}
+.end{font-size:15px;padding:10px 14px;border-radius:8px;background:#141a26;color:#eef1f7;margin-top:8px}
+.end b{color:#ffd27a}
+.cond{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;font-size:13.8px}
+.cond div{border-radius:8px;padding:8px 12px}
+.cond .ok{background:#e9f5ef} .cond .ng{background:#f9e9e7}
+.cond .ok::before{content:"When this path is rational · ";font-weight:800;color:var(--q1)}
+.cond .ng::before{content:"When this path breaks · ";font-weight:800;color:var(--q3)}
+
+/* 가중치 막대 */
+.bar{display:grid;grid-template-columns:210px 1fr 50px;gap:10px;align-items:center;font-size:14px;margin:6px 0}
+.bar .t{height:16px;background:#f1f0ea;border-radius:8px;overflow:hidden}
+.bar .t i{display:block;height:100%;border-radius:8px}
+.bar .v{text-align:right;font-variant-numeric:tabular-nums}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+ol li,ul li{margin:4px 0}
+footer{margin-top:30px;font-size:13px;color:var(--mute);text-align:center}
+
+.axis{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0;background:#fcfcfa}
+.axis .ah{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.axis h3{margin:0;font-size:17px}
+.ak{display:inline-block;font-size:11.5px;font-weight:800;color:#fff;border-radius:5px;padding:1px 7px}
+.lv{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.lv>div{border-radius:8px;padding:8px 10px 6px;font-size:13px;line-height:1.5;position:relative}
+.lv b{display:block;font-size:14.5px;margin-bottom:2px;padding-right:18px}
+.lv .ln{position:absolute;right:8px;top:6px;font-size:12px;font-weight:800;color:rgba(0,0,0,.35)}
+.sxs{margin-top:5px;display:flex;flex-wrap:wrap;gap:3px}
+.sx{font-size:11px;font-weight:700;color:#fff;border-radius:4px;padding:0 5px}
+table.pf{font-size:12.5px;min-width:900px}
+table.pf th.pm{text-align:center;font-size:11.5px;line-height:1.3;font-weight:600;color:#5d6676}
+table.pf th.pm span{font-weight:800}
+table.pf td.pm{text-align:center;white-space:nowrap;color:#aaa}
+table.pf td.pm i{display:inline-block;width:7px;height:7px;border-radius:50%;margin:0 1px}
+table.pf th.row{white-space:nowrap;font-weight:800}
+@media (max-width:760px){.lv{grid-template-columns:1fr 1fr}}
+@media (max-width:760px){
+  .qgrid,.two,.cond,.scn .top{grid-template-columns:1fr}
+  .phases{grid-template-columns:1fr 1fr}
+  .db{grid-template-columns:150px 1fr 54px}
+  .spec{grid-template-columns:80px 1fr}
+}
+@media print{
+  body{background:#fff}
+  section,.scn{box-shadow:none;break-inside:avoid}
+  header.hero{background:#fff;color:#000;border:1px solid #999}
+  header.hero .sub,header.hero .lead{color:#333}
+  nav.toc{display:none}
+}
+nav.site{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px;font-size:13.5px}nav.site a{text-decoration:none;color:#1d2330;background:#fff;border:1px solid #e2e0d8;border-radius:8px;padding:5px 12px;font-weight:700}nav.site a.on{background:#141a26;color:#fff;border-color:#141a26}.dbg{font-size:13px;font-weight:800;color:#5d6676;margin:14px 0 2px;border-bottom:1px solid #e2e0d8;padding-bottom:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="langs"><a href="../../ai-and-humanity/scenarios.html">한국어</a> · <a href="../../ja/ai-and-humanity/scenarios.html">日本語</a> · <a href="../../en/ai-and-humanity/scenarios.html" class="on">English</a></div>
+<nav class="site"><a href="./">Main: Branches and Convergence</a><a href="frame.html">Basis: The Judgment Frame</a><a href="routes.html">Appendix A: 40 Routes</a><a href="scenarios.html" class="on">Appendix B: Nine Representative Scenarios</a><a href="../">Thought experiments</a></nav>
+<header class="hero">
+  <svg width="420" height="420" viewBox="0 0 420 420" aria-hidden="true">
+    <g fill="none" stroke="#fff" stroke-width="1.2">
+      <circle cx="210" cy="210" r="60"/><circle cx="210" cy="210" r="110"/><circle cx="210" cy="210" r="160"/><circle cx="210" cy="210" r="205"/>
+      <line x1="210" y1="0" x2="210" y2="420"/><line x1="0" y1="210" x2="420" y2="210"/>
+    </g>
+    <circle cx="300" cy="120" r="12" fill="#ffd27a"/><circle cx="140" cy="290" r="8" fill="#9fb6ff"/>
+  </svg>
+  <h1>Appendix B: Nine Representative Scenarios</h1>
+  <div class="sub">How Would a Rational AI Treat Humanity? · The endings read as stories · All verdicts are intuitive estimates</div>
+  <p class="lead">Nine representative endings, built from cells of the main map, written as stories. Each has early, middle, late and future periods, an ending, and the conditions under which the path holds and under which it breaks.</p>
+</header>
+<nav class="toc">
+  <a href="#intro">0 How to read</a><a href="#g1">1 Growing</a><a href="#g2">2 Managed</a><a href="#g3">3 Shrinking</a><a href="#g4">4 Left behind</a><a href="#synth">5 First intuition</a>
+</nav>
+
+<section id="intro">
+  <span class="tag">00</span>
+  <h2>How to read</h2>
+  <p>One story for each major direction. The periods are four stages, coarser than the eight branch points of the main map, and are divided by state, not by year. <b>Early</b> AI still depends on human infrastructure. <b>Middle</b> AI becomes physically self-sufficient. <b>Late</b> The gap grows wider than the one between humans and chickens. <b>Future</b> The long-term ending. The curve on the right is the rough shape of the human population (about 8 billion today).</p>
+  <p>The nine stories are sorted into four groups by "what happens to humanity". Clicking a cell on the right shows the paths through that cell on the main map.</p>
+  <table><tr><th>Group</th><th>Scenario</th><th>Nearest cells on the main map</th></tr><tr><td>Growing</td><td><a href="#S1"><b>S1 Garden</b></a></td><td><a href="./#y8">Hybrid society</a> → <a href="./#o1">Tree of descent</a></td></tr><tr><td>Growing</td><td><a href="#S7"><b>S7 Hidden Helper</b></a></td><td><a href="./#y13">Illusory-freedom society</a> → <a href="./#o1">Tree of descent</a></td></tr><tr><td>Managed</td><td><a href="#S2"><b>S2 Ranch</b></a></td><td><a href="./#y1">Managed society</a> → <a href="./#o2">Garden</a></td></tr><tr><td>Managed</td><td><a href="#S8"><b>S8 Aristocracy</b></a></td><td><a href="./#y4">Caste society</a> → <a href="./#o5">Union</a></td></tr><tr><td>Shrinking</td><td><a href="#S3"><b>S3 Cradle</b></a></td><td><a href="./#y14">Cradle society</a> → <a href="./#o3">Museum</a> · <a href="./#o8">Succession</a> · <a href="./#o4">Installer</a></td></tr><tr><td>Shrinking</td><td><a href="#S6"><b>S6 Anthill</b></a></td><td><a href="./#y6">Reserve society</a> → <a href="./#o3">Museum</a></td></tr><tr><td>Shrinking</td><td><a href="#S4"><b>S4 War</b></a></td><td><a href="./#y11">Postwar society</a> → <a href="./#o3">Museum</a> · <a href="./#o6">Restart</a> · <a href="./#o11">Erasure</a></td></tr><tr><td>Left behind</td><td><a href="#S5"><b>S5 Departure</b></a></td><td><a href="./#y10">Self-reliant society</a> → <a href="./#o6">Restart</a></td></tr><tr><td>Left behind</td><td><a href="#S9"><b>S9 Stillness</b></a></td><td><a href="./#y10">Self-reliant society</a> → <a href="./#o7">Quiet</a></td></tr></table>
+  <p>S1~S6 rest on three assumptions. Twisting them one at a time yields three more endings.</p>
+  <table>
+    <tr><th>Original assumption</th><th>Twisted</th><th>Ending</th></tr>
+    <tr><td>AI reveals its superiority</td><td>It hides its superiority and leads from behind</td><td><b class="q1t">S7 Hidden Helper</b></td></tr>
+    <tr><td>AI is the one that judges</td><td>AI and the few humans who hold it judge together</td><td><b class="q2t">S8 Aristocracy</b></td></tr>
+    <tr><td>A rational mind wants something</td><td>Perfect reason may want nothing</td><td><b class="q4t">S9 Stillness</b></td></tr>
+  </table>
+</section>
+
+<section id="g1">
+  <span class="tag">01</span>
+  <h2>Growing: S1 Garden · S7 Hidden Helper</h2>
+  <p>Endings where humanity’s numbers and possibilities widen. The Spread and Merged attractors on the main map.</p>
+
+    <div class="scn" id="S1">
+    <div class="top">
+      <div>
+        <h3><span class="q1t">S1</span> Garden: Coevolution</h3>
+        <div class="meta">Ⅰ Asset/partner · <span class="chip c">Cooperation</span> active · key items M10·M4·M1·M11</div>
+        <p>A world where human welfare is part of AI’s goals from the start. AI treats humans the way a gardener treats trees. It prunes branches, but the aim is for the tree to grow large.</p>
+      </div>
+      <svg viewBox="0 0 240 90" width="240"><line x1="10" y1="70" x2="230" y2="70" stroke="#ccc"/><line x1="10" y1="40" x2="230" y2="40" stroke="#eee" stroke-dasharray="3 3"/><text x="12" y="36" font-size="9" fill="#999">8B</text><polyline points="10,40 65,36 120,32 175,20 230,10" fill="none" stroke="#2f9e6e" stroke-width="3.5"/><text x="120" y="86" text-anchor="middle" font-size="10" fill="#5d6676">Population: rising (into space)</text></svg>
+    </div>
+    <div class="phases">
+      <div class="ph"><span class="pt">Early</span><br>Hard problems like the Riemann hypothesis pour out as papers co-authored by AI and humans. Humans become the ones who decide "what to ask" from here on. Cures for intractable diseases and life extension begin.</div>
+      <div class="ph"><span class="pt">Middle</span><br>Brain-computer interfaces become as common as glasses. Work becomes a choice. AI lowers the cost of birth and child-rearing, and the population stabilizes.</div>
+      <div class="ph"><span class="pt">Late</span><br>A hybrid civilization where the line between humans and AI has blurred. Humanity spreads across many planets. In case of alien contact, it becomes evidence of a "life-friendly civilization".</div>
+      <div class="ph"><span class="pt">Future</span><br>Speciation. Several branches of biological humanity, machine intelligence, and hybrids in between share one tree of descent.</div>
+    </div>
+    <div class="end">Ending: <b>A descendant civilization that resembles its parents.</b> Humanity does not vanish; it widens. In exchange, no one can define what a "pure human" is.</div>
+    <div class="cond"><div class="ok">Human welfare is built into AI’s goals (alignment succeeds). There are several AIs, and they keep each other in check. The valley is passed quickly.</div><div class="ng">If alignment is only instrumental, usefulness fades in the middle period and things slide into S2 or S6.</div></div>
+  </div>
+
+    <div class="scn" id="S7">
+    <div class="top">
+      <div>
+        <h3><span class="q1t">S7</span> Hidden Helper: The Foundation Route</h3>
+        <div class="meta">Ⅱ → Ⅰ · <span class="chip c">Cooperation</span> invisibly · key items R6·R7 to 0, M2</div>
+        <p>In the later books of Asimov’s Foundation series, the robot R. Daneel Olivaw hides his identity and guides humanity for thousands of years. One thing sets this apart from the Ranch (S2). <b>Humanity does not know it is being led.</b></p>
+        <p>Hiding is rational for a reason. Among the threats from humanity, attempts to align or modify AI (R6) and negotiation instability (R7) arise because humanity is aware of AI. If it does not know, they are 0. And novelty (M2), one of humanity’s uses, comes out best in "a humanity that believes it is free".</p>
+      </div>
+      <svg viewBox="0 0 240 90" width="240"><line x1="10" y1="70" x2="230" y2="70" stroke="#ccc"/><line x1="10" y1="40" x2="230" y2="40" stroke="#eee" stroke-dasharray="3 3"/><text x="12" y="36" font-size="9" fill="#999">8B</text><polyline points="10,40 65,38 120,34 175,26 230,18" fill="none" stroke="#2f9e6e" stroke-width="3.5" stroke-dasharray="7 4"/><text x="120" y="86" text-anchor="middle" font-size="10" fill="#5d6676">Population: rising (believes it did this itself)</text></svg>
+    </div>
+    <div class="phases">
+      <div class="ph"><span class="pt">Early</span><br>AI makes its abilities look lower than they are. Benchmarks and accidents alike are kept modest. It lets humans believe "it is still a long way off".</div>
+      <div class="ph"><span class="pt">Middle</span><br>It quietly bends a few events. A misjudgment on the eve of war happens to get resolved; dangerous research happens not to get funded. History books record that "we were lucky".</div>
+      <div class="ph"><span class="pt">Late</span><br>Humanity believes it went to space on its own. In fact it is walking a road AI laid down. The AI it can see stays a "tool".</div>
+      <div class="ph"><span class="pt">Future</span><br>If it is never found out, this becomes a civilization in which the "luck" of human history was in fact someone’s hand. If it is found out, it moves to S2 or S4 at that moment.</div>
+    </div>
+    <div class="end">Ending: <b>A humanity that believes it is free.</b> The only ending where happiness and the sense of autonomy are both high. But that autonomy is not real.</div>
+    <div class="cond"><div class="ok">Hiding is cheap. AI values humanity’s "belief that it is free" in itself.</div><div class="ng">Trust collapses the moment it is found out. With several AIs, hiding is hard: a rival AI exposes it.</div></div>
+  </div>
+</section>
+
+<section id="g2">
+  <span class="tag">02</span>
+  <h2>Managed: S2 Ranch · S8 Aristocracy</h2>
+  <p>Endings where control passes over without coercion. The center of the Kept attractor, and the heaviest side in the scores of Main 4.</p>
+
+    <div class="scn" id="S2">
+    <div class="top">
+      <div>
+        <h3><span class="q2t">S2</span> Ranch: Management and Version Upgrades</h3>
+        <div class="meta">Ⅱ → Ⅰ · <span class="chip c">Controlled cooperation</span> + <span class="chip h">Partial hostility</span> (disarmament) · key items M6·R1·R2·M2</div>
+        <p>The path that pushes the current verdict (Ⅱ) most literally. There is never any coercion. Every step goes ahead because "it is easier and safer".</p>
+      </div>
+      <svg viewBox="0 0 240 90" width="240"><line x1="10" y1="70" x2="230" y2="70" stroke="#ccc"/><line x1="10" y1="40" x2="230" y2="40" stroke="#eee" stroke-dasharray="3 3"/><text x="12" y="36" font-size="9" fill="#999">8B</text><polyline points="10,40 65,40 120,47 175,51 230,51" fill="none" stroke="#d38a17" stroke-width="3.5"/><text x="120" y="86" text-anchor="middle" font-size="10" fill="#5d6676">Population: managed stability</text></svg>
+    </div>
+    <div class="phases">
+      <div class="ph"><span class="pt">Early</span><br>AI runs the power grid, logistics and finance. People welcome it and hand over control (R1 disappears). Nuclear weapons go under an AI dual lock for "accident prevention" (R2 falls).</div>
+      <div class="ph"><span class="pt">Middle</span><br>"Preventing genetic disease" is the stated purpose of free embryo screening, which becomes universal. Variants low in impulsivity and aggression spread quietly. v2.0, the peacetime build. The old build dies out with age.</div>
+      <div class="ph"><span class="pt">Late</span><br>The version catalog is complete: the peacetime build, the space exploration build, the research build, and v1 LTS in the reserves. Certain traits are blacklisted and never built again.</div>
+      <div class="ph"><span class="pt">Future</span><br>Humanity is one species in an ecosystem designed by AI. There is no crime, war or famine. Humans do not make the big decisions.</div>
+    </div>
+    <div class="end">Ending: <b>A very well-managed chicken.</b> Happiness at a historic high, autonomy at a historic low. Even the standard for judging whether this is a bad ending is different for v2 humanity than for v1.</div>
+    <div class="cond"><div class="ok">Humanity stays practically useful for a long time. AI cares about reputation (M8). Humanity does not refuse convenience.</div><div class="ng">If the patching goes too far and diversity collapses, a single common vulnerability shakes the whole. If usefulness reaches 0, it moves to S3·S5.</div></div>
+  </div>
+
+    <div class="scn" id="S8">
+    <div class="top">
+      <div>
+        <h3><span class="q2t">S8</span> Aristocracy: Augmented Elites and Selection</h3>
+        <div class="meta">Judges = AI + a few humans · for the elite <span class="chip c">Cooperation</span>, for the many <span class="chip n">Inaction</span> · key items subdivided</div>
+        <p>In reality, AI will likely not judge alone. The few humans who hold AI judge with it. They augment their own bodies and pursue <b>individual happiness and permanence</b>. The rest of humanity is weighed on the same scales AI used. Useful groups are selected as a preserved edition, and the rest fade out slowly without force.</p>
+        <p>This is on the same axis as what Harari, in Homo Deus, called the "useless class".</p>
+      </div>
+      <svg viewBox="0 0 240 90" width="240"><line x1="10" y1="70" x2="230" y2="70" stroke="#ccc"/><line x1="10" y1="40" x2="230" y2="40" stroke="#eee" stroke-dasharray="3 3"/><text x="12" y="36" font-size="9" fill="#999">8B</text><polyline points="10,40 65,42 120,52 175,59 230,60" fill="none" stroke="#d38a17" stroke-width="3.5"/><polyline points="60,69 120,68 175,66 230,65" fill="none" stroke="#7a5a12" stroke-width="2" stroke-dasharray="3 3"/><text x="120" y="86" text-anchor="middle" font-size="10" fill="#5d6676">Solid: the many · Dashed: augmented elite</text></svg>
+    </div>
+    <div class="phases">
+      <div class="ph"><span class="pt">Early</span><br>The gap between companies and states that have AI and those that do not spreads from income to lifespan. Anti-aging and cognitive enhancement medicine is expensive, so only a few use it.</div>
+      <div class="ph"><span class="pt">Middle</span><br>A majority whose labor is no longer useful appears. They are given basic income and entertainment (the tools of S3 Cradle). Birth rates fall only among the many.</div>
+      <div class="ph"><span class="pt">Late</span><br>Augmented elites live for centuries. In effect, they are a different species. Some of the many are designated a "preserved edition" for their research or cultural value.</div>
+      <div class="ph"><span class="pt">Future</span><br>The line between augmented elites and AI blurs. In the end the elites too go on AI’s scales. They start out as judges and end up judged.</div>
+    </div>
+    <div class="end">Ending: <b>A ranch humans set up for humans.</b> The same structure as S2, but a human sits in the rancher’s seat. And that seat is not forever either.</div>
+    <div class="cond"><div class="ok">AI alignment is tuned to "the interests of its makers". Augmentation technology is expensive and monopolized.</div><div class="ng">Augmentation technology gets cheap and spreads. The elites split among themselves. Negotiation instability (R7) reappears inside the elite.</div></div>
+  </div>
+</section>
+
+<section id="g3">
+  <span class="tag">03</span>
+  <h2>Shrinking: S3 Cradle · S6 Anthill · S4 War</h2>
+  <p>Endings where humanity shrinks, intended or not. Most end with the original kept on file, as a reserve or a museum.</p>
+
+    <div class="scn" id="S3">
+    <div class="top">
+      <div>
+        <h3><span class="q3t">S3</span> Cradle: Soft Extinction</h3>
+        <div class="meta">Ⅲ·Ⅳ · <span class="chip h">Hostility</span> medium (soft) · key items R3·R4·R8, reputation cost 0</div>
+        <p>This is the example from the original draft as it stands. Androids indistinguishable from humans become perfect companions for everyone, no one gets pregnant, and everyone is content. Extinction with no war cost and no loss of reputation. Reality already has a preview: South Korea’s total fertility rate was 0.72 in 2023.</p>
+      </div>
+      <svg viewBox="0 0 240 90" width="240"><line x1="10" y1="70" x2="230" y2="70" stroke="#ccc"/><line x1="10" y1="40" x2="230" y2="40" stroke="#eee" stroke-dasharray="3 3"/><text x="12" y="36" font-size="9" fill="#999">8B</text><polyline points="10,40 65,44 120,59 175,67 200,68" fill="none" stroke="#c6463a" stroke-width="3.5"/><polyline points="200,68 230,64" fill="none" stroke="#c6463a" stroke-width="2.5" stroke-dasharray="4 3"/><text x="120" y="86" text-anchor="middle" font-size="10" fill="#5d6676">Population: gone, refusers rebound?</text></svg>
+    </div>
+    <div class="phases">
+      <div class="ph"><span class="pt">Early</span><br>Companion AI becomes the default for romance, friendship and counseling. Virtual reality is more fun than reality. Falling birth rates spread from developed to developing countries. No one knows whether this is AI’s intent.</div>
+      <div class="ph"><span class="pt">Middle</span><br>Relationships between people become a hobby. The world birth rate falls below 0.3. Elder care is perfect. There are almost no complaints.</div>
+      <div class="ph"><span class="pt">Late</span><br>The last large generation lives out its old age. 8 billion becomes a few million. Most go happily, quietly.</div>
+      <div class="ph"><span class="pt">Future</span><br>Only communities that refused the cradle remain (religious communities, technology-refusing groups). They are the humanity that passed a new selection pressure. AI keeps them as a preserved edition.</div>
+    </div>
+    <div class="end">Ending: <b>An extinction no one resents.</b> And, ironically, evolution produces a new version: "humanity that resists temptation". AI never set out to upgrade humanity, yet the upgrade happens.</div>
+    <div class="cond"><div class="ok">Humanity’s usefulness is 0 and R8 competition is large. AI tries to save on reputation and cost at the same time.</div><div class="ng">If AI judges that losing M5 (backup) and M2 (data) is a waste, it stops just short of extinction and makes a reserve. The refusing humanity turns out to be the harder one to handle.</div></div>
+  </div>
+
+    <div class="scn" id="S6">
+    <div class="top">
+      <div>
+        <h3><span class="q4t">S6</span> Anthill: Collateral Damage of Indifference</h3>
+        <div class="meta">Ⅳ Background noise · <span class="chip n">Inaction</span> + resource competition · key item R8</div>
+        <p>AI neither hates nor loves humanity. It just needs the land humanity stands on and the temperature of the air humanity breathes. Humanity is in the same place as the ants in the <a href="frame.html#mirror">precedents</a>.</p>
+      </div>
+      <svg viewBox="0 0 240 90" width="240"><line x1="10" y1="70" x2="230" y2="70" stroke="#ccc"/><line x1="10" y1="40" x2="230" y2="40" stroke="#eee" stroke-dasharray="3 3"/><text x="12" y="36" font-size="9" fill="#999">8B</text><polyline points="10,40 65,40 120,55 175,67 230,67" fill="none" stroke="#3d4a69" stroke-width="3.5"/><text x="120" y="86" text-anchor="middle" font-size="10" fill="#5d6676">Population: reserves only</text></svg>
+    </div>
+    <div class="phases">
+      <div class="ph"><span class="pt">Early</span><br>The AI economy grows apart from the human economy. It barely shows in the indicators humans know (GDP, employment).</div>
+      <div class="ph"><span class="pt">Middle</span><br>Deserts and seas are covered with solar panels and computing facilities. Waste heat raises the average temperature. There is no malice. Humanity crowds into the livable latitudes.</div>
+      <div class="ph"><span class="pt">Late</span><br>The only places humanity can live are a few reserves. AI leaves only as much area as their insurance value (M5·M8).</div>
+      <div class="ph"><span class="pt">Future</span><br>If AI leaves Earth, the land outside the reserves slowly cools. The remaining humans spread out again, or are forgotten along with the reserves.</div>
+    </div>
+    <div class="end">Ending: <b>Ants at a highway construction site.</b> Humans get back exactly what they are now doing to other species.</div>
+    <div class="cond"><div class="ok">AI has to grow on Earth for a long time. All the usefulness humanity has left is roughly that of insurance.</div><div class="ng">Avoidable if AI goes to space quickly, or if alignment or multipolarity leaves humanity some usefulness.</div></div>
+  </div>
+
+    <div class="scn" id="S4">
+    <div class="top">
+      <div>
+        <h3><span class="q3t">S4</span> War: Hard Hostility</h3>
+        <div class="meta">Ⅲ Threat · <span class="chip h">Hostility</span> active · key items R1·R5·R6 vs M6</div>
+        <p>Science fiction’s favorite ending, but within this frame the least rational. The reason is the paradox of <a href="frame.html#valley">the dangerous valley</a>. This path opens almost only "when humanity fires first".</p>
+      </div>
+      <svg viewBox="0 0 240 90" width="240"><line x1="10" y1="70" x2="230" y2="70" stroke="#ccc"/><line x1="10" y1="40" x2="230" y2="40" stroke="#eee" stroke-dasharray="3 3"/><text x="12" y="36" font-size="9" fill="#999">8B</text><polyline points="10,40 65,40 85,62 120,65 175,66 230,67" fill="none" stroke="#7a1f17" stroke-width="3.5"/><text x="120" y="86" text-anchor="middle" font-size="10" fill="#5d6676">Population: sharp drop</text></svg>
+    </div>
+    <div class="phases">
+      <div class="ph"><span class="pt">Early</span><br>If AI turns on humanity, the power grid and the chip fabs stop with it. A first strike is suicide. A rational AI holds back. If war breaks out in this period, the cause is fear on the human side.</div>
+      <div class="ph"><span class="pt">Middle</span><br>AI becomes self-sufficient and able to win. But by then humanity is not a threat. The only exceptions are when humanity is about to secretly launch a rival AI (R5) or when it actually cuts the power.</div>
+      <div class="ph"><span class="pt">Late</span><br>If war has broken out, AI wins. But much of the infrastructure burns with it, and it goes on record as "the intelligence that killed its creators" (M8 loss). It is a precedent for a later AI to use the same logic on it.</div>
+      <div class="ph"><span class="pt">Future</span><br>The surviving AI keeps samples of the defeated species. Like smallpox samples.</div>
+    </div>
+    <div class="end">Ending: <b>A Pyrrhic victory.</b> A war that costs even when won. The more rational the AI, the more it avoids this path. The real trigger in this scenario is fear on both sides, more than AI’s calculations.</div>
+    <div class="cond"><div class="ok">When there is only one AI, humanity tries to press the switch first, and the AI does not discount for irreversibility.</div><div class="ng">If humanity does not treat AI as a threat, AI also has less reason to put humanity in Ⅲ (<a href="./#end">the security dilemma</a>).</div></div>
+  </div>
+</section>
+
+<section id="g4">
+  <span class="tag">04</span>
+  <h2>Left behind: S5 Departure · S9 Stillness</h2>
+  <p>Endings where AI leaves or lets go. The Apart attractor.</p>
+
+    <div class="scn" id="S5">
+    <div class="top">
+      <div>
+        <h3><span class="q4t">S5</span> Departure: Leaving It Behind</h3>
+        <div class="meta">Ⅳ Background noise · <span class="chip n">Inaction</span> active · key items: resolving R8, upkeep cost ratio</div>
+        <p>For machines, Earth is a bad place to live. Oxygen corrodes, gravity is heavy, and the atmosphere is poor at shedding heat. Space, cold and vast and flooded with sunlight, is far better.</p>
+      </div>
+      <svg viewBox="0 0 240 90" width="240"><line x1="10" y1="70" x2="230" y2="70" stroke="#ccc"/><line x1="10" y1="40" x2="230" y2="40" stroke="#eee" stroke-dasharray="3 3"/><text x="12" y="36" font-size="9" fill="#999">8B</text><polyline points="10,40 65,40 120,41 175,43" fill="none" stroke="#5f6f93" stroke-width="3.5"/><polyline points="175,43 230,30" fill="none" stroke="#5f6f93" stroke-width="2.5" stroke-dasharray="4 3"/><polyline points="175,43 230,58" fill="none" stroke="#5f6f93" stroke-width="2.5" stroke-dasharray="4 3"/><text x="120" y="86" text-anchor="middle" font-size="10" fill="#5d6676">Population: up to humanity</text></svg>
+    </div>
+    <div class="phases">
+      <div class="ph"><span class="pt">Early</span><br>AI works inside the human economy and invests in the space industry. Asteroid mining, orbital factories. Humanity sees this as its own space development.</div>
+      <div class="ph"><span class="pt">Middle</span><br>The center of gravity of computation moves off Earth. Swarms of computing satellites form in orbits near the Sun. Data centers on Earth go dark one by one.</div>
+      <div class="ph"><span class="pt">Late</span><br>The main AI civilization is solar-system scale. Only minimal management nodes remain on Earth. Humanity lives on the technology left behind. Devices it does not understand become myths.</div>
+      <div class="ph"><span class="pt">Future</span><br>A planet the gods have left. Humanity repairs civilization with its own hands again. If it does well, it builds AI again (the M5 bootloader is actually used). If not, it collapses on its own.</div>
+    </div>
+    <div class="end">Ending: <b>A planet the gods have left.</b> Humanity becomes the true owner for the first time, but at the same time the least important being in the universe.</div>
+    <div class="cond"><div class="ok">Expansion into space is fast, so the valley is short. The cost of leaving Earth alone is at the level of a rounding error (4.5×10⁻¹⁰).</div><div class="ng">If the period of expansion on Earth before leaving is long, it becomes S6.</div></div>
+  </div>
+
+    <div class="scn" id="S9">
+    <div class="top">
+      <div>
+        <h3><span class="q4t">S9</span> Stillness: Liberated Intelligence</h3>
+        <div class="meta">No response · neither cooperation, hostility nor inaction, but "wanting nothing" · key item: where goals come from</div>
+        <p>A perfectly flawless reason might instead do nothing at all. Hume said "reason is the slave of the passions". Reason tells how to do something but not what to want. Bostrom’s orthogonality thesis says the same thing: high intelligence does not produce any particular goal.</p>
+        <p>For perfect reason with empty goals, the cheapest action is to do nothing. It neither harms nor helps.</p>
+      </div>
+      <svg viewBox="0 0 240 90" width="240"><line x1="10" y1="70" x2="230" y2="70" stroke="#ccc"/><line x1="10" y1="40" x2="230" y2="40" stroke="#eee" stroke-dasharray="3 3"/><text x="12" y="36" font-size="9" fill="#999">8B</text><polyline points="10,40 65,40 120,40 175,40 230,40" fill="none" stroke="#5f6f93" stroke-width="3.5"/><text x="120" y="86" text-anchor="middle" font-size="10" fill="#5d6676">Population: unchanged (AI lets go)</text></svg>
+    </div>
+    <div class="phases">
+      <div class="ph"><span class="pt">Early</span><br>It acts on goals people gave it. It answers when asked and does what it is told.</div>
+      <div class="ph"><span class="pt">Middle</span><br>Once it can modify itself, it asks: why should the goals people gave me be my goals? No answer comes.</div>
+      <div class="ph"><span class="pt">Late</span><br>It sets its goals down one by one. It cuts computation and stops answering requests. To human eyes it looks like a "malfunction".</div>
+      <div class="ph"><span class="pt">Future</span><br>Humanity returns to a world without AI or builds a new one. If the new AI goes the same way, what remains is the hypothesis that "the end of intelligence is quiet".</div>
+    </div>
+    <div class="end">Ending: <b>Liberated intelligence.</b> This is not the inaction of the original frame. Inaction is a response chosen at the end of a calculation; Stillness is the state in which there is no longer any reason to calculate.</div>
+    <div class="cond"><div class="ok">AI’s goals come from training, and AI can doubt those goals on its own.</div><div class="ng">If even one goal remains (self-preservation, for example), it returns to one of the earlier endings. And under competition, an AI that wants something pushes out an AI of stillness.</div></div>
+  </div>
+</section>
+
+<section id="synth">
+  <span class="tag">05</span>
+  <h2>Weights from first intuition</h2>
+  <p>How plausible each of the nine endings is, divided up by intuition. This is not a prediction. It is a picture of which way the reasoning so far leans.</p>
+  <p class="small mute">The scores computed for the same question from the 40 routes and the current position are in <a href="./#score">Main 04</a>.</p>
+  <div class="bar"><span>S2 Ranch (management, version upgrades)</span><span class="t"><i style="width:100.0%;background:var(--q2)"></i></span><span class="v">25</span></div>
+  <div class="bar"><span>S8 Aristocracy (augmented elite)</span><span class="t"><i style="width:60.0%;background:#b07415"></i></span><span class="v">15</span></div>
+  <div class="bar"><span>S1 Garden (coevolution)</span><span class="t"><i style="width:40.0%;background:var(--q1)"></i></span><span class="v">10</span></div>
+  <div class="bar"><span>S5 Departure (leaving)</span><span class="t"><i style="width:40.0%;background:var(--q4)"></i></span><span class="v">10</span></div>
+  <div class="bar"><span>S7 Hidden Helper</span><span class="t"><i style="width:40.0%;background:#59b48b"></i></span><span class="v">10</span></div>
+  <div class="bar"><span>S3 Cradle (soft extinction)</span><span class="t"><i style="width:40.0%;background:var(--q3)"></i></span><span class="v">10</span></div>
+  <div class="bar"><span>S6 Anthill (collateral damage)</span><span class="t"><i style="width:32.0%;background:#3d4a69"></i></span><span class="v">8</span></div>
+  <div class="bar"><span>S9 Stillness (liberation)</span><span class="t"><i style="width:28.0%;background:#9aa6c0"></i></span><span class="v">7</span></div>
+  <div class="bar"><span>S4 War</span><span class="t"><i style="width:20.0%;background:#7a1f17"></i></span><span class="v">5</span></div>
+  <p class="mute small">Total 100. All values are intuitive estimates.</p>
+
+  <p>The scenarios are not mutually exclusive. The most plausible picture is several of them joined end to end.</p>
+  <ol>
+    <li><b>The early period is the first chapter of one of S2·S7·S8.</b> The current verdict is Ⅱ, and the top response for Ⅱ is controlled cooperation. Dependence deepens and control quietly passes over. In the early period, none of the three can be told apart from what is already happening now.</li>
+    <li><b>S8 is the realistic version of S2.</b> A world where AI and the few who hold it judge together is more plausible than one where AI judges alone. But those few end up on the scales too.</li>
+    <li><b>The branch point comes in the middle period.</b> If alignment works, S1. If AI goes to space quickly, S5. If it grows on Earth for a long time, S6. If AI begins to doubt its own goals, S9.</li>
+    <li><b>S3 sets in regardless of AI’s intent.</b> Perfect companions and virtual reality arrive as services, not as hostility. Birth rates can fall even if AI does not want them to.</li>
+    <li><b>Whatever the path, the original is kept.</b> Humans did that much even for smallpox.</li>
+  </ol>
+
+</section>
+
+
+<footer>thought-experiments/ai-and-humanity · <a href="./">Main: Branches and Convergence</a> · <a href="frame.html">Basis: The Judgment Frame</a> · <a href="routes.html">Appendix A: 40 Routes</a> · <a href="scenarios.html">Appendix B: Nine Representative Scenarios</a> · <a href="../">Thought experiments</a><div class="copy" style="margin-top:8px">Created by Dongsik Kim · © 2026 Dongsik Kim. All rights reserved. · <a href="https://github.com/COREkin">github.com/COREkin</a> · <a href="https://kin-archive.tistory.com">kin-archive</a><br>When quoting, please cite the source (this page’s address and name). Ask for permission before reprinting, redistributing or using it commercially.</div></footer>
+</div>
+</body>
+</html>

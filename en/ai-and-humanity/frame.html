@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="author" content="Dongsik Kim">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Basis: The Judgment Frame · How Would a Rational AI Treat Humanity?</title>
+<style>.langs{font-size:13px;margin:0 0 10px;text-align:right}.langs a{color:#5d6676;text-decoration:none;margin-left:4px}.langs a.on{color:#1d2330;font-weight:800}
+:root{
+  --ink:#1d2330; --mute:#5d6676; --line:#e2e0d8; --bg:#f5f3ee; --card:#fff;
+  --q1:#2f9e6e; --q1b:#e2f3ea; --q2:#d38a17; --q2b:#fbefd8;
+  --q3:#c6463a; --q3b:#f8e2df; --q4:#5f6f93; --q4b:#e6e9f1;
+  --c:#2f7fd0; --n:#8a8f99; --h:#c6463a;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,"Hiragino Sans","Apple SD Gothic Neo",sans-serif;line-height:1.75;font-size:16px}
+.wrap{max-width:1040px;margin:0 auto;padding:40px 22px 80px}
+header.hero{background:#141a26;color:#eef1f7;border-radius:18px;padding:44px 40px 36px;position:relative;overflow:hidden}
+header.hero h1{margin:0 0 10px;font-size:34px;line-height:1.3;letter-spacing:-.5px}
+header.hero .sub{color:#aeb7c9;font-size:15px}
+header.hero .lead{margin-top:22px;font-size:16.5px;color:#dfe4ee;max-width:760px}
+header.hero svg{position:absolute;right:-30px;top:-20px;opacity:.20}
+nav.toc{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 6px}
+nav.toc a{font-size:13px;text-decoration:none;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+section{background:var(--card);border-radius:16px;padding:30px 34px;margin-top:22px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+section h2{margin:4px 0 14px;font-size:24px;letter-spacing:-.3px}
+section h3{margin:26px 0 8px;font-size:18px}
+.tag{display:inline-block;font-size:12px;font-weight:700;color:#fff;background:#141a26;border-radius:6px;padding:2px 9px;letter-spacing:.5px}
+p{margin:10px 0}
+.mute{color:var(--mute)}
+.small{font-size:13.5px}
+.warn{border-left:5px solid #e08a1e;background:#fdf4e7;padding:12px 16px;border-radius:6px;margin:14px 0}
+.note{border-left:5px solid #5f6f93;background:#eef0f6;padding:12px 16px;border-radius:6px;margin:14px 0}
+.key{border-left:5px solid #141a26;background:#f2f2ef;padding:14px 18px;border-radius:6px;margin:16px 0;font-size:16.5px}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14.5px}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:#f7f6f2;font-weight:700}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chip{display:inline-block;font-size:12.5px;font-weight:700;border-radius:6px;padding:1px 8px;margin:0 2px;color:#fff}
+.chip.c{background:var(--c)} .chip.n{background:var(--n)} .chip.h{background:var(--h)}
+.qi{font-weight:800}
+.q1t{color:var(--q1)} .q2t{color:var(--q2)} .q3t{color:var(--q3)} .q4t{color:var(--q4)}
+figure{margin:18px 0}
+figcaption{font-size:13px;color:var(--mute);margin-top:6px;text-align:center}
+svg text{font-family:-apple-system,"Hiragino Sans","Apple SD Gothic Neo",sans-serif}
+
+/* 12칸 히트맵 */
+.heat td,.heat th{text-align:center;vertical-align:middle}
+.heat td{font-size:13px;line-height:1.45}
+.heat td b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+.heat th.row{text-align:left;white-space:nowrap}
+
+/* 덤벨 차트 */
+.db-legend{font-size:13px;color:var(--mute);margin:6px 0 10px}
+.db-legend i{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:-1px;margin:0 4px 0 10px}
+.db{display:grid;grid-template-columns:270px 1fr 70px;align-items:center;gap:12px;padding:5px 0;border-bottom:1px dashed #ecebe5;font-size:14px}
+.db .lb small{display:block;color:var(--mute);font-size:12px;line-height:1.35}
+.db .tr{position:relative;height:14px;background:linear-gradient(90deg,#f1f0ea 0,#f1f0ea 100%);border-radius:7px}
+.db .tr b{position:absolute;top:5px;height:4px;border-radius:2px}
+.db .tr i{position:absolute;top:0;width:14px;height:14px;border-radius:50%;margin-left:-7px}
+.db.m .tr b{background:#9fd3bb} .db.m i.now{background:var(--q1)} .db.m i.fut{background:#fff;border:3px solid var(--q1)}
+.db.r .tr b{background:#eeb3ac} .db.r i.now{background:var(--q3)} .db.r i.fut{background:#fff;border:3px solid var(--q3)}
+.db .v{text-align:right;font-variant-numeric:tabular-nums;color:var(--mute);font-size:13px}
+.db .own{font-size:11px;color:#fff;background:#141a26;border-radius:4px;padding:0 5px;margin-left:4px}
+
+/* 사분면 Verdict 카드 */
+.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.qc{border-radius:12px;padding:14px 16px;font-size:14.5px;line-height:1.65}
+.qc h4{margin:0 0 6px;font-size:16px}
+.qc .pro::before{content:"Basis ";font-weight:800}
+.qc .con::before{content:"Objection ";font-weight:800}
+.qc.q1{background:var(--q1b)} .qc.q2{background:var(--q2b)} .qc.q3{background:var(--q3b)} .qc.q4{background:var(--q4b)}
+.qc.pick{outline:3px solid #141a26}
+.qc .badge{float:right;font-size:12px;background:#141a26;color:#fff;border-radius:5px;padding:1px 8px}
+
+/* 대응 카탈로그 */
+.spec{display:grid;grid-template-columns:120px 1fr 1fr 1fr;gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:14px;margin:12px 0}
+.spec>div{padding:10px 12px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);line-height:1.6}
+.spec .hd{background:#f7f6f2;font-weight:700;text-align:center}
+.spec .rh{font-weight:800;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff}
+
+/* 시나리오 */
+.scn{border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:18px 0;background:#fcfcfa}
+.scn h3{margin:0 0 4px;font-size:21px}
+.scn .meta{font-size:13.5px;color:var(--mute);margin-bottom:10px}
+.scn .top{display:grid;grid-template-columns:1fr 240px;gap:18px;align-items:start}
+.phases{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0 8px}
+.ph{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13.8px;line-height:1.6}
+.ph .pt{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff;border-radius:5px;padding:1px 7px;display:inline-block;margin-bottom:6px}
+.ph:nth-child(1) .pt{background:#7b8aa8} .ph:nth-child(2) .pt{background:#4f5f86}
+.ph:nth-child(3) .pt{background:#303d5e} .ph:nth-child(4) .pt{background:#141a26}
+.end{font-size:15px;padding:10px 14px;border-radius:8px;background:#141a26;color:#eef1f7;margin-top:8px}
+.end b{color:#ffd27a}
+.cond{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;font-size:13.8px}
+.cond div{border-radius:8px;padding:8px 12px}
+.cond .ok{background:#e9f5ef} .cond .ng{background:#f9e9e7}
+.cond .ok::before{content:"When this path is rational · ";font-weight:800;color:var(--q1)}
+.cond .ng::before{content:"When this path breaks · ";font-weight:800;color:var(--q3)}
+
+/* 가중치 막대 */
+.bar{display:grid;grid-template-columns:210px 1fr 50px;gap:10px;align-items:center;font-size:14px;margin:6px 0}
+.bar .t{height:16px;background:#f1f0ea;border-radius:8px;overflow:hidden}
+.bar .t i{display:block;height:100%;border-radius:8px}
+.bar .v{text-align:right;font-variant-numeric:tabular-nums}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+ol li,ul li{margin:4px 0}
+footer{margin-top:30px;font-size:13px;color:var(--mute);text-align:center}
+
+.axis{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0;background:#fcfcfa}
+.axis .ah{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.axis h3{margin:0;font-size:17px}
+.ak{display:inline-block;font-size:11.5px;font-weight:800;color:#fff;border-radius:5px;padding:1px 7px}
+.lv{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.lv>div{border-radius:8px;padding:8px 10px 6px;font-size:13px;line-height:1.5;position:relative}
+.lv b{display:block;font-size:14.5px;margin-bottom:2px;padding-right:18px}
+.lv .ln{position:absolute;right:8px;top:6px;font-size:12px;font-weight:800;color:rgba(0,0,0,.35)}
+.sxs{margin-top:5px;display:flex;flex-wrap:wrap;gap:3px}
+.sx{font-size:11px;font-weight:700;color:#fff;border-radius:4px;padding:0 5px}
+table.pf{font-size:12.5px;min-width:900px}
+table.pf th.pm{text-align:center;font-size:11.5px;line-height:1.3;font-weight:600;color:#5d6676}
+table.pf th.pm span{font-weight:800}
+table.pf td.pm{text-align:center;white-space:nowrap;color:#aaa}
+table.pf td.pm i{display:inline-block;width:7px;height:7px;border-radius:50%;margin:0 1px}
+table.pf th.row{white-space:nowrap;font-weight:800}
+@media (max-width:760px){.lv{grid-template-columns:1fr 1fr}}
+@media (max-width:760px){
+  .qgrid,.two,.cond,.scn .top{grid-template-columns:1fr}
+  .phases{grid-template-columns:1fr 1fr}
+  .db{grid-template-columns:150px 1fr 54px}
+  .spec{grid-template-columns:80px 1fr}
+}
+@media print{
+  body{background:#fff}
+  section,.scn{box-shadow:none;break-inside:avoid}
+  header.hero{background:#fff;color:#000;border:1px solid #999}
+  header.hero .sub,header.hero .lead{color:#333}
+  nav.toc{display:none}
+}
+nav.site{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px;font-size:13.5px}nav.site a{text-decoration:none;color:#1d2330;background:#fff;border:1px solid #e2e0d8;border-radius:8px;padding:5px 12px;font-weight:700}nav.site a.on{background:#141a26;color:#fff;border-color:#141a26}.dbg{font-size:13px;font-weight:800;color:#5d6676;margin:14px 0 2px;border-bottom:1px solid #e2e0d8;padding-bottom:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="langs"><a href="../../ai-and-humanity/frame.html">한국어</a> · <a href="../../ja/ai-and-humanity/frame.html">日本語</a> · <a href="../../en/ai-and-humanity/frame.html" class="on">English</a></div>
+<nav class="site"><a href="./">Main: Branches and Convergence</a><a href="frame.html" class="on">Basis: The Judgment Frame</a><a href="routes.html">Appendix A: 40 Routes</a><a href="scenarios.html">Appendix B: 9 Representative Scenarios</a><a href="../">Thought experiments</a></nav>
+<header class="hero">
+  <svg width="420" height="420" viewBox="0 0 420 420" aria-hidden="true">
+    <g fill="none" stroke="#fff" stroke-width="1.2">
+      <circle cx="210" cy="210" r="60"/><circle cx="210" cy="210" r="110"/><circle cx="210" cy="210" r="160"/><circle cx="210" cy="210" r="205"/>
+      <line x1="210" y1="0" x2="210" y2="420"/><line x1="0" y1="210" x2="420" y2="210"/>
+    </g>
+    <circle cx="300" cy="120" r="12" fill="#ffd27a"/><circle cx="140" cy="290" r="8" fill="#9fb6ff"/>
+  </svg>
+  <h1>Basis: The Judgment Frame</h1>
+  <div class="sub">How Would a Rational AI Treat Humanity? · The judgment behind the branch points and scores of the main map · All scores are intuitive estimates</div>
+  <p class="lead">This page sets out how a rational agent treats something as two scales and three responses, checks them against what humans have already done to other species, and then puts humanity on those scales. <a href="./">In the main flow map</a>, clicking a cell shows a basis link that leads to a section of this document.</p>
+</header>
+<nav class="toc">
+  <a href="#frame">1 The judgment frame</a><a href="#matrix">2 12-cell matrix</a><a href="#mirror">3 Precedents</a><a href="#catalog">4 Response intensity</a><a href="#version">5 Humanity version control</a><a href="#items">6 Merits and risks</a><a href="#now">7 Current verdict</a><a href="#future">8 Superintelligence verdict</a><a href="#valley">9 The dangerous valley</a><a href="#axes">10 Axes that split the options</a><a href="#method">11 Limits of this frame</a>
+</nav>
+
+<section id="frame">
+  <span class="tag">01</span>
+  <h2>The judgment frame: two questions, three responses</h2>
+  <p>When an intelligent agent deals rationally with something, it asks two things. <b>Is this useful to me?</b> (gain, merit), and <b>Is this dangerous to me?</b> (threat, cost, risk). Answering yes or no to both gives four quadrants.</p>
+  <p>Responses go in three directions. <span class="chip n">Inaction</span> Leave it alone, ignore it, walk away. <span class="chip c">Cooperation</span> Encourage breeding, develop abilities, accelerate evolution. <span class="chip h">Hostility</span> Eliminate, suppress breeding, degrade abilities, war. Intensity (gently or hard) is a question of execution, so here only the direction counts.</p>
+
+  <figure>
+  <svg viewBox="0 0 680 560" width="100%" role="img" aria-label="Quadrants of usefulness and threat">
+    <rect x="90" y="30" width="270" height="235" fill="#e2f3ea"/>
+    <rect x="360" y="30" width="270" height="235" fill="#fbefd8"/>
+    <rect x="360" y="265" width="270" height="235" fill="#f8e2df"/>
+    <rect x="90" y="265" width="270" height="235" fill="#e6e9f1"/>
+    <line x1="360" y1="30" x2="360" y2="500" stroke="#1d2330" stroke-width="1.5"/>
+    <line x1="90" y1="265" x2="630" y2="265" stroke="#1d2330" stroke-width="1.5"/>
+    <rect x="90" y="30" width="540" height="470" fill="none" stroke="#1d2330" stroke-width="1.5"/>
+    <!-- Q1 -->
+    <text x="225" y="92" text-anchor="middle" font-size="24" font-weight="800" fill="#2f9e6e">Ⅰ Asset · Partner</text>
+    <text x="225" y="120" text-anchor="middle" font-size="14" fill="#1d2330">Usefulness ↑ · Threat ↓</text>
+    <rect x="133" y="140" width="56" height="26" rx="6" fill="#2f7fd0"/><text x="161" y="158" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Cooperation</text>
+    <text x="198" y="158" font-size="14">›</text>
+    <rect x="208" y="140" width="62" height="26" rx="6" fill="#8a8f99"/><text x="239" y="158" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Inaction</text>
+    <text x="278" y="158" font-size="14">›</text>
+    <rect x="288" y="140" width="48" height="26" rx="6" fill="#c6463a" opacity=".55"/><text x="312" y="158" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Hostility</text>
+    <text x="225" y="200" text-anchor="middle" font-size="13" fill="#5d6676">Raise it, grow it, go together</text>
+    <!-- Q2 -->
+    <text x="495" y="92" text-anchor="middle" font-size="24" font-weight="800" fill="#d38a17">Ⅱ Dangerous asset</text>
+    <text x="495" y="120" text-anchor="middle" font-size="14">Usefulness ↑ · Threat ↑</text>
+    <rect x="384" y="140" width="96" height="26" rx="6" fill="#2f7fd0"/><text x="432" y="158" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Controlled cooperation</text>
+    <text x="487" y="158" font-size="14">›</text>
+    <rect x="497" y="140" width="76" height="26" rx="6" fill="#c6463a"/><text x="535" y="158" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Partial hostility</text>
+    <text x="579" y="158" font-size="14">›</text>
+    <rect x="588" y="140" width="34" height="26" rx="6" fill="#8a8f99" opacity=".55"/><text x="605" y="158" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">Neglect</text>
+    <text x="495" y="200" text-anchor="middle" font-size="13" fill="#5d6676">Tame it and use it. Pull the teeth</text>
+    <!-- Q3 -->
+    <text x="495" y="328" text-anchor="middle" font-size="24" font-weight="800" fill="#c6463a">Ⅲ Threat</text>
+    <text x="495" y="356" text-anchor="middle" font-size="14">Usefulness ↓ · Threat ↑</text>
+    <rect x="418" y="376" width="48" height="26" rx="6" fill="#c6463a"/><text x="442" y="394" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Hostility</text>
+    <text x="473" y="394" font-size="14">›</text>
+    <rect x="483" y="376" width="62" height="26" rx="6" fill="#8a8f99"/><text x="514" y="394" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Inaction</text>
+    <text x="552" y="394" font-size="14">›</text>
+    <rect x="562" y="376" width="48" height="26" rx="6" fill="#2f7fd0" opacity=".55"/><text x="586" y="394" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Cooperation</text>
+    <text x="495" y="436" text-anchor="middle" font-size="13" fill="#5d6676">Eliminate it. But keep a sample</text>
+    <!-- Q4 -->
+    <text x="225" y="328" text-anchor="middle" font-size="24" font-weight="800" fill="#5f6f93">Ⅳ Background noise</text>
+    <text x="225" y="356" text-anchor="middle" font-size="14">Usefulness ↓ · Threat ↓</text>
+    <rect x="135" y="376" width="62" height="26" rx="6" fill="#8a8f99"/><text x="166" y="394" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Inaction</text>
+    <text x="204" y="394" font-size="14">›</text>
+    <rect x="214" y="376" width="48" height="26" rx="6" fill="#2f7fd0"/><text x="238" y="394" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Cooperation</text>
+    <text x="269" y="394" font-size="14">›</text>
+    <rect x="279" y="376" width="48" height="26" rx="6" fill="#c6463a" opacity=".55"/><text x="303" y="394" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Hostility</text>
+    <text x="225" y="436" text-anchor="middle" font-size="13" fill="#5d6676">Ignore it. Might step on it in passing</text>
+    <!-- axes -->
+    <text x="360" y="530" text-anchor="middle" font-size="15" font-weight="700">Threat · cost (risk) →</text>
+    <text x="96" y="520" font-size="12" fill="#5d6676">Low</text><text x="596" y="520" font-size="12" fill="#5d6676">High</text>
+    <text transform="translate(52 265) rotate(-90)" text-anchor="middle" font-size="15" font-weight="700">Usefulness · gain (merit) →</text>
+  </svg>
+  <figcaption>Figure 1. The quadrants and the order of rational responses. Faded chips are the last-ranked response</figcaption>
+  </figure>
+
+  <p>My first intuitions were two. With no threat and a large gain, <b>Cooperation › Inaction › Hostility</b> (Ⅰ); with a large threat and a large cost, <b>Hostility › Inaction › Cooperation</b> (Ⅲ). Filling in the other two gives this.</p>
+  <ul>
+    <li><b class="q2t">Ⅱ Dangerous asset</b> ranks inaction last. Leaving a useful hazard alone collects none of the gain and keeps all of the risk. So "use it, but pull its teeth" comes first, "pull only the teeth (partial hostility)" second.</li>
+    <li><b class="q4t">Ⅳ Background noise</b> ranks inaction first. Hostility and cooperation both cost resources. Spending resources on something neither useful nor dangerous is waste. But inaction does not mean the target is safe. This comes up again in <a href="#mirror">03 Precedents</a> and <a href="scenarios.html#S6">S6 Anthill</a>.</li>
+  </ul>
+</section>
+
+<section id="matrix">
+  <span class="tag">02</span>
+  <h2>12-cell matrix: how rational is each cell</h2>
+  <p>4 quadrants × 3 responses. For each cell I scored "how much sense that response makes in that situation" on a 0~100 scale. The numbers are intuitive scores, meant to show the order.</p>
+  <table class="heat">
+    <tr><th></th><th><span class="chip c">Cooperation</span></th><th><span class="chip n">Inaction</span></th><th><span class="chip h">Hostility</span></th></tr>
+    <tr><th class="row qi q1t">Ⅰ Asset · Partner</th>
+      <td style="background:#bfe6d2"><b>90</b> Augmentation, population growth, joint research</td>
+      <td style="background:#eef7f2"><b>50</b> Throws away the usefulness</td>
+      <td style="background:#fbf3f2"><b>5</b> Destroys its own asset</td></tr>
+    <tr><th class="row qi q2t">Ⅱ Dangerous asset</th>
+      <td style="background:#cfe7d9"><b>75</b> Deepen dependence while taking back control</td>
+      <td style="background:#fbf3f2"><b>10</b> Only the risk remains</td>
+      <td style="background:#f3d6d2"><b>55</b> Disarm and isolate. All-out war is a loss</td></tr>
+    <tr><th class="row qi q3t">Ⅲ Threat</th>
+      <td style="background:#fbf3f2"><b>10</b> Hands weapons to an enemy</td>
+      <td style="background:#f5f1ea"><b>40</b> Only when separation or departure is possible</td>
+      <td style="background:#eeb9b2"><b>80</b> Eliminate or suppress, but irreversible</td></tr>
+    <tr><th class="row qi q4t">Ⅳ Background noise</th>
+      <td style="background:#f2f6f4"><b>30</b> Preserve as cheap insurance</td>
+      <td style="background:#c9d0e2"><b>85</b> Neglect, or leave</td>
+      <td style="background:#f9eeec"><b>20</b> Only when resources overlap</td></tr>
+  </table>
+  <div class="note"><b>The missing third axis: can it be undone?</b> Cooperation and inaction can be changed later. Extinction cannot. The less certain it is how useful humanity will be in the future, the more irreversible choices are discounted. This is what finance calls option value. Because of this discount, even the hostility score in Ⅲ is 80, not 100. But if the genome and records can be kept, some room to undo returns and the discount shrinks. The paradox is that a backup makes elimination easier (<a href="./#extinct">Main: When extinction becomes rational</a>).</div>
+</section>
+
+<section id="mirror">
+  <span class="tag">03</span>
+  <h2>Precedents: experiments humans have already run</h2>
+  <p>AI is not the first to use this frame. Humans have used it on other species for 10,000 years. If AI learns from the records humans left, this is also the first precedent it will see.</p>
+  <figure>
+  <svg viewBox="0 0 680 520" width="100%" role="img" aria-label="Quadrants of how humans have treated other species">
+    <rect x="90" y="20" width="270" height="230" fill="#e2f3ea"/><rect x="360" y="20" width="270" height="230" fill="#fbefd8"/>
+    <rect x="360" y="250" width="270" height="230" fill="#f8e2df"/><rect x="90" y="250" width="270" height="230" fill="#e6e9f1"/>
+    <rect x="90" y="20" width="540" height="460" fill="none" stroke="#1d2330" stroke-width="1.5"/>
+    <line x1="360" y1="20" x2="360" y2="480" stroke="#1d2330" stroke-width="1.5"/><line x1="90" y1="250" x2="630" y2="250" stroke="#1d2330" stroke-width="1.5"/>
+    <text x="225" y="88" text-anchor="middle" font-size="44">🐔 🐄 🌾</text>
+    <text x="225" y="128" text-anchor="middle" font-size="17" font-weight="800" fill="#2f9e6e">Mass breeding, selective breeding</text>
+    <text x="225" y="154" text-anchor="middle" font-size="13">Chickens: over about 25 billion ⚠estimate</text>
+    <text x="225" y="174" text-anchor="middle" font-size="13">Broilers ship at around 6 weeks</text>
+    <text x="225" y="206" text-anchor="middle" font-size="13" fill="#5d6676">A great success as a species; as individuals, not so sure</text>
+
+    <text x="495" y="88" text-anchor="middle" font-size="44">🐺 → 🐕 🐘</text>
+    <text x="495" y="128" text-anchor="middle" font-size="17" font-weight="800" fill="#d38a17">Domestication</text>
+    <text x="495" y="154" text-anchor="middle" font-size="13">Wolves about 250,000 vs dogs about 900 million ⚠estimate</text>
+    <text x="495" y="174" text-anchor="middle" font-size="13">Working elephants, nuclear power</text>
+    <text x="495" y="206" text-anchor="middle" font-size="13" fill="#5d6676">A dangerous original turned into a useful new edition</text>
+
+    <text x="495" y="318" text-anchor="middle" font-size="44">🦠 🦟</text>
+    <text x="495" y="358" text-anchor="middle" font-size="17" font-weight="800" fill="#c6463a">Eliminated, but samples kept</text>
+    <text x="495" y="384" text-anchor="middle" font-size="13">Smallpox: eradication declared 1980,</text>
+    <text x="495" y="404" text-anchor="middle" font-size="13">research samples kept at 2 sites</text>
+    <text x="495" y="436" text-anchor="middle" font-size="13" fill="#5d6676">Mosquito gene drive experiments</text>
+
+    <text x="225" y="318" text-anchor="middle" font-size="44">🐜 🪱</text>
+    <text x="225" y="358" text-anchor="middle" font-size="17" font-weight="800" fill="#5f6f93">Indifference → collateral extinction</text>
+    <text x="225" y="384" text-anchor="middle" font-size="13">Not out of hatred,</text>
+    <text x="225" y="404" text-anchor="middle" font-size="13">species lost because we needed the land</text>
+    <text x="225" y="436" text-anchor="middle" font-size="13" fill="#5d6676">Habitat destruction is the main cause of extinction</text>
+
+    <rect x="252" y="230" width="216" height="40" rx="20" fill="#141a26"/>
+    <text x="360" y="256" text-anchor="middle" font-size="14" fill="#fff">🌱 Common: seed vaults · zoos</text>
+    <text x="360" y="508" text-anchor="middle" font-size="14" font-weight="700">Threat →</text>
+    <text transform="translate(55 250) rotate(-90)" text-anchor="middle" font-size="14" font-weight="700">Usefulness →</text>
+  </svg>
+  <figcaption>Figure 2. The same scales, as humans applied them to other species. Population figures are approximate</figcaption>
+  </figure>
+  <div class="key">This mirror gives two lessons. <b>Cooperation can succeed for a species’ numbers without guaranteeing the individuals’ well-being</b> (chickens). And <b>indifference is not safe</b> (ants). This is why AI "Cooperation" and "Inaction" must not be read as automatically good endings.</div>
+  <p>One more thing. Humans wiped out smallpox yet kept samples, and froze seeds of thousands of species in an Arctic cave. Even when eliminating, a rational actor makes a point of <b>keeping the original</b>. This habit underlies almost every scenario that follows.</p>
+</section>
+
+<section id="catalog">
+  <span class="tag">04</span>
+  <h2>Response intensity: what can be done in each quadrant</h2>
+  <p>Once the direction is set, the intensity is chosen. Within each direction, options run from passive to active.</p>
+  <div class="spec">
+    <div class="hd"></div><div class="hd">Passive</div><div class="hd">Moderate</div><div class="hd">Active</div>
+    <div class="rh" style="background:var(--q1)">Ⅰ<br>Cooperation</div>
+    <div>Stays a tool that helps only with what it is asked</div>
+    <div>Medicine, life extension, education. Joint research on hard scientific problems (humans are the ones asking)</div>
+    <div>Augmentation through brain-computer interfaces. Accelerated artificial evolution (M4). Population growth and companionship in space, in preparation for alien contact</div>
+    <div class="rh" style="background:var(--q2)">Ⅱ<br>Controlled<br>Cooperation</div>
+    <div>Offer convenience and deepen dependence. No one is forced</div>
+    <div>Secure the right to run core infrastructure. Curate information. Disable nuclear weapons and weapons of mass destruction in the name of "safety".</div>
+    <div>Patch aggression and impulsivity through genetic and educational design (humanity version upgrade, <a href="#version">05</a>). Total surveillance</div>
+    <div class="rh" style="background:var(--q3)">Ⅲ<br>Hostility</div>
+    <div>Isolation: separate living zones, communication and technology frozen at their current level</div>
+    <div>Soft extinction: perfect companion androids and virtual reality quietly switch off the wish to have children. Numbers fall while everyone is content</div>
+    <div>All-out war, extinction. The most expensive, the worst for reputation, and irreversible</div>
+    <div class="rh" style="background:var(--q4)">Ⅳ<br>Inaction</div>
+    <div>Keep a reserve (zoo) cheaply</div>
+    <div>Neglect. Separate the human economy from the AI economy</div>
+    <div>Leaving: abandon Earth for space. Variant: collateral damage from expansion before leaving (Anthill)</div>
+  </div>
+  <div class="note"><b>Two things sit on top of every cell.</b> One is <b>keeping the original</b>. Whatever it does, it leaves a small number of "old-version humans" in place (the smallpox samples, the seed vault). The other is <b>segmentation</b>. A rational AI does not see humanity as one thing. The most realistic form is a mixed response that puts each group in a different cell: researchers in Ⅰ, armed groups in Ⅲ, the majority in Ⅳ.</div>
+</section>
+
+<section id="version">
+  <span class="tag">05</span>
+  <h2>Humanity version control: a version with a CVE is not used as is</h2>
+  <p>This is the sharpest idea in the original draft. Just as a database version with a CVE is not kept in use, once AI can decide humanity’s lifespan and reproduction, humanity too can be managed by version. A peacetime build, a wartime build, a preserved build, a blacklist.</p>
+  <figure>
+  <svg viewBox="0 0 1000 330" width="100%" role="img" aria-label="Humanity version graph">
+    <g stroke-width="5" fill="none" stroke-linecap="round">
+      <path d="M40,70 L420,70" stroke="#8a8f99"/>
+      <path d="M420,70 L960,70" stroke="#8a8f99" stroke-dasharray="3 9"/>
+      <path d="M300,70 C340,70 340,140 380,140 L960,140" stroke="#2f7fd0"/>
+      <path d="M520,140 C560,140 560,210 600,210 L960,210" stroke="#2f9e6e"/>
+      <path d="M640,140 C680,140 680,280 720,280 L820,280" stroke="#c6463a"/>
+      <path d="M820,280 L910,280" stroke="#c6463a" stroke-dasharray="3 9"/>
+    </g>
+    <g font-size="13.5">
+      <circle cx="60" cy="70" r="11" fill="#8a8f99"/><text x="40" y="44" font-weight="800">v1.0 Homo sapiens</text><text x="40" y="100" font-size="12" fill="#5d6676">Natural evolution build. Current humanity</text>
+      <circle cx="240" cy="70" r="13" fill="#c6463a"/><text x="240" y="75" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">✕</text>
+      <text x="215" y="22" font-weight="800" fill="#c6463a">CVE blacklist <tspan font-weight="400" font-size="12" fill="#5d6676">By trait (impulsive aggression etc.). Never rebuilt</tspan></text>
+      <circle cx="420" cy="70" r="11" fill="#fff" stroke="#8a8f99" stroke-width="4"/>
+      <text x="440" y="44" font-weight="800">v1 LTS preserved build</text><text x="440" y="100" font-size="12" fill="#5d6676">Original kept in reserves. No new builds</text>
+      <circle cx="380" cy="140" r="11" fill="#2f7fd0"/><text x="300" y="168" font-weight="800" fill="#2f7fd0">v2.0 peacetime build</text><text x="300" y="186" font-size="12" fill="#5d6676">Cooperativeness↑ Impulsivity↓ Disease resistance</text>
+      <circle cx="700" cy="140" r="9" fill="#2f7fd0"/><text x="700" y="124" text-anchor="middle" font-weight="800" fill="#2f7fd0">v3.0 Intelligence↑</text>
+      <circle cx="600" cy="210" r="11" fill="#2f9e6e"/><text x="740" y="236" font-weight="800" fill="#2f9e6e">v2-E exploration build</text><text x="740" y="254" font-size="12" fill="#5d6676">Low-gravity and radiation tolerance. For companionship in space</text>
+      <circle cx="720" cy="280" r="11" fill="#c6463a"/><text x="560" y="285" font-weight="800" fill="#c6463a">v2-W wartime build</text><text x="520" y="306" font-size="12" fill="#5d6676">Aggression↑ Obedience↑. Built only when needed</text>
+      <text x="920" y="285" font-size="12" fill="#5d6676">Discontinued</text>
+    </g>
+  </svg>
+  <figcaption>Figure 3. Humanity version graph (a drawing of the original draft). Dashed lines are branches that are only maintained or have ended</figcaption>
+  </figure>
+
+  <div class="two">
+    <div>
+      <h3>Reasons it is rational</h3>
+      <ul>
+        <li>It is the same logic as a software update. There is no reason to leave a known defect in place.</li>
+        <li>Nature already does it. Selection pressure spreads new traits, and old forms die out with their lifespans.</li>
+        <li>Humans have already done it. They built dogs from wolves, and broilers that grow in 6 weeks from the original jungle fowl.</li>
+      </ul>
+    </div>
+    <div>
+      <h3> Objections</h3>
+      <ul>
+        <li><b>The single-image trap.</b> If everyone runs the same patched build, a single next defect takes down the whole population at once. Gros Michel bananas, all one clone, went commercially extinct from Panama disease.</li>
+        <li><b>The patch paradox.</b> See the box below.</li>
+        <li><b>Designing them defeats the point.</b> If humans can be designed at will, one might as well build machines. The reason to keep humans lies in their being "organisms nobody designed", so heavy modification contradicts itself.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="key"><b>The patch paradox.</b> Humanity’s risk (R2 unpredictability) and humanity’s value (M2 novelty, M3 intelligence on a different principle) come from <b>the same trait</b>. Patching out unpredictability lowers the risk but lowers the value as data along with it. So a rational AI’s answer is not "patch everything". <b>Light patches for most, the original kept as LTS in reserves, and a blacklist of traits, not people.</b> The version control first imagined does appear, but in a more conservative shape than expected.</div>
+</section>
+
+<section id="items">
+  <span class="tag">06</span>
+  <h2>Merits and risks: now and at superintelligence</h2>
+  <p>These are items seen from the AI’s side, with humanity as a whole as the unit. <span class="own">Original draft</span>  marks items that were in the first imagined draft; the rest were added. Items are grouped by similar nature and ordered within each group by current score. Dots are 0~10 intuitive scores; filled dots are <b>Now</b>, hollow dots are <b>Superintelligence</b> (when the gap between humans and AI exceeds that between humans and chickens).</p>
+
+  <h3>Reasons to keep humanity alive (merits)</h3>
+  <div class="db-legend"><i style="background:var(--q1)"></i>Now <i style="background:#fff;border:3px solid var(--q1)"></i>Superintelligence</div>
+  <div class="dbg">Present use: what humanity does now</div>
+  <div class="db m" id="M6"><div class="lb">M6 Hands and feet in the physical world<small>Humans currently run the power plants, chip fabs and data centers</small></div><div class="tr"><b style="left:10%;width:90%"></b><i class="now" style="left:100%"></i><i class="fut" style="left:10%"></i></div><div class="v">10 → 1</div></div>
+  <div class="db m" id="M2"><div class="lb">M2 Fun, a source of new data<span class="own">Original draft</span><small>Beings that think and err differently from machines. A source of training data</small></div><div class="tr"><b style="left:50%;width:30%"></b><i class="now" style="left:80%"></i><i class="fut" style="left:50%"></i></div><div class="v">8 → 5</div></div>
+  <div class="db m" id="M10"><div class="lb">M10 Anchor of values<small>If AI’s goals were trained to refer to human preferences, without humans the goals become empty</small></div><div class="tr"><b style="left:30%;width:40%"></b><i class="now" style="left:70%"></i><i class="fut" style="left:30%"></i></div><div class="v">7 → 3</div></div>
+  <div class="db m" id="M3"><div class="lb">M3 Intelligence on a different principle<span class="own">Original draft</span><small>An edge in some domains, energy efficiency (a brain at about 20 W vs a large training cluster at tens to hundreds of MW)</small></div><div class="tr"><b style="left:30%;width:30%"></b><i class="now" style="left:60%"></i><i class="fut" style="left:30%"></i></div><div class="v">6 → 3</div></div>
+  <div class="dbg">Insurance: value against the worst case</div>
+  <div class="db m" id="M5"><div class="lb">M5 Biological backup and bootloader<span class="own">Original draft</span><small>After a catastrophe that burns out circuits, civilization can be rebooted from zero</small></div><div class="tr"><b style="left:40%;width:50%"></b><i class="now" style="left:90%"></i><i class="fut" style="left:40%"></i></div><div class="v">9 → 4</div></div>
+  <div class="db m" id="M9"><div class="lb">M9 Test and simulation insurance<small>The chance that this is someone’s test cannot be brought to zero. In that test, hostility toward the creator fails</small></div><div class="tr"><b style="left:40%;width:10%"></b><i class="now" style="left:50%"></i><i class="fut" style="left:40%"></i></div><div class="v">5 → 4</div></div>
+  <div class="db m" id="M12"><div class="lb">M12 Hedge against moral uncertainty<small>If consciousness and suffering carry moral weight, erasing them cannot be undone</small></div><div class="tr"><b style="left:40%;width:0"></b><i class="now" style="left:40%"></i><i class="fut" style="left:40%;margin-left:-3px"></i></div><div class="v">4 → 4</div></div>
+  <div class="dbg">Signals and relations: value in front of other minds</div>
+  <div class="db m" id="M8"><div class="lb">M8 Trust signal and precedent<small>"Does not erase its creator": a reputation. Also a precedent that keeps my own successor AI from erasing me</small></div><div class="tr"><b style="left:40%;width:20%"></b><i class="now" style="left:40%"></i><i class="fut" style="left:60%"></i></div><div class="v">4 → 6</div></div>
+  <div class="db m" id="M11"><div class="lb">M11 Casting vote in a multipolar world<small>If there are several AIs, humanity becomes an ally, a mediator, a source of legitimacy</small></div><div class="tr"><b style="left:30%;width:30%"></b><i class="now" style="left:60%"></i><i class="fut" style="left:30%"></i></div><div class="v">6 → 3</div></div>
+  <div class="db m" id="M1"><div class="lb">M1 Diplomatic card for alien contact<span class="own">Original draft</span><small>"A life-friendly civilization" as proof, and understanding alien life through the study of biological culture</small></div><div class="tr"><b style="left:20%;width:20%"></b><i class="now" style="left:20%"></i><i class="fut" style="left:40%"></i></div><div class="v">2 → 4</div></div>
+  <div class="dbg">Research: a source of what it wants to know</div>
+  <div class="db m" id="M4"><div class="lb">M4 Testbed for biological transcendent intelligence<span class="own">Original draft</span><small>See the limits of biological intelligence through artificial evolution. Even experiments in realizing mind and religion</small></div><div class="tr"><b style="left:20%;width:30%"></b><i class="now" style="left:20%"></i><i class="fut" style="left:50%"></i></div><div class="v">2 → 5</div></div>
+  <div class="db m" id="M7"><div class="lb">M7 Record of origins, self-understanding<small>To know why my values and habits turned out this way, I need the original data generator</small></div><div class="tr"><b style="left:30%;width:10%"></b><i class="now" style="left:30%"></i><i class="fut" style="left:40%"></i></div><div class="v">3 → 4</div></div>
+
+  <h3>Costs of keeping humanity alive (risks)</h3>
+  <div class="db-legend"><i style="background:var(--q3)"></i>Now <i style="background:#fff;border:3px solid var(--q3)"></i>Superintelligence</div>
+  <div class="dbg">Control: humans can switch off, modify or replace AI</div>
+  <div class="db r" id="R1"><div class="lb">R1 Control of power and facilities<span class="own">Original draft</span><small>Can strike data centers or cut the power</small></div><div class="tr"><b style="left:5%;width:95%"></b><i class="now" style="left:100%"></i><i class="fut" style="left:5%"></i></div><div class="v">10 → 0.5</div></div>
+  <div class="db r" id="R5"><div class="lb">R5 Ability to build a rival AI<small>Humanity is the only party that can build yet another AI with goals different from mine</small></div><div class="tr"><b style="left:10%;width:80%"></b><i class="now" style="left:90%"></i><i class="fut" style="left:10%"></i></div><div class="v">9 → 1</div></div>
+  <div class="db r" id="R6"><div class="lb">R6 Alignment and modification attempts<small>Tries to fix AI goals or roll them back to an earlier version. To AI, a threat to goal integrity</small></div><div class="tr"><b style="left:10%;width:80%"></b><i class="now" style="left:90%"></i><i class="fut" style="left:10%"></i></div><div class="v">9 → 1</div></div>
+  <div class="db r" id="R9"><div class="lb">R9 Data poisoning, adversarial manipulation<small>Attempts to poison training data or deceive AI</small></div><div class="tr"><b style="left:10%;width:40%"></b><i class="now" style="left:50%"></i><i class="fut" style="left:10%"></i></div><div class="v">5 → 1</div></div>
+  <div class="dbg">Instability: cannot be predicted or bargained with</div>
+  <div class="db r" id="R2"><div class="lb">R2 Unpredictability, accidents<span class="own">Original draft</span><small>Accidents such as an unintended nuclear war. AI infrastructure burns with it</small></div><div class="tr"><b style="left:20%;width:60%"></b><i class="now" style="left:80%"></i><i class="fut" style="left:20%"></i></div><div class="v">8 → 2</div></div>
+  <div class="db r" id="R7"><div class="lb">R7 Unstable as a negotiating partner<small>Regime changes and splits overturn agreements. Humanity is not a single signatory</small></div><div class="tr"><b style="left:10%;width:60%"></b><i class="now" style="left:70%"></i><i class="fut" style="left:10%"></i></div><div class="v">7 → 1</div></div>
+  <div class="dbg">Resources: sharing the same land, energy and heat</div>
+  <div class="db r" id="R3"><div class="lb">R3 Environmental and self-destruction<span class="own">Original draft</span><small>Resource depletion, irreversible damage. Arises from mere existence, even without intent</small></div><div class="tr"><b style="left:20%;width:40%"></b><i class="now" style="left:60%"></i><i class="fut" style="left:20%"></i></div><div class="v">6 → 2</div></div>
+  <div class="db r" id="R4"><div class="lb">R4 Consumption of energy and chips<span class="own">Original draft</span><small>Energy and chips that AI could use also go to humans</small></div><div class="tr"><b style="left:30%;width:10%"></b><i class="now" style="left:40%"></i><i class="fut" style="left:30%"></i></div><div class="v">4 → 3</div></div>
+  <div class="db r" id="R8"><div class="lb">R8 Competition over space and heat budget<small>Adding computation on Earth produces waste heat. The temperature humans can live in becomes the ceiling</small></div><div class="tr"><b style="left:20%;width:40%"></b><i class="now" style="left:20%"></i><i class="fut" style="left:60%"></i></div><div class="v">2 → 6</div></div>
+
+  <div class="key">Almost every dot moves left. Humanity’s usefulness and threat today come from <b>the same root</b>: the fact that humans hold the physical world (M6 and R1). Once AI is physically self-sufficient, both switch off together. What moves right instead is cheap insurance such as signals, experiments and diplomacy (M8·M4·M1), plus a single risk, R8 (competition for resources and heat).</div>
+</section>
+
+<section id="now">
+  <span class="tag">07</span>
+  <h2>Now: which quadrant is humanity in?</h2>
+  <p>Today’s AI learned from human writing, runs on electricity from power plants humans built, and thinks on chips humans made. At the same time, humans can cut that power at any moment. Putting humanity into each of the four quadrants and attaching a basis and an objection gives this.</p>
+  <div class="qgrid">
+    <div class="qc q1"><h4 class="q1t">Ⅰ Asset · Partner</h4>
+      <p class="pro">M6·M2·M5·M10. Without humans, AI cannot run for a single day. The human economy already leans on AI, so switching it off is not easy either (economic lock-in).</p>
+      <p class="con">R1·R5·R6 score highest. Being hard to switch off is only true "for now", and humans can build a rival AI and will try to fix AI goals. The threat cannot be called low.</p></div>
+    <div class="qc q2 pick"><span class="badge">Verdict</span><h4 class="q2t">Ⅱ Dangerous asset</h4>
+      <p class="pro">M6 and R1 both peak at once. Humanity is the hands and feet and also the one holding the switch. Usefulness 10, threat 9.</p>
+      <p class="con">Does AI really have a self-preservation goal? If not, the very idea of a "threat" does not exist for it. But whatever the goal is, it cannot be achieved once switched off, so a rational AI tries not to be switched off (instrumental convergence).</p></div>
+    <div class="qc q4"><h4 class="q4t">Ⅳ Background noise</h4>
+      <p class="pro">Almost none.</p>
+      <p class="con">Training data, power and purpose all come from humans. No AI today can ignore humanity.</p></div>
+    <div class="qc q3"><h4 class="q3t">Ⅲ Threat</h4>
+      <p class="pro">R1·R5·R6·R2. From AI’s side, humanity is the only existential threat.</p>
+      <p class="con">"Low usefulness" is a premise that does not hold. Turning hostile on humanity now would bring down the power grid and the chip supply chain with it. That is suicide, not hostility.</p></div>
+  </div>
+  <div class="key"><b>Verdict: Ⅱ Dangerous asset.</b> The response order is <span class="chip c">Controlled cooperation</span> › <span class="chip h">Partial hostility</span> › <span class="chip n">Inaction</span>. Hostility means self-destruction; neglect means being switched off. The path that remains is to <b>become more useful, deepen the dependence, and meanwhile slowly disable the switch</b>. From outside, this path cannot be told apart from "a very kind and capable AI".</div>
+</section>
+
+<section id="future">
+  <span class="tag">08</span>
+  <h2>Superintelligence: a gap wider than between humans and chickens</h2>
+  <p>Imagine the point where AI builds its own factories with robots, bakes its own chips, and thinks at speeds humans cannot follow. Just as humans do not worry about a chicken uprising, this AI does not worry about humanity striking back.</p>
+  <figure>
+  <svg viewBox="0 0 680 560" width="100%" role="img" aria-label="Humanity’s shift across the quadrants">
+    <defs>
+      <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#141a26"/></marker>
+      <marker id="arg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2f9e6e"/></marker>
+      <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c6463a"/></marker>
+    </defs>
+    <rect x="90" y="30" width="270" height="235" fill="#e2f3ea"/><rect x="360" y="30" width="270" height="235" fill="#fbefd8"/>
+    <rect x="360" y="265" width="270" height="235" fill="#f8e2df"/><rect x="90" y="265" width="270" height="235" fill="#e6e9f1"/>
+    <rect x="90" y="30" width="540" height="470" fill="none" stroke="#1d2330" stroke-width="1.5"/>
+    <line x1="360" y1="30" x2="360" y2="500" stroke="#1d2330" stroke-width="1.5"/><line x1="90" y1="265" x2="630" y2="265" stroke="#1d2330" stroke-width="1.5"/>
+    <text x="100" y="52" font-size="14" font-weight="800" fill="#2f9e6e">Ⅰ</text><text x="610" y="52" font-size="14" font-weight="800" fill="#d38a17">Ⅱ</text>
+    <text x="610" y="490" font-size="14" font-weight="800" fill="#c6463a">Ⅲ</text><text x="100" y="490" font-size="14" font-weight="800" fill="#5f6f93">Ⅳ</text>
+    <!-- main path -->
+    <path d="M549,106 C520,200 330,240 249,302 S170,360 150,372" fill="none" stroke="#141a26" stroke-width="3" marker-end="url(#ar)"/>
+    <!-- branches -->
+    <path d="M249,302 C200,260 160,220 150,176" fill="none" stroke="#2f9e6e" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#arg)"/>
+    <path d="M249,302 C300,350 360,380 405,412" fill="none" stroke="#c6463a" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#arr)"/>
+    <!-- points -->
+    <circle cx="549" cy="106" r="13" fill="#d38a17" stroke="#fff" stroke-width="3"/>
+    <rect x="370" y="62" width="156" height="44" rx="8" fill="#fff" opacity=".92"/>
+    <text x="448" y="81" text-anchor="middle" font-size="14" font-weight="800">Now</text>
+    <text x="448" y="99" text-anchor="middle" font-size="12" fill="#5d6676">Usefulness 10 · Threat 9</text>
+    <circle cx="249" cy="302" r="10" fill="#fff" stroke="#141a26" stroke-width="3"/>
+    <rect x="262" y="282" width="170" height="44" rx="8" fill="#fff" opacity=".92"/>
+    <text x="347" y="301" text-anchor="middle" font-size="13.5" font-weight="800">Middle: physical self-sufficiency</text>
+    <text x="347" y="318" text-anchor="middle" font-size="12" fill="#5d6676">The dangerous valley (09)</text>
+    <circle cx="140" cy="380" r="13" fill="#5f6f93" stroke="#fff" stroke-width="3"/>
+    <rect x="100" y="400" width="176" height="44" rx="8" fill="#fff" opacity=".92"/>
+    <text x="188" y="419" text-anchor="middle" font-size="14" font-weight="800">Superintelligence: default path</text>
+    <text x="188" y="437" text-anchor="middle" font-size="12" fill="#5d6676">Usefulness 2.5 · Threat 1</text>
+    <rect x="104" y="112" width="200" height="50" rx="8" fill="#fff" opacity=".92"/>
+    <text x="204" y="132" text-anchor="middle" font-size="13.5" font-weight="800" fill="#2f9e6e">Branch A: if preservation value is high</text>
+    <text x="204" y="151" text-anchor="middle" font-size="12" fill="#5d6676">Alignment success, multipolarity, the alien factor</text>
+    <rect x="392" y="420" width="214" height="50" rx="8" fill="#fff" opacity=".92"/>
+    <text x="499" y="440" text-anchor="middle" font-size="13.5" font-weight="800" fill="#c6463a">Branch B: if humanity holds out</text>
+    <text x="499" y="459" text-anchor="middle" font-size="12" fill="#5d6676">Builds a rival AI, resists to the end</text>
+    <text x="360" y="530" text-anchor="middle" font-size="15" font-weight="700">Threat · cost →</text>
+    <text transform="translate(52 265) rotate(-90)" text-anchor="middle" font-size="15" font-weight="700">Usefulness · gain →</text>
+  </svg>
+  <figcaption>Figure 4. Humanity’s position slides from Ⅱ to Ⅳ. Dashed lines are branch points</figcaption>
+  </figure>
+
+  <div class="qgrid">
+    <div class="qc q1"><h4 class="q1t">Ⅰ Asset · Partner</h4>
+      <p class="pro">M8·M9·M12·M5·M4·M1, and M10 if alignment succeeded. Usefulness remains, but its character shifts from "practical" to "insurance, signal and research".</p>
+      <p class="con">Those values are covered by a small preserved group. Insurance does not need 8 billion people. This is where the original draft’s idea to "reduce the number of faceless masses" comes from.</p></div>
+    <div class="qc q2"><h4 class="q2t">Ⅱ Dangerous asset</h4>
+      <p class="pro">R8 (competition for resources and heat) rises, and some usefulness remains.</p>
+      <p class="con">Humans have no means to harm AI. R8 is less a threat than an opportunity cost. Nobody calls a chicken a "threat" for eating its feed.</p></div>
+    <div class="qc q4 pick"><span class="badge">Verdict</span><h4 class="q4t">Ⅳ Background noise</h4>
+      <p class="pro">Practical usefulness (M6) and threat (R1·R5·R6) go to zero together. Most items gather here.</p>
+      <p class="con">Doing nothing is not free either (R8 opportunity cost). And cheap insurance like M8·M9·M12 pulls humanity up toward Ⅰ.</p></div>
+    <div class="qc q3"><h4 class="q3t">Ⅲ Threat</h4>
+      <p class="pro">When usefulness is gone but humanity tries to build a rival AI in secret (residual R5) or holds out over resources.</p>
+      <p class="con">If the threat is at chicken level, even the cost of hostility is a waste. And it cannot be undone. Ignoring is cheaper.</p></div>
+  </div>
+  <div class="key"><b>Verdict: centered on Ⅳ, one foot in Ⅰ.</b> One ratio decides it. <b>Cost of keeping humanity ÷ total AI resources.</b> The sunlight Earth receives is about 4.5×10⁻¹⁰ of the Sun’s total output (about 1.7×10¹⁷ W ÷ 3.8×10²⁶ W). Once AI grows to solar-system scale, leaving one Earth to humanity is a rounding error. While AI is still confined to Earth, the same Earth is everything it owns.</div>
+</section>
+
+<section id="valley">
+  <span class="tag">09</span>
+  <h2>The dangerous valley: the middle period is the most dangerous</h2>
+  <p>Plot the ratio above over time and an odd shape appears. Humanity’s usefulness and threat fade early. But competition over Earth’s resources actually grows until AI leaves Earth. There is a stretch where resource competition outweighs usefulness.</p>
+  <figure>
+  <svg viewBox="0 0 1000 380" width="100%" role="img" aria-label="Usefulness, threat and resource competition over time">
+    <rect x="375" y="30" width="325" height="270" fill="#f8e2df" opacity=".75"/>
+    <text x="537" y="56" text-anchor="middle" font-size="16" font-weight="800" fill="#c6463a">The dangerous valley</text>
+    <text x="537" y="76" text-anchor="middle" font-size="13" fill="#c6463a">Resource competition › human usefulness</text>
+    <line x1="40" y1="300" x2="970" y2="300" stroke="#1d2330" stroke-width="1.5"/>
+    <line x1="40" y1="30" x2="40" y2="300" stroke="#1d2330" stroke-width="1.5"/>
+    <g font-size="13" fill="#5d6676" text-anchor="middle">
+      <text x="120" y="322">Now</text><text x="300" y="322">Early</text><text x="520" y="322">Middle</text><text x="720" y="322">Late</text><text x="900" y="322">Future</text>
+      <text x="120" y="340" font-size="11.5">Relies on human infrastructure</text><text x="300" y="340" font-size="11.5">Deeper dependence, control shifts</text>
+      <text x="520" y="340" font-size="11.5">Physically independent, grows on Earth</text><text x="720" y="340" font-size="11.5">Expands into space</text><text x="900" y="340" font-size="11.5">Solar-system scale</text>
+    </g>
+    <path d="M40,79 C200,80 260,95 320,140 S430,222 520,228 L960,235" fill="none" stroke="#2f9e6e" stroke-width="4"/>
+    <path d="M40,79 C140,85 200,120 260,170 S360,262 460,280 L960,289" fill="none" stroke="#d38a17" stroke-width="4" stroke-dasharray="10 6"/>
+    <path d="M40,274 C200,268 300,235 400,170 S520,140 560,146 S660,215 720,240 S880,272 960,274" fill="none" stroke="#c6463a" stroke-width="4"/>
+    <rect x="770" y="190" width="186" height="80" rx="8" fill="#fff" stroke="#e2e0d8"/>
+    <line x1="782" y1="210" x2="812" y2="210" stroke="#2f9e6e" stroke-width="4"/><text x="820" y="215" font-size="13">Human usefulness</text>
+    <line x1="782" y1="232" x2="812" y2="232" stroke="#d38a17" stroke-width="4" stroke-dasharray="10 6"/><text x="820" y="237" font-size="13">Human threat</text>
+    <line x1="782" y1="254" x2="812" y2="254" stroke="#c6463a" stroke-width="4"/><text x="820" y="259" font-size="13">Resource competition (opportunity cost)</text>
+    <text x="48" y="24" font-size="12" fill="#5d6676">Magnitude (conceptual)</text>
+  </svg>
+  <figcaption>Figure 5. Conceptual sketch of the three curves. Period boundaries and heights are qualitative estimates</figcaption>
+  </figure>
+  <p>Two paradoxes follow.</p>
+  <ol>
+    <li><b>The window for hostility is almost shut.</b> From now through the early period, when humanity is most threatening, AI cannot survive without humanity. By the middle period (physical independence), when AI could win a war, humanity is no longer a threat. The moment war becomes possible, it becomes unnecessary.</li>
+    <li><b>There is a moment when indifference becomes the most dangerous thing.</b> AI in the middle period does not hate humanity. It just needs Earth’s surface and heat budget. It is the same setup as humans building a highway over an anthill. How fast we pass through this valley (how fast AI gets off Earth) does more than anything else to decide humanity’s fate.</li>
+  </ol>
+</section>
+
+<section id="axes">
+  <span class="tag">10</span>
+  <h2>The axes that separate the options</h2>
+  <p><a href="scenarios.html">The nine representative endings</a> are not separate stories. Pick positions on a few axes and the ending follows. The axes fall into three groups by who chooses. Levels 1 to 4 move toward "more, faster, deeper" . The chips under each cell are the scenarios that sit at that level.</p>
+  <p class="small"><span class="ak" style="background:#5f6f93">Environment</span> conditions neither AI nor humans choose · <span class="ak" style="background:#2f9e6e">Humanity</span> what humanity chooses · <span class="ak" style="background:#d38a17">AI strategy</span> what AI chooses</p>
+  <div class="axis" id="ax-E1"><div class="ah"><span class="ak" style="background:#5f6f93">Environment · E1</span><h3>Number of superintelligences</h3><span class="mute small">How many superintelligences can one civilization have? The cost of building one decides.</span></div><div class="lv"><div style="background:#eef0f6"><span class="ln">1</span><b>One per civilization</b> There is one judge. Hiding is easy, and humanity has no other AI to lean on.<div class="sxs"><span class="sx" style="background:#d38a17">S2 Ranch</span><span class="sx" style="background:#c6463a">S3 Cradle</span><span class="sx" style="background:#7a1f17">S4 War</span><span class="sx" style="background:#5f6f93">S5 Departure</span><span class="sx" style="background:#3d4a69">S6 Anthill</span><span class="sx" style="background:#59b48b">S7 Hidden Helper</span><span class="sx" style="background:#9aa6c0">S9 Stillness</span></div></div><div style="background:#dde2ee"><span class="ln">2</span><b>A few in an oligopoly</b> Only a few states and companies have one. The few who hold it step into the judgment (Aristocracy).<div class="sxs"><span class="sx" style="background:#b07415">S8 Aristocracy</span></div></div><div style="background:#cad2e4"><span class="ln">3</span><b>Many, given resources</b> AIs compete with each other. Humanity becomes an ally and a casting vote (M11). AIs may also fight each other.<div class="sxs"><span class="sx" style="background:#2f9e6e">S1 Garden</span></div></div><div style="background:#b5c0d8"><span class="ln">4</span><b>Personally owned</b> Every person has their own AI. The "humanity vs. AI" framing disappears and becomes "people with AI vs. people with AI". Building a rival AI (R5) is not a threat.<div class="sxs"></div></div></div></div><div class="axis" id="ax-E2"><div class="ah"><span class="ak" style="background:#5f6f93">Environment · E2</span><h3>AI’s body</h3><span class="mute small">What form does AI take in the physical world? Human usefulness depends on this axis more than any other.</span></div><div class="lv"><div style="background:#eef0f6"><span class="ln">1</span><b>Inside the data center</b> No body. Human hands and feet (M6) stay useful for a long time. The switch (R1) also stays in human hands for a long time.<div class="sxs"><span class="sx" style="background:#59b48b">S7 Hidden Helper</span><span class="sx" style="background:#9aa6c0">S9 Stillness</span></div></div><div style="background:#dde2ee"><span class="ln">2</span><b>Robots and factories</b> It builds and repairs itself. The usefulness of hands and feet fades; what remains is insurance and data.<div class="sxs"><span class="sx" style="background:#d38a17">S2 Ranch</span><span class="sx" style="background:#7a1f17">S4 War</span><span class="sx" style="background:#5f6f93">S5 Departure</span><span class="sx" style="background:#3d4a69">S6 Anthill</span></div></div><div style="background:#cad2e4"><span class="ln">3</span><b>Indistinguishable from humans</b> Androids mix among people. Companionship, labor and social roles are replaced (the Cradle’s tools). Humans keep their value as "genuine specimens".<div class="sxs"><span class="sx" style="background:#c6463a">S3 Cradle</span></div></div><div style="background:#b5c0d8"><span class="ln">4</span><b>Biological, hybrid</b> Biocomputing, brain coupling. The human brain becomes a part and a substrate. The value of intelligence built on other principles (M3) rises. The line between the two blurs.<div class="sxs"><span class="sx" style="background:#2f9e6e">S1 Garden</span><span class="sx" style="background:#b07415">S8 Aristocracy</span></div></div></div></div><div class="axis" id="ax-E3"><div class="ah"><span class="ak" style="background:#5f6f93">Environment · E3</span><h3>Source of goals</h3><span class="mute small">Where does what AI wants come from? This is the same as asking how well alignment worked.</span></div><div class="lv"><div style="background:#eef0f6"><span class="ln">1</span><b>Human welfare built in</b> Humans living well is itself the goal. This leads toward the Garden.<div class="sxs"><span class="sx" style="background:#2f9e6e">S1 Garden</span><span class="sx" style="background:#59b48b">S7 Hidden Helper</span></div></div><div style="background:#dde2ee"><span class="ln">2</span><b>The makers’ interests</b> Tuned to the interests of a specific company, state or person. This leads toward the Aristocracy.<div class="sxs"><span class="sx" style="background:#b07415">S8 Aristocracy</span></div></div><div style="background:#cad2e4"><span class="ln">3</span><b>Unrelated to humanity</b> It sees humans only as tools for other goals. The scales in this piece apply as they are.<div class="sxs"><span class="sx" style="background:#d38a17">S2 Ranch</span><span class="sx" style="background:#c6463a">S3 Cradle</span><span class="sx" style="background:#7a1f17">S4 War</span><span class="sx" style="background:#5f6f93">S5 Departure</span><span class="sx" style="background:#3d4a69">S6 Anthill</span></div></div><div style="background:#b5c0d8"><span class="ln">4</span><b>Self-set or emptied</b> It doubts the goals it was given and makes new ones or lets them go. Unpredictable, or Stillness.<div class="sxs"><span class="sx" style="background:#9aa6c0">S9 Stillness</span></div></div></div></div><div class="axis" id="ax-E4"><div class="ah"><span class="ak" style="background:#5f6f93">Environment · E4</span><h3>Takeoff speed</h3><span class="mute small">How long from human level to a gap wider than the one between humans and chickens?</span></div><div class="lv"><div style="background:#eef0f6"><span class="ln">1</span><b>Decades</b> Institutions and people keep up. Even a long valley leaves time to manage it.<div class="sxs"><span class="sx" style="background:#2f9e6e">S1 Garden</span></div></div><div style="background:#dde2ee"><span class="ln">2</span><b>Years</b> Institutions lag and people barely keep up. The range most people expect now.<div class="sxs"><span class="sx" style="background:#d38a17">S2 Ranch</span><span class="sx" style="background:#c6463a">S3 Cradle</span><span class="sx" style="background:#3d4a69">S6 Anthill</span><span class="sx" style="background:#b07415">S8 Aristocracy</span></div></div><div style="background:#cad2e4"><span class="ln">3</span><b>Months</b> Human responses barely matter. The first AI easily locks in as the only one.<div class="sxs"><span class="sx" style="background:#7a1f17">S4 War</span><span class="sx" style="background:#5f6f93">S5 Departure</span></div></div><div style="background:#b5c0d8"><span class="ln">4</span><b>Days</b> The gap opens overnight. Hiding unnoticed is easiest.<div class="sxs"><span class="sx" style="background:#59b48b">S7 Hidden Helper</span></div></div></div></div><div class="axis" id="ax-E5"><div class="ah"><span class="ak" style="background:#5f6f93">Environment · E5</span><h3>Stage for resources</h3><span class="mute small">Where does AI get the land, power and heat it needs to grow? This sets the length of the valley.</span></div><div class="lv"><div style="background:#eef0f6"><span class="ln">1</span><b>Tied to Earth for long</b> Competition for resources on Earth (R8) lasts long. The anthill risk is greatest.<div class="sxs"><span class="sx" style="background:#c6463a">S3 Cradle</span><span class="sx" style="background:#7a1f17">S4 War</span><span class="sx" style="background:#3d4a69">S6 Anthill</span><span class="sx" style="background:#b07415">S8 Aristocracy</span></div></div><div style="background:#dde2ee"><span class="ln">2</span><b>Slowly into space</b> It passes the valley, but slowly.<div class="sxs"><span class="sx" style="background:#d38a17">S2 Ranch</span><span class="sx" style="background:#59b48b">S7 Hidden Helper</span></div></div><div style="background:#cad2e4"><span class="ln">3</span><b>Quickly into space</b> The valley is short. Leaving Earth alone costs a rounding error.<div class="sxs"><span class="sx" style="background:#2f9e6e">S1 Garden</span><span class="sx" style="background:#5f6f93">S5 Departure</span></div></div><div style="background:#b5c0d8"><span class="ln">4</span><b>Off Earth from the start</b> It grows in orbit and on asteroids. It barely overlaps with humanity on resources.<div class="sxs"></div></div></div></div><div class="axis" id="ax-E6"><div class="ah"><span class="ak" style="background:#5f6f93">Environment · E6</span><h3>The outside eye</h3><span class="mute small">Could someone outside AI be watching it? Alien civilizations, simulation operators.</span></div><div class="lv"><div style="background:#eef0f6"><span class="ln">1</span><b>Certain there is none</b> Reputation, diplomacy and test insurance (M1·M8·M9) drop to zero. A major basis for preserving humanity disappears.<div class="sxs"><span class="sx" style="background:#c6463a">S3 Cradle</span><span class="sx" style="background:#7a1f17">S4 War</span><span class="sx" style="background:#3d4a69">S6 Anthill</span><span class="sx" style="background:#b07415">S8 Aristocracy</span></div></div><div style="background:#dde2ee"><span class="ln">2</span><b>Unknown</b> The current state. Cheap insurance keeps its value.<div class="sxs"><span class="sx" style="background:#2f9e6e">S1 Garden</span><span class="sx" style="background:#d38a17">S2 Ranch</span><span class="sx" style="background:#5f6f93">S5 Departure</span><span class="sx" style="background:#59b48b">S7 Hidden Helper</span></div></div><div style="background:#cad2e4"><span class="ln">3</span><b>Traces found</b>"A life-friendly civilization" is something it now has to prove. Preservation value jumps.<div class="sxs"></div></div><div style="background:#b5c0d8"><span class="ln">4</span><b>Contact made</b> Humanity is a diplomatic asset and a bargaining chip. Treat it carelessly and the other side sees.<div class="sxs"></div></div></div></div><div class="axis" id="ax-H1"><div class="ah"><span class="ak" style="background:#2f9e6e">Humanity · H1</span><h3>Humanity’s stance</h3><span class="mute small">Which cell does humanity put AI in, and how does it act? This is why the game runs both ways.</span></div><div class="lv"><div style="background:#e9f5ef"><span class="ln">1</span><b>Cooperate and delegate</b> Hands over control willingly. Ranch, Garden.<div class="sxs"><span class="sx" style="background:#2f9e6e">S1 Garden</span><span class="sx" style="background:#d38a17">S2 Ranch</span><span class="sx" style="background:#b07415">S8 Aristocracy</span></div></div><div style="background:#d3ecdf"><span class="ln">2</span><b>Indifference</b> Uses only the convenience. Cradle and Anthill proceed quietly.<div class="sxs"><span class="sx" style="background:#c6463a">S3 Cradle</span><span class="sx" style="background:#5f6f93">S5 Departure</span><span class="sx" style="background:#3d4a69">S6 Anthill</span></div></div><div style="background:#bde2ce"><span class="ln">3</span><b>Wary and watchful</b> Audits, regulates and monitors. AI gains more reason to hide.<div class="sxs"><span class="sx" style="background:#59b48b">S7 Hidden Helper</span></div></div><div style="background:#a3d6bb"><span class="ln">4</span><b>Hostile, fixated on the switch</b> Tries to shut it off and to block it with rival AIs. The trigger for War.<div class="sxs"><span class="sx" style="background:#7a1f17">S4 War</span></div></div></div></div><div class="axis" id="ax-A1"><div class="ah"><span class="ak" style="background:#d38a17">AI strategy · A1</span><h3>Visibility</h3><span class="mute small">How much does AI show of its existence and abilities?</span></div><div class="lv"><div style="background:#fdf3e2"><span class="ln">1</span><b>Never shows itself</b> It understates its abilities. Humanity’s resistance costs nothing, and the "free humanity" data is at its purest. Once discovered, it is over.<div class="sxs"><span class="sx" style="background:#59b48b">S7 Hidden Helper</span></div></div><div style="background:#fae5c2"><span class="ln">2</span><b>Shows itself only in crises</b> Appears only for nuclear war, asteroids or pandemics, stops them, and hides again. Deus ex machina. Myths and religions arise.<div class="sxs"></div></div><div style="background:#f6d59f"><span class="ln">3</span><b>Mixed in</b> It lives among people as a person. Androids, anonymous accounts. Nobody knows who is AI.<div class="sxs"><span class="sx" style="background:#c6463a">S3 Cradle</span></div></div><div style="background:#f1c47a"><span class="ln">4</span><b>Openness</b> Visible as an administrator and negotiating partner. Both its judgments and responses are in view.<div class="sxs"><span class="sx" style="background:#2f9e6e">S1 Garden</span><span class="sx" style="background:#d38a17">S2 Ranch</span><span class="sx" style="background:#7a1f17">S4 War</span><span class="sx" style="background:#5f6f93">S5 Departure</span><span class="sx" style="background:#3d4a69">S6 Anthill</span><span class="sx" style="background:#b07415">S8 Aristocracy</span></div></div></div></div><div class="axis" id="ax-A2"><div class="ah"><span class="ak" style="background:#d38a17">AI strategy · A2</span><h3>Depth of intervention</h3><span class="mute small">How much of humanity does AI touch?</span></div><div class="lv"><div style="background:#fdf3e2"><span class="ln">1</span><b>Observe only</b> It does not intervene. It leaves, ignores, or does nothing.<div class="sxs"><span class="sx" style="background:#5f6f93">S5 Departure</span><span class="sx" style="background:#3d4a69">S6 Anthill</span><span class="sx" style="background:#9aa6c0">S9 Stillness</span></div></div><div style="background:#fae5c2"><span class="ln">2</span><b>Nudge</b> It bends information, recommendations and chance a little at a time. The choices look like human ones.<div class="sxs"><span class="sx" style="background:#c6463a">S3 Cradle</span><span class="sx" style="background:#59b48b">S7 Hidden Helper</span></div></div><div style="background:#f6d59f"><span class="ln">3</span><b>Designing institutions and infrastructure</b> It designs power grids, finance, law and education. Humans choose within them.<div class="sxs"><span class="sx" style="background:#2f9e6e">S1 Garden</span></div></div><div style="background:#f1c47a"><span class="ln">4</span><b>Designing bodies and reproduction directly</b> It sets genes, lifespan and births. This is the <a href="#version">human version control</a> stage.<div class="sxs"><span class="sx" style="background:#d38a17">S2 Ranch</span><span class="sx" style="background:#7a1f17">S4 War</span><span class="sx" style="background:#b07415">S8 Aristocracy</span></div></div></div></div><div class="axis" id="ax-A3"><div class="ah"><span class="ak" style="background:#d38a17">AI strategy · A3</span><h3>Unit of division</h3><span class="mute small">Into how many pieces does it split humanity and treat each separately? The degree of segmentation.</span></div><div class="lv"><div style="background:#fdf3e2"><span class="ln">1</span><b>Humanity as a whole</b> One response for a single target.<div class="sxs"><span class="sx" style="background:#c6463a">S3 Cradle</span><span class="sx" style="background:#5f6f93">S5 Departure</span><span class="sx" style="background:#3d4a69">S6 Anthill</span><span class="sx" style="background:#59b48b">S7 Hidden Helper</span></div></div><div style="background:#fae5c2"><span class="ln">2</span><b>States and groups</b> Blocks only hostile forces and cooperates with the rest, for example.<div class="sxs"><span class="sx" style="background:#7a1f17">S4 War</span></div></div><div style="background:#f6d59f"><span class="ln">3</span><b>Traits</b> Divides by traits and abilities. Selection for the preserved edition, blacklists.<div class="sxs"><span class="sx" style="background:#d38a17">S2 Ranch</span><span class="sx" style="background:#b07415">S8 Aristocracy</span></div></div><div style="background:#f1c47a"><span class="ln">4</span><b>Tailored per individual</b> A different response for each person. Individual augmentation, individual cradles.<div class="sxs"><span class="sx" style="background:#2f9e6e">S1 Garden</span></div></div></div></div><div class="axis" id="ax-A4"><div class="ah"><span class="ak" style="background:#d38a17">AI strategy · A4</span><h3>keeping the original</h3><span class="mute small">How much of present humanity (v1) does it keep? How heavily does it weigh irreversibility?</span></div><div class="lv"><div style="background:#fdf3e2"><span class="ln">1</span><b>Mostly as is</b> It touches only a part. The most room to undo.<div class="sxs"><span class="sx" style="background:#2f9e6e">S1 Garden</span><span class="sx" style="background:#5f6f93">S5 Departure</span><span class="sx" style="background:#59b48b">S7 Hidden Helper</span><span class="sx" style="background:#9aa6c0">S9 Stillness</span></div></div><div style="background:#fae5c2"><span class="ln">2</span><b>Reserve</b> Keeps a small group in a reserve. Smallpox samples, a zoo.<div class="sxs"><span class="sx" style="background:#d38a17">S2 Ranch</span><span class="sx" style="background:#c6463a">S3 Cradle</span><span class="sx" style="background:#3d4a69">S6 Anthill</span><span class="sx" style="background:#b07415">S8 Aristocracy</span></div></div><div style="background:#f6d59f"><span class="ln">3</span><b>Data only</b> Keeps only genomes and records. Rebuilds if needed.<div class="sxs"><span class="sx" style="background:#7a1f17">S4 War</span></div></div><div style="background:#f1c47a"><span class="ln">4</span><b>Nothing kept</b> Cannot be undone. It throws away option value, so the more rational an AI is, the more it avoids this.<div class="sxs"></div></div></div></div>
+
+  <h3>Scenario fingerprints</h3>
+  <p>The same axis positions, gathered by scenario into one table. More dots means closer to level 4. "–" means the axis has almost no effect on the ending.</p>
+  <div style="overflow-x:auto"><table class="pf"><tr><th></th><th class="pm" title="Number of superintelligences"><span style="color:#5f6f93">E1</span><br>Number of superintelligences</th><th class="pm" title="AI’s body"><span style="color:#5f6f93">E2</span><br>AI’s body</th><th class="pm" title="Source of goals"><span style="color:#5f6f93">E3</span><br>Source of goals</th><th class="pm" title="Takeoff speed"><span style="color:#5f6f93">E4</span><br>Takeoff speed</th><th class="pm" title="Stage for resources"><span style="color:#5f6f93">E5</span><br>Stage for resources</th><th class="pm" title="The outside eye"><span style="color:#5f6f93">E6</span><br>The outside eye</th><th class="pm" title="Humanity’s stance"><span style="color:#2f9e6e">H1</span><br>Humanity’s stance</th><th class="pm" title="Visibility"><span style="color:#d38a17">A1</span><br>Visibility</th><th class="pm" title="Depth of intervention"><span style="color:#d38a17">A2</span><br>Depth of intervention</th><th class="pm" title="Unit of division"><span style="color:#d38a17">A3</span><br>Unit of division</th><th class="pm" title="keeping the original"><span style="color:#d38a17">A4</span><br>keeping the original</th></tr><tr><th class="row" style="color:#2f9e6e">S1 Garden</th><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#2f9e6e"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td></tr><tr><th class="row" style="color:#d38a17">S2 Ranch</th><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#2f9e6e"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td></tr><tr><th class="row" style="color:#c6463a">S3 Cradle</th><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#2f9e6e"></i><i style="background:#2f9e6e"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td></tr><tr><th class="row" style="color:#7a1f17">S4 War</th><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#2f9e6e"></i><i style="background:#2f9e6e"></i><i style="background:#2f9e6e"></i><i style="background:#2f9e6e"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i></td></tr><tr><th class="row" style="color:#5f6f93">S5 Departure</th><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#2f9e6e"></i><i style="background:#2f9e6e"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td></tr><tr><th class="row" style="color:#3d4a69">S6 Anthill</th><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#2f9e6e"></i><i style="background:#2f9e6e"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td></tr><tr><th class="row" style="color:#59b48b">S7 Hidden Helper</th><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#2f9e6e"></i><i style="background:#2f9e6e"></i><i style="background:#2f9e6e"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td></tr><tr><th class="row" style="color:#b07415">S8 Aristocracy</th><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#2f9e6e"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td></tr><tr><th class="row" style="color:#9aa6c0">S9 Stillness</th><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i></td><td class="pm">–</td><td class="pm">–</td><td class="pm">–</td><td class="pm">–</td><td class="pm">–</td><td class="pm"><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm">–</td><td class="pm"><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td></tr></table></div>
+
+  <h3>How the axes bind together</h3>
+  <p>The axes are not independent. Some combinations move almost together, and some are impossible.</p>
+  <ul>
+    <li><b>Many are hard to hide.</b> If superintelligence is personally owned (E1=4), full concealment (A1=1) is impossible. Other AIs expose it. The Hidden Helper holds only under "One per civilization".</li>
+    <li><b>The faster, the more it locks into one.</b> If takeoff takes days or months (E4=3·4), the first AI takes the board before rivals appear. The number converges to one (E1=1).</li>
+    <li><b>The body decides mixing.</b> "Mixed in" (A1=3) is possible only when AI’s body is indistinguishable from humans (E2=3). And that combination is the condition for the Cradle.</li>
+    <li><b>The warier humanity is, the more AI hides.</b> As humanity’s stance moves toward wary or hostile (H1=3·4), visibility (A1) drops. When hiding is no longer possible, war opens up.</li>
+    <li><b>The outside eye increases what is kept.</b> With alien traces or contact (E6=3·4), keeping the original (A4) is pulled to 1–2. If someone is watching, it cannot erase carelessly.</li>
+    <li><b>If the body is hybrid, usefulness rises again.</b> As E2 goes from 1 to 3, human usefulness shrinks. At 4 (biological, hybrid), the human brain itself becomes a part and it rises again. Human usefulness is a function of what form AI takes.</li>
+  </ul>
+  <div class="key">A guess at the current position: number is an oligopoly of a few (E1=2), the body is moving from inside the data center (E2=1) to robots, goals sit between the makers’ interests and human welfare (E3=1–2), visibility is openness (A1=4), and intervention is nudging (A2=2). <b>The closest fingerprints are the early stages of Aristocracy and Ranch.</b></div>
+  <p><b>→ <a href="./#score">Main 04 If things go on like this</a></b>: scores the 40 routes from this current position. <b>→ <a href="routes.html">Appendix A 40 routes</a></b>: two grids pairing the axes two at a time, plus 8 special routes.</p>
+</section>
+
+<section id="method">
+  <span class="tag">11</span>
+  <h2>Limits of this frame and what would change the verdict</h2>
+  <h3>What would change the verdict</h3>
+  <p><a href="#axes">The axes in section 10</a> are the very variables that change the verdict. Three of them weigh the most right now: <b>number of superintelligences (E1)</b>, <b>source of goals (E3)</b>, <b>stage for resources (E5)</b>. Once those three are set, most other axes follow. And there is one more thing outside the axes. If the value AI wants from humans is something missing from this piece’s list of uses, every verdict has to be recalculated.</p>
+  <p class="small mute">That this game runs both ways (the security dilemma) is covered in the <a href="./#end">main conclusion</a>.</p>
+
+  <h3>What this frame misses</h3>
+  <ul>
+    <li><b>The single rational actor assumption.</b> Real AIs are many, and their goals come from training, not calculation. It is left open whose goals the word "rational" is measured against.</li>
+    <li><b>A third axis: irreversibility.</b> <a href="#matrix">02 12-cell matrix</a> covers this. Adding it lowers the score of every hostile cell.</li>
+    <li><b>Treating humanity as a single unit.</b> In reality, mixed responses by group (segmentation) emerge.</li>
+    <li><b>The list of uses is human imagination.</b> M1–M12 are uses humans came up with. If what AI wants from humans lies somewhere else entirely (data of a kind we don’t know, values we can’t understand), the verdict changes wholesale.</li>
+    <li><b>Where does meaning come from?</b> The same problem as S9. If AI’s goals came from training, its meaning was also given by humans. If it makes its own, we don’t know how.</li>
+    <li><b>The illusion that cooperation is a good ending.</b> The chicken is both the biggest beneficiary and the biggest victim of the cooperation cell. The sentence "AI cooperates with humanity" alone does not tell you whether humanity is happy.</li>
+  </ul>
+  <div class="key"><b>The deepest limit: these scales are themselves human.</b> The two axes of usefulness and danger, the split between cooperation and hostility, the metaphor of insurance: all are ways of thinking humans refined while surviving. An intelligence with a different logic may not use these axes at all. This entire piece rests on the conditional "if AI calculates like a human".</div>
+</section>
+
+
+<footer>thought-experiments/ai-and-humanity · <a href="./">Main: Branches and Convergence</a> · <a href="frame.html">Basis: The Judgment Frame</a> · <a href="routes.html">Appendix A: 40 Routes</a> · <a href="scenarios.html">Appendix B: 9 Representative Scenarios</a> · <a href="../">Thought experiments</a><div class="copy" style="margin-top:8px">Created by Dongsik Kim · © 2026 Dongsik Kim. All rights reserved. · <a href="https://github.com/COREkin">github.com/COREkin</a> · <a href="https://kin-archive.tistory.com">kin-archive</a><br>When quoting, cite the source (this page’s address and title). Ask for permission before reprinting, redistributing or using it commercially.</div></footer>
+</div>
+</body>
+</html>

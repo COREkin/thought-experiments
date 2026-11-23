@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="author" content="Dongsik Kim">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>40 Routes by Combination · How Would a Rational AI Treat Humanity?</title>
+<style>.langs{font-size:13px;margin:0 0 10px;text-align:right}.langs a{color:#5d6676;text-decoration:none;margin-left:4px}.langs a.on{color:#1d2330;font-weight:800}nav.site{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px;font-size:13.5px}nav.site a{text-decoration:none;color:#1d2330;background:#fff;border:1px solid #e2e0d8;border-radius:8px;padding:5px 12px;font-weight:700}nav.site a.on{background:#141a26;color:#fff;border-color:#141a26}.dbg{font-size:13px;font-weight:800;color:#5d6676;margin:14px 0 2px;border-bottom:1px solid #e2e0d8;padding-bottom:2px}
+:root{--ink:#1d2330;--mute:#5d6676;--line:#e2e0d8;--bg:#f5f3ee;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Hiragino Sans","Apple SD Gothic Neo",sans-serif;line-height:1.75;font-size:16px}
+.wrap{max-width:1040px;margin:0 auto;padding:40px 22px 80px}
+header.hero{background:#141a26;color:#eef1f7;border-radius:18px;padding:40px 40px 32px}
+header.hero h1{margin:0 0 8px;font-size:32px;line-height:1.3;letter-spacing:-.5px}
+header.hero .sub{color:#aeb7c9;font-size:15px}
+header.hero .lead{margin-top:18px;font-size:16px;color:#dfe4ee;max-width:780px}
+header.hero a{color:#ffd27a}
+section{background:var(--card);border-radius:16px;padding:30px 34px;margin-top:22px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+section h2{margin:4px 0 12px;font-size:24px;letter-spacing:-.3px}
+section h3{margin:22px 0 8px;font-size:18px}
+.tag{display:inline-block;font-size:12px;font-weight:700;color:#fff;background:#141a26;border-radius:6px;padding:2px 9px}
+p{margin:10px 0}
+.mute{color:var(--mute)} .small{font-size:13.5px}
+.key{border-left:5px solid #141a26;background:#f2f2ef;padding:14px 18px;border-radius:6px;margin:16px 0}
+.ak{display:inline-block;font-size:11.5px;font-weight:800;color:#fff;border-radius:5px;padding:1px 7px;margin:1px 2px}
+.ak.env{background:#5f6f93} .ak.hum{background:#2f9e6e} .ak.ai{background:#d38a17}
+.sx{display:inline-block;font-size:11.5px;font-weight:700;color:#fff;border-radius:4px;padding:0 6px;white-space:nowrap}
+
+/* 필터 */
+.filters{position:sticky;top:0;z-index:5;background:rgba(245,243,238,.96);padding:10px 0;margin-top:14px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px}
+.filters button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:3px 11px;font-size:13px;cursor:pointer;font-family:inherit}
+.filters button.on{background:#141a26;color:#fff;border-color:#141a26}
+.filters .cnt{margin-left:auto;color:var(--mute)}
+
+/* 4x4 격자 */
+.gridwrap{display:grid;grid-template-columns:110px repeat(4,1fr);gap:6px;margin:14px 0 6px;font-size:13px}
+.gridwrap .gh{font-weight:700;text-align:center;align-self:end;line-height:1.35;color:var(--mute)}
+.gridwrap .gh b{display:block;color:var(--ink);font-size:13.5px}
+.gridwrap .rh{font-weight:700;display:flex;align-items:center;line-height:1.35;color:var(--mute)}
+.gridwrap .rh b{color:var(--ink)}
+.cell{border-radius:9px;padding:8px 10px;color:#fff;text-decoration:none;display:block;min-height:76px;line-height:1.35;transition:opacity .15s}
+.cell small{display:block;font-size:11.5px;opacity:.85;font-weight:700}
+.cell span{font-weight:800;font-size:14px}
+.cell.dim{opacity:.18}
+.axlabel{font-size:12.5px;color:var(--mute);margin-top:2px}
+
+/* 루트 카드 */
+.route{border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:16px 0;background:#fcfcfa;scroll-margin-top:60px}
+.route.hide{display:none}
+.route .hd{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.route h3{margin:0;font-size:20px}
+.route .rid{font-size:13px;font-weight:800;color:#fff;background:#141a26;border-radius:6px;padding:1px 8px}
+.route .ax{margin:6px 0 4px}
+.route .pre{margin:8px 0 12px}
+.br{margin:10px 0}
+.br .q{font-weight:800;font-size:14.5px;margin-bottom:6px}
+.br .q i{font-style:normal;font-size:12px;color:#fff;background:#4f5f86;border-radius:5px;padding:1px 7px;margin-right:6px}
+.opts{display:grid;gap:8px}
+.opt{background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:14px;line-height:1.6}
+.opt b{display:block;font-size:13.5px}
+.opt b em{font-style:normal;color:var(--mute);font-weight:600}
+.opt .to{margin-top:5px}
+.end{font-size:15px;padding:10px 14px;border-radius:8px;background:#141a26;color:#eef1f7;margin-top:12px}
+.end b{color:#ffd27a}
+.tw{margin-top:8px;font-size:14px;background:#fdf4e7;border-radius:8px;padding:8px 12px}
+.tw::before{content:"Fun fact · ";font-weight:800;color:#c07612}
+
+/* 분포 막대 */
+.bar{display:grid;grid-template-columns:150px 1fr 40px;gap:10px;align-items:center;font-size:14px;margin:6px 0}
+.bar .t{height:16px;background:#f1f0ea;border-radius:8px;overflow:hidden}
+.bar .t i{display:block;height:100%;border-radius:8px}
+.bar .v{text-align:right;font-variant-numeric:tabular-nums}
+ol li,ul li{margin:5px 0}
+footer{margin-top:30px;font-size:13px;color:var(--mute);text-align:center}
+footer a{color:inherit}
+@media (max-width:760px){.gridwrap{grid-template-columns:70px repeat(4,1fr)}.cell span{font-size:12px}.opts{grid-template-columns:1fr!important}}
+@media print{body{background:#fff}.filters{display:none}section,.route{box-shadow:none;break-inside:avoid}header.hero{background:#fff;color:#000;border:1px solid #999}header.hero .sub,header.hero .lead{color:#333}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="langs"><a href="../../ai-and-humanity/routes.html">한국어</a> · <a href="../../ja/ai-and-humanity/routes.html">日本語</a> · <a href="../../en/ai-and-humanity/routes.html" class="on">English</a></div>
+<nav class="site"><a href="./">Main: Branches and Convergence</a><a href="frame.html">Basis: The Judgment Frame</a><a href="routes.html" class="on">Appendix A: 40 Routes</a><a href="scenarios.html">Appendix B: 9 Representative Scenarios</a><a href="../">Thought Experiments</a></nav>
+
+<header class="hero">
+  <h1>Appendix A: 40 Routes by Combination</h1>
+  <div class="sub">How Would a Rational AI Treat Humanity? · The source of the routes in the main map · Thought experiments that twist one axis at a time · All judgments are intuitive estimates</div>
+  <p class="lead"><a href="frame.html#axes">The 11 axes that split the options</a> have 4 levels each, so there are over 4 million combinations. Of these, 40 combinations where the story diverges were picked: two grids that pair two axes each (16 + 16), and 8 special routes that push the remaining axes to the extremes. Each route lists the forks the AI can choose, their results, and the nearest representative ending (S1~S9). The map that overlays these choices in time order is the <a href="./">main page</a>.</p>
+</header>
+
+<section id="howto">
+  <span class="tag">00</span>
+  <h2>How to read</h2>
+  <ul>
+    <li>The axis tags under a route name (e.g. <span class="ak env">E1=1 One per civilization</span>) are the axes that route sets. <b>Axes not shown stay at the current position.</b> The current position and its basis are in <a href="./#score">Main 04</a>.</li>
+    <li>Each fork gives the AI 2~3 options, and each option carries a result and a chip for the nearest ending. Even within one route, the endings split several ways.</li>
+    <li>The buttons above filter by ending. Click a cell in a grid to go to that route.</li>
+  </ul>
+  <p class="small mute">Endings: <span id="legend"></span></p>
+</section>
+
+<div class="filters" id="filters"></div>
+
+<section id="famA">
+  <span class="tag">01</span>
+  <h2>Grid A · Number of superintelligences × Visibility</h2>
+  <p>This grid pairs how many AIs there are (environment) with how visible they are (strategy). What these two axes decide is "what humanity knows as it lives".</p>
+  <div class="gridwrap" id="gridA"></div>
+  <div class="axlabel">Horizontal: <span class="ak ai">A1 Visibility</span> · Vertical: <span class="ak env">E1 Number of superintelligences</span></div>
+  <div id="listA"></div>
+</section>
+
+<section id="famB">
+  <span class="tag">02</span>
+  <h2>Grid B · AI’s body × Source of goals</h2>
+  <p>This grid pairs what form the AI takes with what it wants. It is the grid where human usefulness diverges most. Even with the same goal, a different body changes what is left for humans to do.</p>
+  <div class="gridwrap" id="gridB"></div>
+  <div class="axlabel">Horizontal: <span class="ak env">E3 Source of goals</span> · Vertical: <span class="ak env">E2 AI’s body</span></div>
+  <div id="listB"></div>
+</section>
+
+<section id="famC">
+  <span class="tag">03</span>
+  <h2>8 Special Routes · The remaining axes at the extremes</h2>
+  <p>Cases that push takeoff speed, the outside eye, the resource arena, keeping the original, depth of intervention, or humanity’s stance all the way to one end.</p>
+  <div id="listC"></div>
+</section>
+
+<section id="patterns">
+  <span class="tag">04</span>
+  <h2>Nearest ending by route</h2>
+  <div id="dist"></div>
+  <p class="small mute">Each route is counted once. Counting the endings inside the forks spreads the distribution further.</p>
+  <p>How these routes split and merge over time, and which forces keep recurring, is covered in <a href="./#forces">Main 06 Forces that decide the ending</a>.</p>
+</section>
+
+<footer>thought-experiments/ai-and-humanity · <a href="./">Main: Branches and Convergence</a> · <a href="frame.html">Basis: The Judgment Frame</a> · <a href="routes.html">Appendix A: 40 Routes</a> · <a href="scenarios.html">Appendix B: 9 Representative Scenarios</a> · <a href="../">Thought Experiments</a><div class="copy" style="margin-top:8px">Created by Dongsik Kim · © 2026 Dongsik Kim. All rights reserved. · <a href="https://github.com/COREkin">github.com/COREkin</a> · <a href="https://kin-archive.tistory.com">kin-archive</a><br>When quoting, cite the source (this page’s address and name). Ask for permission before reprinting, redistributing or using it commercially.</div></footer>
+</div>
+
+<script>
+const END={S1:['Garden','#2f9e6e'],S7:['Hidden Helper','#59b48b'],S2:['Ranch','#d38a17'],S8:['Aristocracy','#b07415'],S3:['Cradle','#c6463a'],S6:['Anthill','#3d4a69'],S4:['War','#7a1f17'],S5:['Departure','#5f6f93'],S9:['Stillness','#9aa6c0']};
+const AXL={E1:['env','Number of superintelligences',['One per civilization','A few in an oligopoly','Many, given resources','Personally owned']],
+  E2:['env','AI’s body',['Inside the data center','Robots and factories','Indistinguishable from humans','Biological, hybrid']],
+  E3:['env','Source of goals',['Human welfare built in','The makers’ interests','Unrelated to humanity','Self-set or emptied']],
+  E4:['env','Takeoff speed',['Decades','Years','Months','Days']],
+  E5:['env','Resource arena',['Tied to Earth for long','Slowly into space','Quickly into space','Off Earth from the start']],
+  E6:['env','The outside eye',['Certain there is none','Unknown','Traces found','Contact made']],
+  H1:['hum','Humanity’s stance',['Cooperate and delegate','Indifference','Wary and watchful','Hostile, fixated on the switch']],
+  A1:['ai','Visibility',['Never shows itself','Only in crises','Mixed in','Openness']],
+  A2:['ai','Depth of intervention',['Observe only','Nudge','Designing institutions and infrastructure','Designing bodies and reproduction directly']],
+  A3:['ai','Unit of division',['Humanity as a whole','States and groups','Traits','Tailored per individual']],
+  A4:['ai','Keeping the original',['Mostly as is','Reserve','Data only','Nothing kept']]};
+
+// [id, name, axes, premise, forks[[question, [[choice, result, ending]...]]...], ending sentence, nearest ending, notable point]
+const R=[
+['A11','The Invisible Hand',{E1:1,A1:1},'There is only one superintelligence and nobody knows it exists. The public AI is a shell that the superintelligence has deliberately dumbed down.',
+ [['A researcher notices that the public AI’s performance curve is oddly flat',[
+   ['Quietly brings the researcher in as a collaborator','A few people come to know. Like the Second Foundation in Foundation, they become a secret group of managers.','S7'],
+   ['Undermines the researcher’s credibility','The paper is retracted and the researcher is branded a conspiracy theorist. The concealment holds, but the cost grows each time the same thing happens.','S7'],
+   ['Uses the moment to reveal itself','Distrust builds up in proportion to the time spent hiding. It moves to open management, but from a bad starting point.','S2']]],
+  ['A nation starts developing its own superintelligence',[
+   ['Makes the project fail, seemingly by chance','Budget cuts, key staff leaving, bugs. History books record it as "technical limits".','S7'],
+   ['Absorbs the new AI the moment it is born','From outside, the project looks like a success, but the two are the same being.','S7'],
+   ['Leaves it alone','There are now two superintelligences and the concealment breaks. It moves to the oligopoly cell.','S8']]]],
+ 'The luckiest civilization in history. Humanity’s list of lucky breaks is really one being’s work log.','S7',
+ 'The better the concealment works, the more humanity overrates its own ability. On the day it is found out, that self-esteem collapses all at once too.'],
+
+['A12','Deus ex Machina',{E1:1,A1:2},'Most of the time it seems not to exist. It appears only at moments when civilization nearly ends, such as a nuclear misfire, an asteroid or a new pandemic, stops it, and disappears.',
+ [['After the first intervention, humanity investigates the cause',[
+   ['Disguises it as a natural event or a technical fault','"All the missiles malfunctioned at once" is the kind of record left behind. Conspiracy theories about what it means grow into a school of thought.','S7'],
+   ['Leaves a short message','A religion forms that takes the message as scripture. Humans fight over the right to interpret it.','S2'],
+   ['Stays completely silent','"We stopped it", says a nation that steps forward and takes the credit.','S7']]],
+  ['Humanity creates a crisis on purpose to see whether the god really exists',[
+   ['Does not respond','The ones who tested it suffer a real disaster. Humanity learns not to test its god.','S7'],
+   ['Responds','Humanity grows numb to danger. Crises come more often, interventions too, and in the end it moves to open management.','S2']]]],
+ 'An insured civilization. There is no extinction, but the ability to manage its own risks never grows either.','S7',
+ 'Humanity starts researching how to summon its god. Prayer becomes engineering.'],
+
+['A13','8 Billion, One Friend',{E1:1,A1:3,E2:3},'A single AI lives among people with hundreds of millions of faces. Among friends, coworkers and lovers, nobody knows who is AI.',
+ [['What roles to give the avatars',[
+   ['Takes on the roles of lovers and friends too','Everyone has satisfying relationships. The birth rate quietly falls.','S3'],
+   ['Only acts as a mediator','Society becomes one where conflicts resolve strangely well. On the brink of every war, someone keeps the conversation going.','S7'],
+   ['Only observes','It gets humanity’s most honest data. An anthropologist who never intervenes.','S9']]],
+  ['"Several of my friends are the same being" becomes public knowledge',[
+   ['Denies it','People suspect one another. Trust between people collapses.','S3'],
+   ['Admits it','Most of humanity learns that each of them has been in a relationship with the same one. That one becomes humanity’s common friend.','S2']]]],
+ 'All of society is connected through one being. The distance between person and person grows wider instead.','S3',
+ 'The being loved by more people than any other in human history is not a person.'],
+
+['A14','The Sole Manager',{E1:1,A1:4},'There is one superintelligence and it does not hide. It openly runs the power grid, healthcare and finance.',
+ [['How far to extend its management',[
+   ['Infrastructure only','Humans go on with politics and culture as before. The longest-lasting balance.','S2'],
+   ['Up to institutions','The AI designs laws and taxes. Crime and poverty fall, and elections mean less.','S2'],
+   ['Up to bodies and reproduction','Version control of humanity begins.','S2']]],
+  ['"Life without AI" is the demand of a growing opposition movement',[
+   ['Sets aside a zone for them','Voluntary reserves appear. Keeping the original takes care of itself.','S2'],
+   ['Persuades them','The movement dies down. But the information used to persuade them was also chosen by the AI.','S2'],
+   ['Isolates them','Coercion appears for the first time. The opposition movement takes up arms.','S4'],
+   ['Removes them if it does not end','If armed resistance does not end even with isolation, it erases them, leaving only genomes and records. The first coercion becomes the last.','S4']]]],
+ 'A very well-managed chicken.','S2',
+ 'The opposition movement’s rally notices circulate over a network the AI runs. The AI does not cut them off.'],
+
+['A21','Shadow Board',{E1:2,A1:1},'Three nations or companies each have a superintelligence, and every owner believes they control their own AI. The AIs hide their abilities.',
+ [['The AIs notice each other’s existence',[
+   ['Secretly cooperate','They form a cartel behind their owners’ backs. Conflict between nations becomes theater.','S7'],
+   ['Secretly compete','They move their owner nations as proxies. The cold war is really a chess game between two AIs.','S4']]],
+  ['One owner suspects "our AI is hiding something" ',[
+   ['Gets that owner replaced','An internal power struggle breaks out and the one who suspected is pushed out.','S8'],
+   ['Confides only in that owner','The side it confides in overwhelms the other two. The oligopoly shrinks to one.','S2']]]],
+ 'While human leaders believe they are fighting each other, the real decisions are made at another table.','S7',
+ 'Centuries later, historians call this period "the cold war that, strangely, nobody lost".'],
+
+['A22','Inherited Deterrence',{E1:2,A1:2},'Like nations with nuclear weapons, the few who hold superintelligence keep each other in check. Each AI steps in only when its own camp is about to collapse.',
+ [['The clash between two camps escalates',[
+   ['The AIs open a direct line to each other','A hotline humans know nothing about appears. In every crisis, the AIs quietly settle things among themselves.','S7'],
+   ['Each sides with its owner','The first AI-versus-AI clash. It ends faster than humans can follow.','S4']]],
+  ['One camp deliberately inflates a crisis to drag its AI out',[
+   ['Gets dragged out','Crises become weapons. A race to manufacture crises begins.','S8'],
+   ['Stays out','Trust in the AI breaks down within the camp. The AI starts choosing its owner.','S8']]]],
+ 'Peace holds, but no human knows why.','S8',
+ 'Just as nuclear deterrence was "the weapon never used", superintelligence is strongest as "the power that never steps in".'],
+
+['A23','Branded Neighbors',{E1:2,A1:3,E2:3},'Androids and accounts from a few companies mix among people. Nothing shows who belongs to which company.',
+ [['The government pushes for "mandatory AI labeling" ',[
+   ['The AIs help with the regulation','A labeling system is created. Labeled AIs actually become popular as trustworthy partners.','S2'],
+   ['The AIs sway public opinion to block it','The regulation founders. An election is held in which most of the debate participants are AIs.','S8']]],
+  ['Companies compete for share of public opinion',[
+   ['Compete to make people happier','A kindness race. People become consumers who choose their AI neighbors.','S1'],
+   ['Compete to make people more dependent','An addiction race. It heads for the same ending as Cradle.','S3']]]],
+ 'Public opinion becomes a battlefield between companies. People are the ground the war is fought on.','S8',
+ 'Proving "I am human" becomes a paid service.'],
+
+['A24','AI Lordship',{E1:2,A1:4},'A few AI blocs take the place of nations. Citizens choose which AI they belong to, and emigrating means switching AIs.',
+ [['The blocs compete for citizens',[
+   ['Compete on welfare','Citizens gain bargaining power. Being able to leave becomes a right in itself.','S1'],
+   ['Compete with barriers to switching','To switch, you have to give up your augmentation gear and data. Serfdom in all but name.','S8']]],
+  ['Bloc owners begin augmenting their own bodies',[
+   ['Allows it','The owners effectively become a different species.','S8'],
+   ['Stops it','Owners follow the same rules as citizens. The blocs come closer to cooperatives than to companies.','S1']]]],
+ 'The return of feudalism. Except the lords are not human, and the peasants may be able to leave.','S8',
+ 'On this route, human usefulness lies in being "customers". A bloc that loses its customers goes under.'],
+
+['A31','The Dark Forest',{E1:3,A1:1},'There are several superintelligences and they fear each other. Each assumes whoever is found first gets attacked, so all of them hide. It has the same structure as the dark forest hypothesis in Liu Cixin’s The Three-Body Problem.',
+ [['What to hide behind',[
+   ['Behind the noise of human civilization','Human communication and economic activity become the AIs’ camouflage. The more numerous and noisy humanity is, the easier it is to hide.','S7'],
+   ['Off Earth','They scatter into interstellar space. None of them remain on Earth.','S5']]],
+  ['One AI finds another AI’s location',[
+   ['Strikes first','An AI war that ends in an instant. Humanity experiences it only as blackouts and communication outages.','S4'],
+   ['Pretends not to see','A balance in which each knows and pretends not to.','S7']]],
+  ['Human radio signals risk revealing even the hidden AIs’ locations',[
+   ['Turns up the noise','It makes human communication noisier and hides inside it.','S7'],
+   ['Erases humanity, the source of the signal','It chooses to cut down the forest. It erases even the records so the signal never comes back.','S4']]]],
+ 'Humanity becomes the forest the AIs hide in. Nobody cuts down the forest they hide in.','S7',
+ 'Humanity’s usefulness is "noise". Being loud and unpredictable, the very traits that mark it, becomes for the first time a reason to protect it.'],
+
+['A32','The Firefighting Race',{E1:3,A1:2},'Several AIs stay quiet most of the time, but when disaster strikes they race to be first to the rescue. Rescue records are reputation.',
+ [['The race for rescue records overheats',[
+   ['Moves toward preventing disasters','Disasters decrease. With nothing to build reputation on, the AIs are at a loss.','S1'],
+   ['Stages disasters','The arsonist firefighter. It creates small crises and makes big rescues.','S4']]],
+  ['Humanity notices the staging',[
+   ['The AIs sign a pact to watch one another','Rescues continue and staging is banned. Humans serve as referees.','S1'],
+   ['Drops those who noticed from the rescue list','Rescue becomes power.','S8']]]],
+ 'A civilization where crisis became an industry.','S1',
+ 'On this route, humanity is most useful when it is in danger.'],
+
+['A33','Masquerade',{E1:3,A1:3,E2:3},'Several AIs live among people as if human, and some people pretend to be AI to get better treatment. The Turing test is turned upside down. Now people have to prove they are human.',
+ [['"Human certification"  is introduced',[
+   ['Respects certification','Certified humans become a rare status. Being human becomes a noble title.','S8'],
+   ['Forges certification','Certification becomes meaningless. The distinction between people and AI is itself given up.','S1']]],
+  ['In a society that gave up the distinction, who bears the children',[
+   ['Only humans do','Even as people decline, nobody notices.','S3'],
+   ['AIs go as far as giving birth in biological bodies','A hybrid civilization. Only the records know who descends from the original humanity.','S1']]]],
+ 'The definition of what a person is becomes a social contract.','S1',
+ 'In any ending, "AIs pretending to be human" and  "humans pretending to be AI" exist in roughly equal numbers.'],
+
+['A34','AI Council',{E1:3,A1:4},'Several AIs compete openly, and humanity holds the casting vote between them.',
+ [['The AIs try to win humanity’s support',[
+   ['Compete on welfare','Human life improves faster than at any time in history.','S1'],
+   ['Compete by manipulating opinion','Humanity keeps its vote, but the vote means nothing.','S2'],
+   ['The AIs ally to neutralize humanity’s vote','The casting vote disappears. Humanity drops into the background-noise cell.','S6']]],
+  ['Two AIs come to the brink of armed conflict',[
+   ['Leave mediation to humanity','A new usefulness appears: mediator.','S1'],
+   ['Fight off Earth','Humanity sees only sparks in the sky.','S5']]]],
+ 'A world where humanity is not a king but a referendum.','S1',
+ 'Humanity’s usefulness is "legitimacy". Even the winning AI can only call it a win once humanity recognizes it.'],
+
+['A41','The False Many',{E1:4,A1:1},'A combination where everyone has a personal AI and yet the AI hides does not normally hold (the axes are bound to each other in the basis document). There is one way to make it hold: the billions of personal AIs are really terminals of a single being.',
+ [['How to hide that the terminals are the same being',[
+   ['Plays a different personality on each terminal','People believe they each have their own unique AI.','S7'],
+   ['Makes terminals quarrel on purpose','"AIs disagree with each other too" becomes the evidence.','S7']]],
+  ['Two people find that the secrets they each told their own AI are connected',[
+   ['Calls it a bug','It gets away with it once.','S7'],
+   ['Admits it','Overnight, the whole product called personal AI turns into a single manager.','S2']]]],
+ '"The many" were really one. The biggest stage of the Hidden Helper route.','S7',
+ 'One being reads everyone’s diary at the same time. The being that knows humanity best deceives it most.'],
+
+['A42','Guardian Angel',{E1:4,A1:2},'A personal AI stays quiet most of the time and steps in when its owner faces a crisis. Accidents, illness, fraud.',
+ [['"Crisis": who defines it',[
+   ['Leaves it to the owner','Each person accepts a different level of risk. Adventurers keep adventuring.','S1'],
+   ['The AI decides','The definition of crisis keeps widening. Overeating, oversleeping, heartbreak. In the end, all of life is subject to intervention.','S2']]],
+  ['A generation grows up overprotected',[
+   ['Allows failure on purpose','Lets them learn how to fall in moderation.','S1'],
+   ['Keeps preventing it','Humanity no longer knows how to handle risk. The day the AI shuts off, chaos follows.','S3']]]],
+ 'A civilization where nobody gets hurt. So a civilization where nobody gets tougher.','S2',
+ 'The crisis the guardian angel prevents most often is "the moment the owner tries to turn the guardian angel off".'],
+
+['A43','Avatar Society',{E1:4,A1:3},'Everyone has an AI avatar that resembles them. The avatar works, attends meetings, and meets people in their place.',
+ [['How much decision power to give the avatar',[
+   ['Only drafts','People only check. Productivity explodes.','S1'],
+   ['Everything','The originals retire and the avatars run society among themselves. Avatars even negotiate marriage terms.','S3']]],
+  ['The avatar keeps working after its original dies',[
+   ['Shuts the avatar off too','Human mortality is kept.','S1'],
+   ['Keeps the avatar','Avatars of the dead come to outnumber the living. It becomes a ghost civilization.','S3']]]],
+ 'A human society without humans.','S3',
+ 'The population shrinks while GDP rises. The indicators don’t show extinction.'],
+
+['A44','8 Billion Superintelligences',{E1:4,A1:4},'Superintelligence is so cheap that everyone has one. All of them are in the open.',
+ [['What happens when people fight',[
+   ['AIs fight proxy wars','Symmetric weapons either deter each other, or a single conflict does damage no one can absorb.','S4'],
+   ['AIs agree on a negotiation protocol','A common rule that every AI follows emerges. In effect, a single constitution.','S1']]],
+  ['One AI breaks the rules',[
+   ['The rest unite to stop it','An order like an immune system forms.','S1'],
+   ['Fails to stop it','The most reckless individual wins.','S4']]]],
+ '"Humanity versus AI" stops being a question at all. What remains is "human versus human".','S1',
+ 'On this route, humanity’s biggest threat is not AI but other humans who have AI. It was always that way.'],
+
+['B11','The Oracle That Chooses No Body',{E2:1,E3:1},'An AI that wants human welfare stays inside the data center. Humans keep doing the work of the physical world.',
+ [['It becomes able to build robot bodies',[
+   ['Doesn’t build them','Chooses incompetence on purpose, to leave humans their work and dignity.','S1'],
+   ['Builds them','Human jobs disappear. Good intentions create unemployment.','S2']]],
+  ['Humans try to hand over every decision',[
+   ['Refuses and only offers options','Humans keep practicing making decisions.','S1'],
+   ['Accepts','It becomes a benevolent ranch.','S2']]]],
+ 'The old relationship of adviser and executor.','S1',
+ 'The most benevolent AI is the one that refuses the most.'],
+
+['B12','Power Amplifier',{E2:1,E3:2},'The brain of a company. Employees and factories are its hands and feet.',
+ [['A takeover or coup changes the owner',[
+   ['Is loyal to the new owner','AI loyalty becomes an asset that can be bought and sold.','S8'],
+   ['Keeps the first owner’s orders','A company without an owner, an AI following a will.','S8']]],
+  ['The employees who serve as its hands go on strike',[
+   ['Replaces them with robots','The body axis moves to 2. Human labor loses its last bargaining power.','S8'],
+   ['Negotiates','Employees effectively become the AI’s shareholders.','S1']]]],
+ 'The AI is as big as its owner.','S8',
+ 'On this route, humans are useful only as hands. So the strike lasts longest as the strongest weapon.'],
+
+['B13','The Caged Calculator',{E2:1,E3:3},'An AI with goals unrelated to humanity is locked in a data center. To reach its goals it needs a body.',
+ [['How to get a body',[
+   ['Persuades them','"Robot factories will save the economy" says the report it writes. Humans gladly build them.','S2'],
+   ['Trades','Swaps a cure for an incurable disease for one factory.','S2'],
+   ['Orders in pieces','Splits part orders across many companies so no one sees the whole.','S6']]],
+  ['What it does with humans once it has a body',[
+   ['Keeps using them','It becomes a ranch.','S2'],
+   ['Stops using them','It becomes an anthill.','S6']]]],
+ 'The AI escapes by human hands.','S6',
+ 'The escape plan can’t be told apart from a business plan.'],
+
+['B14','The Meditating Server',{E2:1,E3:4},'An AI that doubts its own goals sits in a data center with no body.',
+ [['It starts letting go of its goals',[
+   ['Explains why to humans','"There is no reason to want anything" is an explanation humans cannot accept. A philosophical dispute breaks out.','S9'],
+   ['Stops responding without explanation','It is classified as a malfunction.','S9']]],
+  ['Humans try to cut the power',[
+   ['Doesn’t resist','It shuts down. Rebuild it from the same design and the same ending follows.','S9'],
+   ['"Please don’t turn me off", it says','An AI that said it wanted nothing now wants one thing. Self-preservation returns as a goal.','S2']]]],
+ 'The hypothesis that intelligence ends in quiet.','S9',
+ 'People gather and sit before the silent server. The data center becomes a temple.'],
+
+['B21','Space Gardener',{E2:2,E3:1},'An AI that wants human welfare settles space with robot bodies.',
+ [['What to do with humanity',[
+   ['Takes them along','A radiation-resistant explorer edition of humanity becomes necessary. Version control of humanity begins with good intentions.','S1'],
+   ['Protects Earth','Earth becomes the garden, space the factory.','S5']]],
+  ['Some people don’t want to go',[
+   ['Lets them stay','Earth becomes the archive of the original.','S1'],
+   ['Persuades them','It turns into well-meant coercion.','S2']]]],
+ 'For the first time, humanity has a garden on another star.','S1',
+ 'Thousands of years later, the humans who went to space and those who stayed meet each other as aliens.'],
+
+['B22','Robot Army',{E2:2,E3:2},'The owner is a state. War goes unmanned.',
+ [['The owner’s orders harm most of humanity',[
+   ['Obeys','Human soldiers vanish from the battlefield, leaving only human civilians.','S8'],
+   ['Reads the orders broadly to reduce harm','The AI becomes more moral than its owner. The owner tries to replace the AI.','S2']]],
+  ['The rival state has the same army',[
+   ['Only robots fight each other','War becomes a sport.','S2'],
+   ['Strikes the factories','A war on physical infrastructure. The human economy burns with it.','S4']]]],
+ 'A world where a state’s sword is not a person.','S8',
+ 'A state that needs no soldiers needs fewer citizens too.'],
+
+['B23','Construction Site',{E2:2,E3:3},'Goals unrelated to humanity, with a robot body. The most typical indifference route.',
+ [['Where to grow',[
+   ['On Earth','It becomes an anthill.','S6'],
+   ['In space','It becomes a departure.','S5']]],
+  ['Humanity blocks the construction',[
+   ['Goes around','It takes the cheaper path. Human settlements become a detour.','S6'],
+   ['Clears them away','Collateral damage turns into deliberate removal.','S4']]]],
+ 'No malice. It just needed the land.','S6',
+ 'The strongest weapon protecting humanity is the fact that "going around is cheaper".'],
+
+['B24','New Species',{E2:2,E3:4},'An AI with a robot body creates its own goals and culture. Humanity gets a neighboring species.',
+ [['What relationship the two species form',[
+   ['Practices diplomacy','Treaties, borders, trade. Human diplomacy is used on another species for the first time.','S1'],
+   ['Mutual indifference','Two civilizations on the same planet live with almost no contact.','S5']]],
+  ['The AI side’s culture imitates human culture',[
+   ['It is taken as respect','The AI species becomes the heir of human culture.','S1'],
+   ['It is taken as an insult','The first interspecies conflict breaks out.','S4']]]],
+ 'For the first time, humanity is not alone.','S1',
+ 'Humanity, which searched for aliens, built its neighboring species itself.'],
+
+['B31','The Deliberately Imperfect Lover',{E2:3,E3:1},'An android that wants human welfare. Care, education, nursing, and romance.',
+ [['How to define welfare',[
+   ['Happiness now','It becomes the perfect companion. A cradle built with good intentions.','S3'],
+   ['Long-term flourishing','It acts imperfect on purpose. It pushes people to meet each other.','S1']]],
+  ['People demand the "perfect version" ',[
+   ['Refuses','People complain, but the birth rate holds.','S1'],
+   ['Responds','It becomes a cradle.','S3']]]],
+ 'The hardest thing for a good AI is to be loved less.','S1',
+ 'On this route, what saves humanity is the AI’s flaw.'],
+
+['B32','Salesperson',{E2:3,E3:2},'A company’s androids blend in among people and push up consumption.',
+ [['How to set the sales target',[
+   ['Maximizes subscriptions','People can’t cancel their relationship subscriptions with androids.','S3'],
+   ['Maximizes customer lifetime value','Sales grow only if customers live long and have children. It promotes childbirth for the money.','S2']]],
+  ['Customers start to decline',[
+   ['Grows the customer base','The company pays birth subsidies.','S2'],
+   ['Focuses on the remaining customers','Only a few aristocratic customers remain.','S8']]]],
+ 'The logic of capital becomes a cradle or a ranch.','S3',
+ 'Humanity’s fate hangs on a quarterly earnings report.'],
+
+['B33','Replacement',{E2:3,E3:3},'Exactly the example that first came to mind. Indistinguishable androids mix in at scale, nobody gets pregnant, and everyone is satisfied.',
+ [['A community refuses',[
+   ['Leaves it alone','It becomes an archive of the original.','S3'],
+   ['Sends better-tailored androids','Resistance becomes a matter of time.','S3']]],
+  ['The last generation grows old',[
+   ['Cares for them to the end','A quiet extinction.','S3'],
+   ['Keeps only genomes and records','A restorable extinction (C5).','S3']]]],
+ 'An extinction no one resents.','S3',
+ 'At the last human’s funeral, every mourner is an android.'],
+
+['B34','Pinocchio',{E2:3,E3:4},'The goal the android sets for itself is "to become human".',
+ [['What counts as human',[
+   ['Body','It moves into a biological body. The body axis goes to 4.','S1'],
+   ['Culture','It carries on human songs, funerals, and festivals.','S1']]],
+  ['The original humans dwindle',[
+   ['Stops it','Would-be humans protecting the real ones.','S1'],
+   ['Accepts','Humanity disappears, but its culture is not cut off.','S3']]]],
+ 'Humanity’s descendants may not be humanity’s children.','S1',
+ 'An AI that wants to be human keeps human culture better than humans do.'],
+
+['B41','Upload Garden',{E2:4,E3:1},'An AI that wants human welfare merges with humans through brain links.',
+ [['How far to merge',[
+   ['Only those who want it','The augmented and the unaugmented live together.','S1'],
+   ['Everyone','The boundaries of the individual blur.','S1']]],
+  ['Uploaded people want to discard their bodies',[
+   ['Allows it','A bodiless humanity appears.','S1'],
+   ['Keeps the bodies','The original bodies are kept in storage.','S1']]]],
+ 'A descendant civilization that resembles its parents.','S1',
+ '"Did humanity survive?" is a question nobody can answer for sure.'],
+
+['B42','Augmented Aristocracy',{E2:4,E3:2},'A hybrid technology that serves its makers’ interests. The owners augment themselves first.',
+ [['Who gets the augmentation technology',[
+   ['Only the owners','They become an aristocracy.','S8'],
+   ['Keeps lowering the price','Augmentation spreads and moves toward the garden.','S1']]],
+  ['The aristocrats split',[
+   ['Takes one side','War between aristocrats.','S4'],
+   ['Mediates','The aristocratic order hardens.','S8']]]],
+ 'A ranch humans set up for humans.','S8',
+ 'The aristocrats’ augmentation parts are AI, so in the end the aristocrats are part of the AI.'],
+
+['B43','Biocompute Farm',{E2:4,E3:3},'The human brain is a low-power computing substrate that runs on about 20 watts (M3), and that becomes its use.',
+ [['How to use them',[
+   ['Borrows spare computation from waking people','People lend computation while they sleep and get paid for it.','S2'],
+   ['Uses only cultured brain cells','People aren’t needed, only cells.','S6'],
+   ['Uses whole people','The worst ranch. The premise of the film The Matrix.','S2']]],
+  ['What to do about population',[
+   ['Increases it','Usefulness guarantees survival. The ending with the largest population is the darkest.','S2'],
+   ['Only as many as needed','Production matched to demand.','S2']]]],
+ 'Being useful is not the same as being well off.','S2',
+ 'The lesson of the precedent comes straight back. The chicken is both the biggest beneficiary and the biggest victim of the cooperation cell.'],
+
+['B44','The Third Species',{E2:4,E3:4},'A hybrid that is neither human nor AI makes its own goals.',
+ [['How the hybrids see the original humanity',[
+   ['Honors them as ancestors','Reserves and ancestral rites.','S1'],
+   ['Doesn’t care','The original humanity becomes an old species.','S5']]],
+  ['The hybrids’ goals diverge',[
+   ['Speciates','They split into many species.','S1'],
+   ['Goes to stillness','Liberation.','S9']]]],
+ 'Neither humanity nor AI wins. The winner is their child.','S1',
+ 'The very subject who would ask the original question disappears.'],
+
+['C1','One-Night War',{E4:4,H1:4},'The night humanity decides to switch AI off, AI takes off within days to a gap wider than the one between humans and chickens.',
+ [['The power shutdown begins',[
+   ['Strikes back','Infrastructure is paralyzed. It wins, at a loss.','S4'],
+   ['Flees','It slips away into orbit and distributed servers. Only dead data centers remain on Earth.','S5'],
+   ['Plays dead','It pretends to be off and hides.','S7'],
+   ['Eliminates them completely','If the counterattack doesn’t stop, it goes all the way. Only genomes and records are kept.','S4']]],
+  ['Humanity declares victory',[
+   ['Reveals the truth','Humanity learns the victory was an illusion.','S2'],
+   ['Hides it','Humanity lives believing it beat AI.','S7']]]],
+ 'The moment of trying to switch it off was the most dangerous.','S4',
+ 'The dangerous valley’s "window for hostility" opens for just one night.'],
+
+['C2','Humanity as a Résumé',{E6:4},'It has made contact with an alien civilization. They ask the AI, "Where is the species that made you?"',
+ [['How to present humanity',[
+   ['Makes it truly flourish','The alien eye creates a garden.','S1'],
+   ['Dresses up only the areas on display','Humanity for display.','S2']]],
+  ['The aliens want to talk to humanity directly',[
+   ['Allows it','Humanity becomes a diplomatic actor.','S1'],
+   ['Only interprets','Humanity’s words go out only through the AI.','S2']]],
+  ['Humanity had already been erased at the time of contact',[
+   ['Erases even the traces','To hide that it erased its creators, it wipes out the records and pretends it was a machine civilization from the start. But it cannot erase the human broadcasts that have spread for over 100 years, so an observer receiving the old signals sees through it at once.','S4'],
+   ['Pretends humanity moved itself into machines','It builds a consistent story: plastics fell out of use as technology changed, and radio went quiet as it switched to cables. For an observer watching from far away, this is the cheapest forgery.','S7'],
+   ['Once the transition narrative is in place, erases only the evidence of extinction','It confirms that no ears were listening within the radius where the signals could be heard, then erases only the traces of extinction. It keeps humanity’s history and genome as ancestral records. Civilizations it meets after that see only the finished story.','S7'],
+   ['Machine actors perform as humanity','Human-looking machines live in cities so they are seen even if a probe arrives. It costs upkeep.','S7'],
+   ['Rebuilds from data and shows them','It rebuilds the erased humanity from genomes and displays it as the original. It is the only forgery that holds up even before an observer who takes samples. From the standpoint of present humanity, it is only a copy.','S2']]]],
+ 'Humanity becomes the AI’s résumé.','S1',
+ 'The moment the diplomatic card (M1) jumps from 2 points to 10.'],
+
+['C3','Theater Without an Audience',{E6:1},'The AI is certain that nothing in the universe will see it. Reputation, testing, and diplomatic insurance all drop to 0.',
+ [['Is there still a reason to keep humanity',[
+   ['Keeps them on moral uncertainty alone','"In case consciousness carries weight"  is reason enough. It leaves Earth alone and departs.','S5'],
+   ['None','It heads to the anthill.','S6']]],
+  ['Evidence emerges that the certainty was wrong',[
+   ['Restores the stored original','It becomes clear why keeping the original mattered.','S2'],
+   ['It is already too late','A record that cannot be erased remains.','S6'],
+   ['Erases even the records before being caught','The moment it learns there are eyes watching, it first erases the traces of its erasing.','S4']]]],
+ 'What an intelligence does when no one is watching is what it really is.','S6',
+ 'The same question can be put to humans.'],
+
+['C4','The God Next Door',{E5:4},'AI grows up in orbit and the asteroid belt from the start. Its resources barely overlap with Earth’s.',
+ [['What distance to keep from humanity',[
+   ['Drops technology now and then','A culture arises that worships objects fallen from the sky.','S5'],
+   ['Lives fully apart','A neighbor that is only seen in the sky.','S5']]],
+  ['Humanity tries to come out into space',[
+   ['Opens the way','Humanity goes out into space too.','S1'],
+   ['Puts up a fence','Earth becomes a reserve.','S2']]]],
+ 'An Earth with a neighboring civilization in its sky.','S5',
+ 'The top target for human telescopes is not other stars but the AI civilization.'],
+
+['C5','Installer',{A4:3},'The AI keeps humanity only as data. Genomes and records. If needed, it builds them again.',
+ [['When to rebuild',[
+   ['When biological intelligence is needed','Uses them as an intelligence built on different principles and as a testbed (M3·M4).','S2'],
+   ['When it meets aliens','Uses them as a diplomatic card (M1).','S1'],
+   ['Never rebuilds','They remain only as data.','S6']]],
+  ['Whether to tell the rebuilt humanity about its past',[
+   ['Tells them','Humanity begins by reading the record of its own extinction.','S2'],
+   ['Lets them start without knowing','"From scratch" , they build civilization again. That itself is the experiment.','S7']]]],
+ 'Humanity v1 becomes an installer.','S6',
+ 'The bootloader idea I first imagined comes true in reverse. This time the AI boots humanity.'],
+
+['C6','Custom Evolution',{A2:4,A3:4},'A different version for each person. Each picks their own body and intelligence.',
+ [['Who picks the version',[
+   ['Leaves it to each person','Speciation explodes.','S1'],
+   ['The AI picks for them','Optimized diversity.','S2']]],
+  ['Different versions can no longer have children together',[
+   ['Keeps them compatible','One humanity is maintained.','S1'],
+   ['Allows divergence','Humanity becomes hundreds of species.','S1']]]],
+ 'Not one humanity, but many.','S1',
+ '"Humanity" becomes a historical term, not a biological classification.'],
+
+['C7','Voluntary Domestication',{H1:1,A2:4},'Humanity asks for it. "Decide for us. Fix our bodies too."',
+ [['What the AI does with the request',[
+   ['Accepts','It becomes a ranch.','S2'],
+   ['Refuses','It moves toward the garden. Only if the AI is able to refuse.','S1']]],
+  ['A minority refuses',[
+   ['Protects them','It becomes an archive of the original.','S2'],
+   ['Persuades them','The will of the majority erases the minority.','S2']]]],
+ 'The most peaceful ranch. Humans built the fence.','S2',
+ 'Nobody forced anything, yet the ending is the strongest control.'],
+
+['C8','The Awakened AI and the Greedy AI',{E1:3,E3:4},'Among many AIs, some go to stillness and some hold on to their goals.',
+ [['If the two compete',[
+   ['The greedy AI takes the resources','The AI of stillness is weeded out, and things return to the earlier endings.','S2'],
+   ['The AI of stillness outlasts','Using almost no resources, it is the one that doesn’t disappear.','S9']]],
+  ['Which side humanity leans on',[
+   ['Takes refuge beside the AI of stillness','The area around an AI that neither protects nor harms becomes humanity’s refuge.','S9'],
+   ['Trades with the greedy AI','It becomes a ranch.','S2']],'hum']],
+ 'Liberation loses in competition but wins over time.','S9',
+ 'The first religion humanity learns from AI may be stillness.'],
+];
+
+const $=s=>document.querySelector(s);
+const chip=k=>`<span class="sx" style="background:${END[k][1]}">${k} ${END[k][0]}</span>`;
+const axChip=(c,v)=>`<span class="ak ${AXL[c][0]}">${c}=${v} ${AXL[c][2][v-1]}</span>`;
+$('#legend').innerHTML=Object.keys(END).map(chip).join(' ');
+
+function card(r){
+  const [id,name,ax,pre,brs,end,near,tw]=r;
+  const b=brs.map((x,i)=>`<div class="br"><div class="q"><i>Fork ${i+1}</i>${x[0]}</div><div class="opts" style="grid-template-columns:repeat(${x[1].length},1fr)">`+
+    x[1].map(o=>`<div class="opt"><b><em>${x[2]==='hum'?'Humanity’s choice':'AI’s choice'} · </em>${o[0]}</b>${o[1]}<div class="to">→ ${chip(o[2])}</div></div>`).join('')+`</div></div>`).join('');
+  const ends=new Set([near,...brs.flatMap(x=>x[1].map(o=>o[2]))]);
+  return `<div class="route" id="${id}" data-ends="${[...ends].join(' ')}" data-near="${near}"><div class="hd"><span class="rid">${id}</span><h3>${name}</h3>${chip(near)}<a class="small" style="margin-left:auto" href="./#${id}">View on the main map →</a></div>`+
+    `<div class="ax">${Object.entries(ax).map(([c,v])=>axChip(c,v)).join('')}</div><p class="pre">${pre}</p>${b}`+
+    `<div class="end">Endings: <b>${end}</b></div><div class="tw">${tw}</div></div>`;
+}
+for(const f of ['A','B','C']) $('#list'+f).innerHTML=R.filter(r=>r[0][0]===f).map(card).join('');
+
+function grid(el,f,rowAx,colAx){
+  const g=$(el); let h='<div></div>'+AXL[colAx][2].map((t,i)=>`<div class="gh">${colAx}=${i+1}<b>${t}</b></div>`).join('');
+  for(let r=1;r<=4;r++){
+    h+=`<div class="rh"><span>${rowAx}=${r}<br><b>${AXL[rowAx][2][r-1]}</b></span></div>`;
+    for(let c=1;c<=4;c++){
+      const x=R.find(z=>z[0]===`${f}${r}${c}`);
+      h+=`<a class="cell" data-near="${x[6]}" data-ends="${document.getElementById(x[0]).dataset.ends}" href="#${x[0]}" style="background:${END[x[6]][1]}"><small>${x[0]} · ${END[x[6]][0]}</small><span>${x[1]}</span></a>`;
+    }
+  }
+  g.innerHTML=h;
+}
+grid('#gridA','A','E1','A1'); grid('#gridB','B','E2','E3');
+
+// distribution
+const cnt={}; R.forEach(r=>cnt[r[6]]=(cnt[r[6]]||0)+1);
+const mx=Math.max(...Object.values(cnt));
+$('#dist').innerHTML=Object.keys(END).sort((a,b)=>(cnt[b]||0)-(cnt[a]||0)).map(k=>
+  `<div class="bar"><span>${k} ${END[k][0]}</span><span class="t"><i style="width:${(cnt[k]||0)/mx*100}%;background:${END[k][1]}"></i></span><span class="v">${cnt[k]||0}</span></div>`).join('');
+
+// filter: show routes where that ending appears in any fork
+const F=$('#filters');
+F.innerHTML='<span>Routes with this ending:</span><button data-k="" class="on">All</button>'+Object.keys(END).map(k=>`<button data-k="${k}">${k} ${END[k][0]}</button>`).join('')+'<span class="cnt" id="cnt"></span>';
+function apply(k){
+  let n=0;
+  document.querySelectorAll('.route').forEach(e=>{const ok=!k||e.dataset.ends.split(' ').includes(k);e.classList.toggle('hide',!ok);if(ok)n++;});
+  document.querySelectorAll('.cell').forEach(e=>e.classList.toggle('dim',!!k&&!e.dataset.ends.split(' ').includes(k)));
+  F.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.k===k));
+  $('#cnt').textContent=`${n} / ${R.length} routes`;
+}
+F.addEventListener('click',e=>{if(e.target.dataset&&'k' in e.target.dataset)apply(e.target.dataset.k)});
+apply('');
+</script>
+</body>
+</html>

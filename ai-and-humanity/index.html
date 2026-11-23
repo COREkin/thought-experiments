@@ -2,9 +2,10 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
+<meta name="author" content="김동식 (Dongsik Kim)">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>합리적인 AI는 인류를 어떻게 대할까</title>
-<style>
+<style>.langs{font-size:13px;margin:0 0 10px;text-align:right}.langs a{color:#5d6676;text-decoration:none;margin-left:4px}.langs a.on{color:#1d2330;font-weight:800}
 :root{--ink:#1d2330;--mute:#5d6676;--line:#e2e0d8;--bg:#f5f3ee;--card:#fff}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Hiragino Sans","Apple SD Gothic Neo",sans-serif;line-height:1.75;font-size:16px}
@@ -126,6 +127,7 @@ footer a{color:inherit}
 </head>
 <body>
 <div class="wrap">
+<div class="langs"><a href="../ai-and-humanity/" class="on">한국어</a> · <a href="../ja/ai-and-humanity/">日本語</a> · <a href="../en/ai-and-humanity/">English</a></div>
 <nav class="site"><a href="./" class="on">메인: 갈래와 수렴</a><a href="frame.html">근거: 판단 틀</a><a href="routes.html">부록 A: 루트 40개</a><a href="scenarios.html">부록 B: 대표 시나리오 9편</a><a href="../">사고 실험 목록</a></nav>
 <header class="hero">
   <h1>합리적인 AI는 인류를 어떻게 대할까</h1>
@@ -356,7 +358,7 @@ footer a{color:inherit}
   <p class="small mute">이 지도 전체가 "AI가 인간처럼 쓸모와 위험을 계산한다면"이라는 조건문 위에 있다. 이 틀이 놓친 것은 <a href="frame.html#method">이 틀의 한계</a>에 모았다.</p>
 </section>
 
-<footer>thought-experiments/ai-and-humanity · <a href="./">메인: 갈래와 수렴</a> · <a href="frame.html">근거: 판단 틀</a> · <a href="routes.html">부록 A: 루트 40개</a> · <a href="scenarios.html">부록 B: 대표 시나리오 9편</a> · <a href="../">사고 실험 목록</a></footer>
+<footer>thought-experiments/ai-and-humanity · <a href="./">메인: 갈래와 수렴</a> · <a href="frame.html">근거: 판단 틀</a> · <a href="routes.html">부록 A: 루트 40개</a> · <a href="scenarios.html">부록 B: 대표 시나리오 9편</a> · <a href="../">사고 실험 목록</a><div class="copy" style="margin-top:8px">만든 사람: 김동식 (Dongsik Kim) · © 2026 Dongsik Kim. All rights reserved. · <a href="https://github.com/COREkin">github.com/COREkin</a> · <a href="https://kin-archive.tistory.com">kin-archive</a><br>인용할 때는 출처(이 페이지 주소와 이름)를 밝혀 주세요. 전재·재배포·상업적 이용은 허락을 받아 주세요.</div></footer>
 </div>
 
 <script>
@@ -608,7 +610,11 @@ ORD.forEach((row,i)=>{const slot=(Rx-L)/row.length;row.forEach((n,j)=>{pos[n]={c
 const H=TOP+(ORD.length-1)*GAP+NH+24;
 const svg=$('#flow');svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
 const seg=(a,b)=>{const A=pos[a],B=pos[b],y1=A.y+NH,y2=B.y,m=(y1+y2)/2;return `M${A.cx},${y1} C${A.cx},${m} ${B.cx},${m} ${B.cx},${y2}`};
-function wrap(s,w){const mx=Math.max(2,Math.floor((w-6)/11.5));if(s.length<=mx)return[s];
+function txw(s){let w=0;for(const ch of s)w+=/[\u1100-\uffff]/.test(ch)?11.5:6.6;return w}
+function wrap(s,w){const mx=Math.max(2,Math.floor((w-6)/11.5));
+  if(!/[\u3040-\u30ff\u4e00-\u9fff\uac00-\ud7af]/.test(s)){if(txw(s)<=w-6||!s.includes(' '))return[s];
+    const ws=s.split(' ');let b=null;for(let i=1;i<ws.length;i++){const a=ws.slice(0,i).join(' '),c=ws.slice(i).join(' '),m=Math.max(txw(a),txw(c));if(!b||m<b[0])b=[m,a,c]}return[b[1],b[2]]}
+  if(s.length<=mx)return[s];
   const sp=s.indexOf(' ');if(sp>0&&sp<=mx&&s.length-sp-1<=mx)return[s.slice(0,sp),s.slice(sp+1)];
   const h=Math.ceil(s.length/2);return[s.slice(0,h),s.slice(h)]}
 function base(){
@@ -626,9 +632,9 @@ function base(){
   h+='<g id="nodes">';
   ORD.flat().forEach(n=>{const P0=pos[n],x=P0.cx-P0.w/2,c=colOf(n),isW=!!WC[n];
     const fill=isW?c:(c?c+'22':'#fff'),stroke=c||'#b9bcc4',tc=isW?'#fff':'#1d2330';
-    const ls=wrap(N[n][0],P0.w),y0=P0.y+(ls.length===1?20:15);
+    const ls=wrap(N[n][0],P0.w),y0=P0.y+(ls.length===1?20:15),fb=isW?13.5:11.5,fs=Math.max(7.5,fb*Math.min(1,(P0.w-6)/(Math.max(...ls.map(txw))*fb/11.5)));
     h+=`<g class="nd" data-n="${n}" aria-label="${N[n][0]}: ${N[n][1]}"><rect x="${x}" y="${P0.y}" width="${P0.w}" height="${NH}" rx="7" fill="${fill}" stroke="${stroke}" stroke-width="1.3"/>`+
-      ls.map((l,i)=>`<text x="${P0.cx}" y="${y0+i*13}" text-anchor="middle" font-size="${isW?13.5:11.5}" font-weight="800" fill="${tc}">${l}</text>`).join('')+
+      ls.map((l,i)=>`<text x="${P0.cx}" y="${y0+i*13}" text-anchor="middle" font-size="${fs.toFixed(1)}" font-weight="800" fill="${tc}">${l}</text>`).join('')+
       `<text x="${P0.cx}" y="${P0.y+NH-6}" text-anchor="middle" font-size="9.5" fill="${isW?'#fff':'#8a8f99'}">${cnt[n]||0}</text></g>`});
   h+='</g>';
   svg.innerHTML='<defs><marker id="am" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5f6f93"/></marker></defs>'+h;

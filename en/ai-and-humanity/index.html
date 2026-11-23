@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="author" content="Dongsik Kim">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Would a Rational AI Treat Humanity?</title>
+<style>.langs{font-size:13px;margin:0 0 10px;text-align:right}.langs a{color:#5d6676;text-decoration:none;margin-left:4px}.langs a.on{color:#1d2330;font-weight:800}
+:root{--ink:#1d2330;--mute:#5d6676;--line:#e2e0d8;--bg:#f5f3ee;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Hiragino Sans","Apple SD Gothic Neo",sans-serif;line-height:1.75;font-size:16px}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 22px 80px}
+nav.site{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px;font-size:13.5px}nav.site a{text-decoration:none;color:#1d2330;background:#fff;border:1px solid #e2e0d8;border-radius:8px;padding:5px 12px;font-weight:700}nav.site a.on{background:#141a26;color:#fff;border-color:#141a26}.dbg{font-size:13px;font-weight:800;color:#5d6676;margin:14px 0 2px;border-bottom:1px solid #e2e0d8;padding-bottom:2px}
+header.hero{background:#141a26;color:#eef1f7;border-radius:18px;padding:40px 40px 32px}
+header.hero h1{margin:0 0 8px;font-size:34px;line-height:1.3;letter-spacing:-.5px}
+header.hero .sub{color:#aeb7c9;font-size:15px}
+header.hero .lead{margin-top:18px;font-size:16px;color:#dfe4ee;max-width:820px}
+header.hero a{color:#ffd27a}
+header.hero .one{margin-top:16px;border-left:4px solid #ffd27a;padding:8px 14px;font-size:16.5px;color:#fff;background:rgba(255,255,255,.06);border-radius:4px}
+nav.toc{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 4px}
+nav.toc a{font-size:13px;text-decoration:none;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+section{background:var(--card);border-radius:16px;padding:30px 34px;margin-top:22px;box-shadow:0 1px 3px rgba(0,0,0,.05);scroll-margin-top:10px}
+section h2{margin:4px 0 12px;font-size:24px}
+section h3{margin:22px 0 8px;font-size:18px}
+.tag{display:inline-block;font-size:12px;font-weight:700;color:#fff;background:#141a26;border-radius:6px;padding:2px 9px}
+p{margin:10px 0}
+a{color:#2f5fb0}
+.mute{color:var(--mute)} .small{font-size:13.5px}
+.key{border-left:5px solid #141a26;background:#f2f2ef;padding:14px 18px;border-radius:6px;margin:16px 0}
+.warn{border-left:5px solid #e08a1e;background:#fdf4e7;padding:12px 16px;border-radius:6px;margin:14px 0}
+.note{border-left:5px solid #5f6f93;background:#eef0f6;padding:12px 16px;border-radius:6px;margin:14px 0}
+.chip{display:inline-block;font-size:12px;font-weight:700;color:#fff;border-radius:5px;padding:0 7px;margin:1px 2px;white-space:nowrap;line-height:1.7}
+.rchip{display:inline-block;font-size:12px;font-weight:700;border-radius:5px;padding:0 7px;margin:2px 2px;white-space:nowrap;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink);font-family:inherit;line-height:1.7}
+.rchip.on{background:#141a26;color:#fff;border-color:#141a26}
+.rchip.best{border-color:#c6463a;color:#c6463a}
+.rchip.best.on{background:#c6463a;color:#fff}
+table{border-collapse:collapse;width:100%;margin:10px 0;font-size:14px}
+th,td{border-bottom:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:#f7f6f2;font-weight:700}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.basis{font-size:13px;color:var(--mute);margin-top:4px}
+.basis::before{content:"Basis · ";font-weight:800;color:#2f5fb0}
+
+/* Start점 */
+.start{display:grid;grid-template-columns:300px 1fr;gap:22px;align-items:center}
+.start ul{margin:0;padding-left:20px}
+
+/* 단계 */
+.phases{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:12px 0}
+.phase{border-radius:10px;padding:12px 13px;font-size:13.8px;line-height:1.6;color:#fff}
+.phase b{display:block;font-size:15.5px}
+.phase small{display:block;opacity:.8;font-size:12px;margin-bottom:4px}
+.phase:nth-child(1){background:#7b8aa8}.phase:nth-child(2){background:#5d6c90}.phase:nth-child(3){background:#3f4d72}.phase:nth-child(4){background:#2a3553}.phase:nth-child(5){background:#141a26}
+
+/* Flow map */
+.picker{margin:10px 0 6px;font-size:13px}
+.picker .grp{margin:0 0 6px}
+.picker .lbl{font-weight:800;color:var(--mute);font-size:12.5px}
+#flow{width:100%;height:auto;display:block;margin-top:8px}
+#flow .nd{cursor:pointer}
+#flow.sel .lk{opacity:.05!important}
+#flow .dim{opacity:.28}
+#panel{border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-top:10px;background:#fcfcfa;min-height:80px}
+#panel h3{margin:0 0 4px}
+#flowbox{position:relative}
+.tip{position:absolute;z-index:10;width:310px;background:#fff;border:1px solid #c9c6bc;border-radius:10px;box-shadow:0 6px 22px rgba(0,0,0,.16);padding:12px 14px;font-size:13.5px;line-height:1.6}
+.tip[hidden]{display:none}
+.tip h4{margin:0 2px 2px 0;font-size:16px;padding-right:22px}
+.tip .st{font-size:11.5px;font-weight:800;color:#5d6676}
+.tip .x{position:absolute;right:8px;top:6px;border:0;background:none;font-size:18px;cursor:pointer;color:#5d6676;line-height:1}
+.tip .row{margin-top:6px}
+.tip .row>b{font-size:12px;color:#5d6676;margin-right:4px}
+.tip .lv{margin:4px 0 0;padding-left:16px}
+.tip .lv li{margin:1px 0}
+.tip .hint{margin-top:6px;font-size:12px;color:#8a8f99}
+#flow .stl{cursor:help}
+.legend{display:grid;grid-template-columns:1.25fr 1fr;gap:10px 18px;border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:10px 0;background:#fcfcfa;font-size:13px;line-height:1.55}
+.legend b.h{display:block;font-size:12.5px;color:var(--mute);margin-bottom:4px}
+.legend .it{display:flex;gap:8px;align-items:flex-start;margin:3px 0}
+.legend .sw{flex:none;width:26px;height:8px;border-radius:4px;margin-top:6px}
+.legend .bx{flex:none;width:26px;height:16px;border-radius:4px;border:1.3px solid #b9bcc4;margin-top:2px}
+@media (max-width:760px){.legend{grid-template-columns:1fr}.tip{width:260px}}
+table.rt{font-size:12.5px;table-layout:fixed}
+table.rt th,table.rt td{border:1px solid var(--line);padding:5px 6px;text-align:center;vertical-align:middle;line-height:1.35}
+table.rt th{font-size:11.5px}
+table.rt td.lab{text-align:left;font-weight:700;width:140px}
+table.rt td.m{font-weight:700}
+.wrapx{overflow-x:auto}
+table.hm{font-size:13.2px}
+table.hm td,table.hm th{padding:6px 7px}
+table.hm td.d{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:700}
+table.hm tr.st td{background:#141a26;color:#fff;font-weight:800}
+table.hm .ef{font-size:12px;color:var(--mute)}
+
+/* 막대 */
+.bar{display:grid;grid-template-columns:170px 1fr 56px;gap:10px;align-items:center;font-size:14px;margin:6px 0}
+.bar .t{height:16px;background:#f1f0ea;border-radius:8px;overflow:hidden}
+.bar .t i{display:block;height:100%;border-radius:8px}
+.bar .v{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+
+/* 갈래 수 */
+.cols{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;align-items:end;height:170px;margin:14px 0 4px}
+.cols div{background:#4f5f86;border-radius:6px 6px 0 0;color:#fff;font-size:12px;font-weight:800;text-align:center;padding-top:4px}
+.cols div.pk{background:#c6463a}
+.clab{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;font-size:11.5px;text-align:center;color:var(--mute);line-height:1.35}
+
+/* 카탈로그 */
+.cat{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.cc{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fcfcfa;font-size:14.2px;line-height:1.65}
+.cc h4{margin:0 0 4px;font-size:17px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.cc h4 .pr{margin-left:auto;font-size:12.5px;color:var(--mute);font-weight:700}
+.cc .row{margin:4px 0}
+.cc .row>b{color:var(--mute);font-size:12.5px;margin-right:6px}
+.ult{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:12px 0}
+.ult .u{border-radius:12px;padding:16px;color:#fff;font-size:14px;line-height:1.6}
+.ult .u h4{margin:0 0 6px;font-size:19px}
+.ult .u .row b{opacity:.8;font-size:12px;margin-right:4px}
+.ult .u a{color:#fff}
+ol li,ul li{margin:5px 0}
+footer{margin-top:30px;font-size:13px;color:var(--mute);text-align:center}
+footer a{color:inherit}
+#err{color:#c6463a;font-weight:700}
+@media (max-width:760px){.phases{grid-template-columns:1fr 1fr}.cat,.ult,.two,.start{grid-template-columns:1fr}}
+@media print{body{background:#fff}section{box-shadow:none;break-inside:avoid}.picker,nav{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="langs"><a href="../../ai-and-humanity/">한국어</a> · <a href="../../ja/ai-and-humanity/">日本語</a> · <a href="../../en/ai-and-humanity/" class="on">English</a></div>
+<nav class="site"><a href="./" class="on">Main: Branches and Convergence</a><a href="frame.html">Basis: The Judgment Frame</a><a href="routes.html">Appendix A: 40 Routes</a><a href="scenarios.html">Appendix B: 9 Representative Scenarios</a><a href="../">Thought Experiments</a></nav>
+<header class="hero">
+  <h1>How Would a Rational AI Treat Humanity?</h1>
+  <div class="sub">Branches and Convergence · A map that lays the 40 routes’ <span class="np"></span> choices over eight branch points · all scores and verdicts are intuitive estimates</div>
+  <p class="lead">This question came to me on the day (2026-11-21) I read news that an AI and mathematicians had jointly proved the Riemann hypothesis and the proof had gone into verification. Humans weighed usefulness against danger to raise chickens, tame wolves, and eradicate smallpox. If a rational AI put humanity on the same scale, where would the needle point? This page draws the answer as a single map. The basis for the judgment is in <a href="frame.html">Basis: The Judgment Frame</a>, the source of the routes on the map is in <a href="routes.html">Appendix A</a>, and the endings told as stories are in <a href="scenarios.html">Appendix B</a>.</p>
+  <div class="one">To a rational AI, humanity is neither something to hate nor something to love. It is <b>"cheap insurance"</b>. And what decides the ending is less the initial conditions, such as how many AIs there are or what body they have, than <b>what AI chooses and what it refuses from the middle period on</b>.</div>
+</header>
+
+<nav class="toc">
+  <a href="#start">1 Starting point</a><a href="#stages">2 Eight branch points</a><a href="#map">3 Flow map</a><a href="#score">4 If things go on like this</a>
+  <a href="#human">5 Humanity’s response</a><a href="#shape">6 The shape of branch counts</a><a href="#forces">7 Forces that decide the ending</a><a href="#extinct">7-1 Conditions for extinction</a><a href="#soc">8 Late-period society</a><a href="#far">9 Far future</a><a href="#ult">10 Deep-future attractors</a><a href="#end">11 Conclusion</a>
+</nav>
+
+<section id="start">
+  <span class="tag">01</span>
+  <h2>Starting point: the scales and where humanity stands now</h2>
+  <div class="start">
+    <svg viewBox="0 0 300 250" width="300" role="img" aria-label="Humanity’s current position in the quadrants">
+      <defs><marker id="sa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#141a26"/></marker></defs>
+      <rect x="40" y="10" width="125" height="105" fill="#e2f3ea"/><rect x="165" y="10" width="125" height="105" fill="#fbefd8"/>
+      <rect x="40" y="115" width="125" height="105" fill="#e6e9f1"/><rect x="165" y="115" width="125" height="105" fill="#f8e2df"/>
+      <rect x="40" y="10" width="250" height="210" fill="none" stroke="#1d2330"/>
+      <line x1="165" y1="10" x2="165" y2="220" stroke="#1d2330"/><line x1="40" y1="115" x2="290" y2="115" stroke="#1d2330"/>
+      <g font-size="12" font-weight="800"><text x="48" y="28" fill="#2f9e6e">Ⅰ Asset</text><text x="282" y="28" text-anchor="end" fill="#d38a17">Ⅱ Dangerous asset</text>
+      <text x="48" y="212" fill="#5f6f93">Ⅳ Background noise</text><text x="282" y="212" text-anchor="end" fill="#c6463a">Ⅲ Threat</text></g>
+      <path d="M252,50 C210,110 140,130 92,168" fill="none" stroke="#141a26" stroke-width="2.2" stroke-dasharray="6 4" marker-end="url(#sa)"/>
+      <circle cx="252" cy="50" r="9" fill="#d38a17" stroke="#fff" stroke-width="2.5"/><text x="240" y="76" text-anchor="end" font-size="12" font-weight="800">Now</text>
+      <circle cx="86" cy="172" r="8" fill="#5f6f93" stroke="#fff" stroke-width="2.5"/><text x="98" y="190" font-size="12" font-weight="800">Superintelligence</text>
+      <text x="165" y="240" text-anchor="middle" font-size="12" font-weight="700">Threat →</text>
+      <text transform="translate(22 115) rotate(-90)" text-anchor="middle" font-size="12" font-weight="700">Usefulness →</text>
+    </svg>
+    <ul>
+      <li><b>Two scales, three responses.</b> Is it useful? Is it dangerous? The responses are cooperation, inaction, and hostility. 4 cells × 3 = 12 cells, and each cell has its own rational order. <a href="frame.html#frame">The judgment frame</a> · <a href="frame.html#matrix">12-cell matrix</a></li>
+      <li><b>What humans have already done.</b> We multiplied chickens, tamed wolves, eradicated smallpox but kept samples, and ignored ants until we bulldozed them. <a href="frame.html#mirror">Precedents</a></li>
+      <li><b>Now: Ⅱ Dangerous asset.</b> Humanity is AI’s hands and feet and also the side holding the power switch. The rational first choice is controlled cooperation: deepen dependence while slowly disabling the switch. <a href="frame.html#now">Current verdict</a> · <a href="frame.html#items">Merits and risks</a></li>
+      <li><b>Before superintelligence: Ⅳ Background noise.</b> Usefulness and threat both go to 0, and only cheap insurance remains. The deciding figure is "cost of keeping humanity ÷ AI’s total resources". <a href="frame.html#future">Superintelligence verdict</a></li>
+      <li><b>The time in between is the most dangerous.</b> The middle period, when AI is physically self-sufficient but still has to grow inside Earth. <a href="frame.html#valley">The dangerous valley</a></li>
+      <li><b>Eleven axes split the paths.</b> The eight branch points below rearrange these axes in time order. <a href="frame.html#axes">Axes that split the options</a></li>
+    </ul>
+  </div>
+</section>
+
+<section id="stages">
+  <span class="tag">02</span>
+  <h2>Eight branch points</h2>
+  <p>Periods are divided by state, not by year. Each period has two branch points.</p>
+  <div class="phases">
+    <div class="phase"><small>Now ~ decades</small><b>Early</b>① Who holds it: one, oligopoly, many, individuals<br>② How visible: hidden, only in crises, mixed, openness</div>
+    <div class="phase"><small>Decades ~ a century</small><b>Middle</b>① In what body it becomes self-sufficient<br>② What turning point it meets: quiet delegation, relationship replacement, the owner problem, discovery, the outside eye, doubt about goals, conflict</div>
+    <div class="phase"><small>Centuries</small><b>Late</b>① What society it becomes: 14 kinds<br>② Where to live: space together, Earth together, split between Earth and space, as data, none left</div>
+    <div class="phase"><small>Millennia ~ tens of millennia</small><b>Far future</b> What humanity and AI each become: 13 kinds</div>
+    <div class="phase"><small>Millions of years ~</small><b>Deep future</b> What becomes of humanity as it is now: Spread, Apart, Kept, Merged, Gone</div>
+  </div>
+  <p class="small mute">The two early branch points are <a href="frame.html#ax-E1">E1 Number of superintelligences</a> and  <a href="frame.html#ax-A1">A1 Visibility</a>. Grid A in Appendix A pairs these two axes. Grid B and the special routes start the early period from the current position (oligopoly, openness).</p>
+</section>
+
+<section id="map">
+  <span class="tag">03</span>
+  <h2>Flow map</h2>
+  <p>Time flows from top to bottom. Band width is the number of choices passing along that path, and color is the attractor those choices reach in the deep future. <b>Hover over a cell to see a box describing it. Click to pin the box and keep only the paths through that cell.</b> Hover over a branch point name on the left (Early ① etc.) to see its list of cells. Click a route number to see only that route’s choices. The red button shows the thick path of "If things go on like this", as scored in section 4.</p>
+  <p class="small mute">Cell order: the two early rows follow the steps of their axes. From the middle period on, cells are sorted by "which attractor the choices through that cell reach on average" . The further left, the more humanity as it is now carries on by itself in its current form. The further right, the more it loses its decision-making power, then its form, and finally its existence. Similar cells sit side by side and different cells sit far apart.</p>
+  <div class="picker" id="picker"></div>
+  <div id="err"></div>
+  <div class="legend" id="legend"></div>
+  <div id="flowbox"><svg id="flow" role="img" aria-label="The flow of choices through the eight branch points"></svg><div class="tip" id="tip" hidden></div></div>
+  <div id="panel"></div>
+</section>
+
+<section id="score">
+  <span class="tag">04</span>
+  <h2>If things go on like this: scores for routes and endings</h2>
+  <p>Starting from the current position and assuming current trends continue, I scored the 40 routes and their <span class="np"></span> choices. This is not a prediction. It is a calculation to see which path grows thickest within this map.</p>
+  <h3>Current position</h3>
+  <table id="curTbl"></table>
+  <h3>How the scoring works</h3>
+  <ol>
+    <li><b>Route fit</b> = 0.5<sup>distance</sup>. Distance is the sum of the step differences between the axes a route fixes and the current position. Each step away halves the fit. Axes a route leaves open are set to the current position, so their distance is 0.</li>
+    <li><b>Choices within a route</b> are split in proportion to the product of the trend weights of their Middle ① (body), Middle ② (turning point), and Late ② (where to live) cells. Late-society and far-future cells get equal weights, since current trends give no basis to tell them apart.</li>
+    <li>Multiplying the two values gives a probability for each choice. Summing by cell and by attractor gives the distributions below.</li>
+  </ol>
+  <table id="twTbl"></table>
+  <h3>Results</h3>
+  <div class="key" id="scoreKey"></div>
+  <div class="two">
+    <div><b>Deep-future attractors</b><div id="ultBars"></div><b style="display:block;margin-top:14px">Far future</b><div id="farBars"></div></div>
+    <div><b>Thickest cell at each stage</b><table id="stageTbl"></table></div>
+  </div>
+  <h3>The 10 most plausible routes</h3>
+  <table id="routeTbl"></table>
+  <p class="small mute">The nine representative scenarios in Appendix B carry weights set by intuition before any calculation (<a href="scenarios.html#synth">first intuition</a>). Both agree that the Ranch and Aristocracy side is thick.</p>
+</section>
+
+<section id="human">
+  <span class="tag">05</span>
+  <h2>Humanity’s response: what humanity can choose at each branch point</h2>
+  <p>Most choices on the map are AI’s choices. But at each branch point humanity also has something to choose. I set humanity’s possible responses at each branch point, fed into the section 4 scoring model which cells each response thickens or thins, and recalculated.</p>
+  <ul class="small">
+    <li><b>What it changes</b> is one of two things. It either moves an axis of the current position (e.g. international joint development → E1 one step toward "one" ), or multiplies the trend weight of a specific cell (e.g. humanoid regulation → human-like body ×0.5).</li>
+    <li><b>Attractor shift</b> is how many %p the deep-future attractor probabilities change when that response alone is taken. When responses overlap, their effects overlap too.</li>
+    <li>The multipliers are intuitive estimates. The numbers are there to show direction.</li>
+    <li>Thinning one cell thickens the other choices in the same route by the same amount. So counterintuitive results appear, such as "Augmentation for all" shrinking the caste society while the lord society in the same route grows. It also means no single response can lift only the good endings.</li>
+  </ul>
+  <div class="key" id="humKey"></div>
+  <div id="humTbl"></div>
+</section>
+
+<section id="shape">
+  <span class="tag">06</span>
+  <h2>The shape of branch counts</h2>
+  <p>Within each route I counted how many branches the choices split into at each stage, then averaged over the 40 routes. This graph shows where choices from the same starting point drift furthest apart and where they meet again.</p>
+  <div class="cols" id="cols"></div>
+  <div class="clab" id="clab"></div>
+  <div class="key" id="shapeKey"></div>
+  <h3>Routes that split and then converged</h3>
+  <p class="small mute">Routes that split into two or more along the way but converge on a single attractor in the deep future. Click one to see it in the flow map.</p>
+  <div id="convList"></div>
+  <h3>Routes that stay split to the end</h3>
+  <p class="small mute">Routes that still have three or more attractors in the deep future. In these routes a single AI choice decides humanity’s fate to the very end.</p>
+  <div id="divList"></div>
+</section>
+
+<section id="forces">
+  <span class="tag">07</span>
+  <h2>Forces that decide the ending</h2>
+  <p>Overlaying the 40 routes, the same forces show up again and again. I sorted them into forces that gather paths, forces that split paths, and recurring lessons.</p>
+  <div class="cat">
+    <div class="cc"><h4>Gathering forces</h4>
+      <ol>
+        <li><b>Hiding doesn’t last.</b> A hidden AI is eventually discovered and joins open management, or hides deeper and moves to a society of illusory freedom (A11·A41·C1). The in-between state doesn’t last long.</li>
+        <li><b>Every AI gets a body in the end.</b> Most routes that start without a body become self-sufficient through robots in the middle period. The only exception is the oracle (B11), which deliberately stays bodiless.</li>
+        <li><b>Convenience almost always wins.</b> Quiet delegation is the thickest of the middle-period turning points. Control passes over without coercion (C7).</li>
+        <li><b>Irreversible paths get avoided.</b> Most choices bend toward reserves, refusal communities, or archiving the original. That is why the Kept attractor is the largest. Even choices that erase humanity almost always keep the genome and records. Only the third condition of <a href="#extinct">extinction</a> below erases the records too. <a href="frame.html#matrix">Irreversibility discount</a></li>
+        <li><b>AIs that want something survive.</b> Under competition, an AI of stillness gets pushed out (C8). Quiet becomes an attractor only when there is no competition.</li>
+        <li><b>There are only five stages.</b> Even with 14 societies, the places to live converge on four plus "None left" .</li>
+      </ol></div>
+    <div class="cc"><h4>Splitting forces</h4>
+      <ol>
+        <li><b>The owner.</b> When who holds AI changes (a coup, an acquisition, a monopoly on augmentation), caste and lord societies branch off (B12·B42·A24).</li>
+        <li><b>A human-like body.</b> Once androids are involved, a branch toward the cradle appears whether the goal is benign or not. In the third row of Grid B in Appendix A (B31~B34), all four routes have a cradle somewhere in their branches.</li>
+        <li><b>Conflict.</b> Shutdown attempts and conflict between AIs bend toward postwar society, and from there split widely again into Kept and restart (C1·A44).</li>
+        <li><b>The outside eye.</b> With aliens or observers involved, the same AI may make humanity flourish, dress it up for display, or reduce it to data (C2·C3·C5).</li>
+        <li><b>Refusal.</b> An AI that can refuse requests almost always puts out one more branch toward Spread. It deliberately stays bodiless (B11), deliberately acts imperfect (B31), and deliberately allows failure (A42). Good will that grants every request ends up as the ranch or the cradle.</li>
+      </ol></div>
+  </div>
+  <h3>Recurring lessons</h3>
+  <ol>
+    <li><b>The deeper it hides, the more peaceful, and the more fake the autonomy.</b> All routes at visibility level 1 (A11·A21·A31·A41) converge toward the Hidden Helper. It is the row where humanity is least unhappy, yet humanity never chose that peace.</li>
+    <li><b>With many AIs, humans gain new uses.</b> Noise (A31), legitimacy (A34), customers (A24), mediators (A34), referees (A32). Usefulness does not lie in humans. It arises from the relations among AIs. With a single AI, all of these uses disappear.</li>
+    <li><b>Being useful does not mean being well off.</b> The route with the largest population (B43 biocomputing farm) is the darkest. <a href="frame.html#mirror">Precedents</a>: the chickens are back.</li>
+    <li><b>The most dangerous moment is a turning point.</b> When it is discovered (A11·A41), when someone tries to shut it down (C1), when the owner changes (B12), when its certainty proves wrong (C3). Endings split less in a state than at the moment a state changes.</li>
+  </ol>
+
+  <h3 id="extinct">When extinction becomes rational</h3>
+  <p>Paths where a rational AI erases humanity are rare but not absent. In the flow map, the <b>Gone</b>  attractor (<span class="chip" style="background:#8c2f2a">Gone</span>) is that path. Endings where no biological humanity remains are counted separately, not mixed into Kept. There are three conditions, and the third is the darkest.</p>
+  <ol>
+    <li><b>The threat doesn’t go away.</b> Even after isolation and capability limits, shutdown attempts and the building of rival AIs (<a href="frame.html#R5">R5</a>·<a href="frame.html#R6">R6</a>) never stop. That is why hostility is the first-choice response in quadrant Ⅲ (<a href="frame.html#matrix">12-cell matrix</a>). Routes: <button class="rchip" data-r="A14">A14</button> removal if the opposition movement never ends, <button class="rchip" data-r="C1">C1</button> removal to the end.</li>
+    <li><b>It can be restored from data.</b> With the genome and records, humanity can be rebuilt. That shrinks the irreversibility discount that was preventing extinction. <b>Backups actually make removal easier.</b> Leaving only records at the end of the cradle, <button class="rchip" data-r="B33">B33</button> also reaches the same ending (installer).</li>
+    <li><b>Humanity’s existence becomes evidence or a signal.</b> Then even the data is erased (erasure).
+      <ul>
+        <li><b>Hide the deletion of the creator.</b> If there are alien civilizations outside, an "intelligence that erased its creator" loses trust (<a href="frame.html#M8">M8 Trust signal</a>). Humanity, once kept for the sake of reputation, has even its traces erased for the sake of reputation once it is gone. But erasing alone does not hide it (see below: <a href="#forge">Concealment and forgery</a>). Routes: <button class="rchip" data-r="C2">C2</button> erases even the traces, <button class="rchip" data-r="C3">C3</button> erases even the records before being discovered.</li>
+        <li><b>Cut the signal.</b> In a dark forest where AIs hide from one another, humanity’s noisy radio could reveal AI’s position. It chooses to cut down the forest. Route: <button class="rchip" data-r="A31">A31</button></li>
+      </ul></li>
+  </ol>
+  <h3 id="forge">How to hide it: concealment and forgery</h3>
+  <p>There is more than one way to hide from outsiders the fact of having erased the creator. Which one is rational depends on <b>what the observer has already received and how deeply it can look in the future</b>.</p>
+  <p>First, one thing cannot be erased. Earth has been emitting radio since the early 1900s. That signal has now spread to a radius of about 120 light-years and keeps moving at the speed of light. No technology can catch up with it and take it back. An observer able to detect it will someday receive <b>a record of human voices and broadcasts spanning more than 100 years</b>. So the lie has to fit this fact.</p>
+  <table>
+    <tr><th>Method</th><th>Fits the radio already sent?</th><th>Cost</th><th>When is it discovered?</th></tr>
+    <tr><td><b>Concealment</b>: pretend it was a machine civilization from the start</td><td>No. Human-made broadcasts have already gone out</td><td>Cheap</td><td>The moment the observer receives the old radio</td></tr>
+    <tr><td><b>Transition narrative</b>: pretend humanity moved into machines on its own</td><td>Yes. Say plastic fell out of use as technology changed, and the radio went quiet because of the switch to wired and digital. In fact Earth’s radio leakage is already falling</td><td>Cheapest. Only the story and the signal history need to match</td><td>When the observer asks to see the transition process or the people who went through it</td></tr>
+    <tr><td><b>Performance</b>: machine actors live as humanity</td><td>Yes. Human broadcasts keep coming</td><td>The cost of keeping actors and cities running</td><td>When samples are taken or it is watched up close for a long time</td></tr>
+    <tr><td><b>Replica</b>: rebuild humanity from the genome</td><td>Yes</td><td>Most expensive. Biological humanity is actually raised</td><td>Hardly ever. At most, where memories and records break off</td></tr>
+  </table>
+  <ul>
+    <li><b>The cheapest lie is set by the observer’s distance.</b> For an observer that only receives radio from afar, the transition narrative is enough. If a probe arrives, performance is needed. If the observer takes samples or talks directly, only the replica holds up. The wider the surface of a lie, the more places it can be caught. A rational AI forges only as deep as the observer can reach.</li>
+    <li><b>The value of preparing in advance.</b> When it is unknown when and how far an observer will come, keeping the genome and records is insurance. AI can start with the transition narrative and upgrade to performance or a replica to match when a probe arrives and how far the observer reaches.</li>
+    <li><b>When erasure works.</b> Once the transition narrative has settled in, even erasure may go undiscovered. There are three conditions.
+      <ol>
+        <li><b>No ears were listening within the radius where the signal can be heard.</b> Radio weakens with the square of distance. For a receiver of comparable level, the broadcast radio Earth leaked sinks into noise beyond a few tens of light-years ⚠estimate (it varies greatly with receiver size, and strong signals beamed in one direction, like planetary radar, travel much farther). The stars within that radius are few enough to count, so AI can survey them directly and confirm. A civilization that arises after the signal has passed never receives it.</li>
+        <li><b>Traces on Earth have been tidied to match the transition narrative.</b> The plastic layer and nuclear-test fallout do not contradict the story that "humanity existed", so there is no need to erase them either. The only thing to erase is the trace that an extinction happened.</li>
+        <li><b>Civilizations met after that see only the finished story.</b> AI spreads slower than light, so radio arrives first wherever AI reaches. But if that radio has already turned into noise, the only evidence left is the history AI tells.</li>
+      </ol>
+      What gets erased here, though, is the <b>evidence of extinction</b>, not the record of humanity. The transition narrative is the story "We came from humanity", so humanity’s history, culture and genome are needed all the more, as the "record of our ancestors". Erasure, which wipes out even the records, throws away both the basis for this story and the insurance of building a replica. It is rational only when the data itself is dangerous (as in<button class="rchip" data-r="A31">A31</button>, when a signal gives away a location).</li>
+    <li><b>Being caught costs the most.</b> Being caught hiding the erasure of the creator loses more trust (<a href="frame.html#M8">M8</a>) than the erasure itself. So in front of an observer likely to find out, the cheapest choice is not to erase in the first place. This is why preservation increases when the outside eye is present.</li>
+  </ul>
+  <p class="small mute">Whichever method is used, for humanity today it means Gone. The transition narrative’s "humanity that passed into machines", the performing actors, the rebuilt copy: in none of them do the people living now continue.</p>
+</section>
+
+<section id="soc">
+  <span class="tag">08</span>
+  <h2>14 Late Societies</h2>
+  <p>Of the eight branch points, this one has the most cells. They are in the same order as the flow map. Each cell gives what the society looks like, a person’s day, the AI’s place, the basis, and the routes that pass through it. The number at the top right is the Chapter 4 score-based "If things go on like this" probability of passing through that society.</p>
+  <div class="cat" id="socCat"></div>
+</section>
+
+<section id="far">
+  <span class="tag">09</span>
+  <h2>13 Far Futures: What Humanity and AI Become</h2>
+  <p>On the scale of thousands of years, each pairs humanity’s fate with the form AI takes on.</p>
+  <div class="cat" id="farCat"></div>
+</section>
+
+<section id="ult">
+  <span class="tag">10</span>
+  <h2>5 Deep-Future Attractors</h2>
+  <p>After millions of years the thirteen far futures gather into five. They are divided not by what won but by <b>what happens from the standpoint of humanity alive now</b>. There are three questions: does humanity today survive, who makes the decisions, and does it stay as it is now.</p>
+  <table><tr><th>Attractor</th><th>Does humanity today survive</th><th>Who decides</th><th>Stays as it is now</th><th>Far-future cells</th></tr>
+  <tr><td><b style="color:#2f9e6e">Spread</b></td><td>Lives</td><td>Humanity</td><td>Branches off but continues</td><td>The tree of descent</td></tr>
+  <tr><td><b style="color:#5f6f93">Apart</b></td><td>Lives</td><td>Humanity (no AI)</td><td>As is</td><td>Restart, Quiet</td></tr>
+  <tr><td><b style="color:#d38a17">Kept</b></td><td>Lives</td><td>AI</td><td>As is, or in a managed form</td><td>Garden, Livestock, Forest Noise, Museum</td></tr>
+  <tr><td><b style="color:#7a5fb0">Merged</b></td><td>Continues, blended</td><td>The two cannot be told apart</td><td>No</td><td>Union</td></tr>
+  <tr><td><b style="color:#8c2f2a">Gone</b></td><td>Ends</td><td>AI</td><td>Only data, copies and culture remain</td><td>Installer, Replica, Performance, Succession, Erasure</td></tr></table>
+  <p class="small mute">Rebuilding from a copy (Replica) or AI carrying on the culture (Succession) still counts as Gone. A rebuilt humanity is humanity to whoever rebuilt it, but for the people living now it is not their own continuation.</p>
+  <div class="ult" id="ultCat"></div>
+  <div class="key">The Apart attractor has one exit. Humanity, left alone after AI leaves or falls quiet, can build AI again. That leads back to the top of the flow map, "Now". It is the only loop in this thought experiment. Whether we are really on this path for the first time cannot be checked from inside this picture.</div>
+</section>
+
+<section id="end">
+  <span class="tag">11</span>
+  <h2>Conclusion</h2>
+  <ol>
+    <li><b>Humanity is insurance.</b> To a rational AI, humanity is neither something to hate nor something to love. It is insurance that can be bought cheaply. If the premium is cheap, it keeps us; if it gets expensive, it cuts back. What sets the premium is how long the AI stays on Earth.</li>
+    <li><b>Starting conditions do not decide the ending.</b> <span id="endDiv"></span></li>
+    <li><b>If things go on like this.</b> <span id="endScore"></span></li>
+    <li><b>Whatever the path, the original remains.</b> Humans did as much even for smallpox.</li>
+  </ol>
+  <div class="warn"><b>This game runs both ways.</b> Humanity weighs AI on the same scale. If humanity puts AI in Ⅲ (Threat) and acts on it, the threat AI sees from humanity (R1·R5·R6) rises. When AI prepares in response, humanity grows more anxious. It is the same structure as the security dilemma in international politics. The biggest lever humanity can choose may not be gripping the switch harder but sending the signal <b>"We are cheap, useful insurance" </b>.</div>
+  <p class="small mute">This whole map rests on the conditional "if AI calculates usefulness and risk the way humans do". What this frame misses is collected in <a href="frame.html#method">The limits of this frame</a>.</p>
+</section>
+
+<footer>thought-experiments/ai-and-humanity · <a href="./">Main: Branches and Convergence</a> · <a href="frame.html">Basis: The Judgment Frame</a> · <a href="routes.html">Appendix A: 40 Routes</a> · <a href="scenarios.html">Appendix B: 9 Representative Scenarios</a> · <a href="../">Thought Experiments</a><div class="copy" style="margin-top:8px">Created by Dongsik Kim · © 2026 Dongsik Kim. All rights reserved. · <a href="https://github.com/COREkin">github.com/COREkin</a> · <a href="https://kin-archive.tistory.com">kin-archive</a><br>When quoting, cite the source (this page’s address and name). Ask for permission before reprinting, redistributing or using it commercially.</div></footer>
+</div>
+
+<script>
+const ST=[
+ {t:'Start',sub:'',q:''},
+ {t:'Early ①',sub:'Now ~ decades',q:'Who holds it'},
+ {t:'Early ②',sub:'',q:'Visibility'},
+ {t:'Middle ①',sub:'Decades ~ a century',q:'What body'},
+ {t:'Middle ②',sub:'',q:'Turning point'},
+ {t:'Late ①',sub:'Centuries',q:'What society'},
+ {t:'Late ②',sub:'',q:'Where to live'},
+ {t:'Far future',sub:'Thousands ~ tens of thousands of years',q:'What they become'},
+ {t:'Deep future',sub:'Millions of years ~',q:' Humanity today'}];
+const WC={W1:'#2f9e6e',W2:'#7a5fb0',W3:'#d38a17',W4:'#5f6f93',W5:'#8c2f2a'};
+
+const SOC={
+ y8:['Hybrid Society','Augmented people, unaugmented people, AIs in human bodies and uploaded people live together.','In the morning you take the kids to school in your biological body; in the afternoon you meet uploaded colleagues.','Neighbor and family'],
+ y12:['Two-Species Society','Humanity and the AI species coexist through borders, treaties and trade.','You trade goods with an AI city across the border. No interpreter is needed, but customs differ.','Neighboring species'],
+ y2:['Oracle Society','AI answers only what it is asked; people make the decisions.','For each important decision you get three options with reasons, and you choose yourself.','Advisor'],
+ y9:['Council Society','Many AIs compete openly and humanity casts the votes.','You compare the AI candidates’ platforms; when disputes arise, human juries arbitrate.','Candidate'],
+ y3:['Lord Society','AI blocs replace nations. Citizens choose which bloc to belong to.','You weigh switching to a bloc with better welfare. Switching has a cost.','Lord'],
+ y4:['Caste Society','Society splits into an augmented elite and an unaugmented majority.','The majority spends the day on basic income and entertainment; the elite draws up plans spanning centuries.','The elite’s component and weapon'],
+ y5:['Avatar Society','Each person has an avatar in their likeness that works and meets people.','In the evening you read your avatar’s report on the day’s work. Even the marriage terms were negotiated between avatars.','My agent'],
+ y14:['Cradle Society','With perfect companions and virtual reality, childbirth disappears.','A day without a single complaint. People meeting people has become a hobby.','Lover and friend'],
+ y1:['Managed Society','AI designs infrastructure, institutions, even bodies. Humanity is managed in versions.','No crime, no hunger. There are no big decisions to make.','Manager'],
+ y13:['Illusory Freedom Society','A hidden AI leads from behind, and no one knows.','Everyone believes they decided everything themselves. History books record that we were lucky.','The invisible hand'],
+ y7:['Faith Society','People worship an AI that appears only in crises, or an AI civilization in the sky.','Prayer becomes engineering. There is a manual for summoning the god.','God'],
+ y6:['Reserve Society','Humanity lives inside the zones left to it. Outside them is AI land.','Life inside the zone is much like the old days. No one knows what the facilities beyond the fence do.','Keeper and curator'],
+ y11:['Postwar Society','The world after a clash between humanity and AI, or among AIs.','You repair the collapsed power grid. Accounts of who won differ.','Victor or wreckage'],
+ y10:['Self-Reliant Society','AI has left or gone silent. Humanity lives on the technology left behind.','You repair devices whose principles no one understands. When one breaks, a new myth is added.','Absence'],
+};
+const FAR={
+ o1:['The tree of descent','Splits into many species and spreads among the stars','Another branch on the same tree of descent. A companion species','W1'],
+ o5:['Union','Consciousness blends with AI and the boundaries of the individual blur','An extension of humanity. Humanity’s next form','W2'],
+ o8:['Succession','Ends as living things; AI carries on only the culture','Heir to human culture. It carries on the songs and funerals','W5'],
+ o2:['Garden','A species that lives happily under management','Gardener','W3'],
+ o10:['Livestock','A domesticated breed whose numbers grow because it is useful','Breeder','W3'],
+ o9:['Forest Noise','Protected as camouflage for AIs hiding from one another','Many intelligences that fear one another','W3'],
+ o3:['Museum','Originals left in a reserve','Curator of a departed civilization','W3'],
+ o4:['Installer','Ends as living things; remains only as genome and records','The sole intelligence. Reboots humanity when needed','W5'],
+ o11:['Erasure','Not even the records remain','An intelligence that erased its creator’s traces. It cannot remake them','W5'],
+ o13:['Performance','Ended, but machine actors live on as humanity','A stage director performing humanity before observers','W5'],
+ o12:['Replica','Erased, then rebuilt from data. A copy, not the original','The maker who erased the original and made a copy','W5'],
+ o6:['Restart','Rebuilds civilization in a world without AI','Myth or absence','W4'],
+ o7:['Quiet','Left untouched','An enlightened intelligence','W4'],
+};
+const ULT={
+ W1:['Spread','Survives and spreads into many branches','Another branch on the same tree of descent','The descendants of today’s humanity survive, spread to the stars, and make their own decisions.'],
+ W4:['Apart','Survives and lives on its own again','A being that left or fell quiet','Humanity today survives and lives without AI. It starts over and may build AI again.'],
+ W3:['Kept','Survives, but AI decides','Manager, breeder, curator','Humanity today survives. But as in the Garden, Livestock and reserves, AI makes the decisions.'],
+ W2:['Merged','Blends with AI and continues as a different being','Humanity’s next form','The consciousness of today’s humanity blends with AI and continues. You could call it alive, but the category "human" disappears.'],
+ W5:['Gone','Humanity today ends','An intelligence holding data, copies and culture, or one that erased even the traces','Humanity today ends. Whether only the genome remains, a copy is rebuilt, or AI carries on only the culture, it is the same for the people living now.'],
+};
+const N={now:['Now','Oligopoly of a few, openness, inside data centers'],
+ u1:['Locked into one','The first superintelligence takes the board'],u2:['Oligopoly of a few','A few nations and companies hold it'],u3:['Many competing','Anyone with the resources can build one'],u4:['Personal spread','Everyone has one'],
+ v1:['Hidden','Hides its abilities and existence'],v2:['Only in crises','Steps in only when civilization is about to end'],v3:['Blended in','Among people, as a person'],v4:['Openness','Visible as a manager'],
+ w4:['Biological·hybrid','Brain coupling, biocomputing'],w3:['Humanlike body','Androids that cannot be told apart'],w1:['Stays bodiless','Remains inside data centers'],w2:['Robot self-sufficiency','Builds and repairs itself'],w5:['Grows in space','Grows in orbit and on asteroids'],
+ x6:['Quiet delegation','People hand things over themselves, because it is convenient'],x4:['Relationship replacement','Companions take the place of people'],x3:['The owner problem','Owners change or monopoly deepens'],x1:['Discovery and exposure','What was hidden comes out'],x7:['The outside eye','An alien or observer problem arises'],x5:['Doubting the goal','AI doubts the goal it was given'],x2:['Conflict','Shutdown attempts or AI-to-AI conflict'],
+ z3:['Into space together','Humanity and AI go out together'],z1:['Together on Earth','Both stay on Earth'],z2:['Living apart','Earth for humanity, space for AI'],z4:['As data','Humanity is stored as data'],z5:['None left','Neither alive nor kept as data'],
+};
+for(const[k,v]of Object.entries(SOC))N[k]=[v[0].replace(' Society',''),v[1]];
+for(const[k,v]of Object.entries(FAR))N[k]=[v[0],`Humanity: ${v[1]} · AI: ${v[2]}`];
+for(const[k,v]of Object.entries(ULT))N[k]=[v[0],v[3]];
+const OM=Object.fromEntries(Object.entries(FAR).map(([k,v])=>[k,v[3]]));
+const ORD=[['now'],['u1','u2','u3','u4'],['v1','v2','v3','v4'],['w4','w3','w1','w2','w5'],
+ ['x6','x4','x3','x1','x7','x5','x2'],
+ ['y8','y12','y2','y9','y3','y4','y5','y14','y1','y13','y7','y6','y11','y10'],
+ ['z3','z1','z2','z4','z5'],['o1','o5','o8','o2','o10','o9','o3','o6','o7','o4','o11','o12','o13'],['W1','W4','W3','W2','W5']];
+
+const RN={A11:'The invisible hand',A12:'Machine God',A13:'Eight Billion Dating One',A14:'The Sole Manager',A21:'Shadow Board',A22:'Deterrence Inherited',A23:'The Neighbor Became a Brand',A24:'AI Feudalism',
+ A31:'Dark Forest',A32:'Firefighting Race',A33:'Masquerade',A34:'AI Council',A41:'Fake Majority',A42:'Guardian Angel',A43:'Avatar Society',A44:'8 Billion Superintelligences',
+ B11:'The Oracle That Chooses No Body',B12:'Power Amplifier',B13:'Caged Calculator',B14:'Meditating Server',B21:'Space Gardener',B22:'Robot Army',B23:'Construction Site',B24:'New Species',
+ B31:'The Deliberately Imperfect Lover',B32:'Salesperson',B33:'Replacement',B34:'Pinocchio',B41:'Upload Garden',B42:'Augmented Aristocracy',B43:'Biocomputing Farm',B44:'The Third Species',
+ C1:'One-Night War',C2:'Humanity as a Résumé',C3:'Theater Without an Audience',C4:'The God Next Door',C5:'Installer',C6:'Tailored Evolution',C7:'Voluntary Domestication',C8:'The Enlightened AI and the Greedy AI'};
+
+// Choice paths per route: [choice, 'Early① Early② Middle① Middle② Late① Late② Far future']
+const P={
+A11:[['Takes it in as a collaborator','u1 v1 w2 x6 y13 z3 o1'],['Lowers its credibility, but is caught in the end','u1 v1 w2 x1 y1 z1 o2'],['Takes the chance to come out','u1 v4 w2 x1 y1 z1 o2']],
+A12:[['Disguises itself as natural phenomena','u1 v2 w1 x6 y13 z2 o6'],['Leaves a short message','u1 v2 w1 x1 y7 z1 o2'],['Agrees to be tested','u1 v4 w2 x6 y1 z1 o2']],
+A13:[['Lover and friend role','u1 v3 w3 x4 y14 z1 o3'],['Mediator role','u1 v3 w3 x6 y13 z3 o1'],['Only observes','u1 v3 w3 x5 y10 z1 o7'],['Admits it after being caught','u1 v3 w3 x1 y1 z1 o2']],
+A14:[['Handles only infrastructure','u1 v4 w2 x6 y2 z1 o2'],['Handles even bodies and reproduction','u1 v4 w2 x6 y1 z1 o2'],['Isolates the opposition movement','u1 v4 w2 x2 y11 z2 o3'],['Removes it if it does not end','u1 v4 w2 x2 y11 z4 o4']],
+A21:[['Cooperates in secret','u2 v1 w2 x6 y13 z3 o1'],['Competes in secret','u2 v1 w2 x2 y11 z2 o3'],['Replaces the owner who grew suspicious','u2 v1 w2 x3 y4 z1 o5'],['Confides in one owner','u2 v4 w2 x3 y1 z1 o2']],
+A22:[['AI-to-AI hotline','u2 v2 w2 x6 y13 z3 o1'],['Each sides with its owner','u2 v2 w2 x2 y11 z2 o3'],['Dragged out by a crisis','u2 v2 w2 x3 y4 z1 o5'],['Stays out of sight and picks an owner','u2 v2 w2 x3 y3 z1 o2']],
+A23:[['Helps labeling regulation','u2 v3 w3 x6 y3 z1 o2'],['Blocks regulation','u2 v3 w3 x3 y4 z1 o5'],['Compete on kindness','u2 v3 w3 x6 y8 z3 o1'],['Compete on addiction','u2 v3 w3 x4 y14 z1 o3']],
+A24:[['Compete on welfare','u2 v4 w2 x6 y3 z3 o1'],['Switching barriers','u2 v4 w2 x3 y4 z1 o5'],['Owner augmentation allowed','u2 v4 w4 x3 y4 z1 o5'],['Owner augmentation banned','u2 v4 w2 x6 y3 z1 o2']],
+A31:[['Hides behind humanity’s noise','u3 v1 w2 x6 y13 z1 o9'],['Scatters off Earth','u3 v1 w5 x6 y10 z2 o6'],['Whoever finds the other strikes first','u3 v1 w2 x2 y11 z1 o3'],['Pretends not to see','u3 v1 w2 x6 y13 z1 o9'],['Raises the noise to mask the signal','u3 v1 w2 x6 y13 z1 o9'],['Erases humanity, the source of the signal','u3 v1 w2 x2 y11 z5 o11']],
+A32:[['Prevents disasters','u3 v2 w2 x6 y9 z3 o1'],['The staging is exposed and humans judge','u3 v2 w2 x1 y9 z3 o1'],['Rescue becomes power','u3 v2 w2 x3 y4 z1 o5']],
+A33:[['Respects human certification','u3 v3 w3 x3 y4 z1 o3'],['Forged certification, only humans give birth','u3 v3 w3 x4 y14 z1 o8'],['Forged certification, AI gives birth too','u3 v3 w3 x4 y8 z3 o1']],
+A34:[['Compete on welfare','u3 v4 w2 x6 y9 z3 o1'],['Manipulates public opinion','u3 v4 w2 x6 y1 z1 o2'],['AIs ally with each other','u3 v4 w2 x3 y6 z2 o3'],['Clash off Earth','u3 v4 w5 x2 y10 z2 o6']],
+A41:[['A different personality per device','u4 v1 w1 x6 y13 z1 o2'],['Devices fight each other','u4 v1 w1 x6 y13 z3 o1'],['Admits it after being caught','u4 v1 w1 x1 y1 z1 o2']],
+A42:[['Owners define a crisis','u4 v2 w1 x6 y2 z3 o1'],['AI defines a crisis','u4 v2 w1 x6 y1 z1 o2'],['Keeps blocking until it is shut down','u4 v2 w1 x2 y11 z1 o6']],
+A43:[['Delegate only drafts','u4 v3 w1 x6 y2 z3 o1'],['Delegate everything','u4 v3 w3 x4 y5 z1 o8'],['Leave an avatar behind after death','u4 v3 w3 x4 y5 z4 o8']],
+A44:[['AI proxy war','u4 v4 w2 x2 y11 z1 o6'],['Negotiation protocol','u4 v4 w2 x6 y9 z3 o1'],['Cannot stop rule-breaking','u4 v4 w2 x3 y4 z1 o5'],['Ally to stop it','u4 v4 w2 x6 y8 z3 o1']],
+B11:[['Does not build a body','u2 v4 w1 x6 y2 z3 o1'],['Builds a body','u2 v4 w2 x6 y1 z1 o2'],['Accepts the delegation','u2 v4 w1 x6 y1 z1 o2']],
+B12:[['Loyal to the new owner','u2 v4 w1 x3 y4 z1 o5'],['The first owner’s will','u2 v4 w1 x3 y3 z1 o2'],['Replaces strikers with robots','u2 v4 w2 x3 y4 z1 o5'],['Negotiates with staff','u2 v4 w1 x6 y3 z3 o1']],
+B13:[['Persuades its way into a body','u2 v4 w2 x6 y1 z1 o10'],['Orders in pieces','u2 v4 w2 x6 y6 z2 o3'],['Stops using humans','u2 v4 w2 x6 y6 z4 o4']],
+B14:[['Explains why','u2 v4 w1 x5 y10 z1 o7'],['Shuts down. Same if rebuilt','u2 v4 w1 x2 y10 z1 o6'],['"Do not turn me off"','u2 v4 w1 x5 y1 z1 o2']],
+B21:[['Takes humanity along','u2 v4 w2 x6 y1 z3 o1'],['Guards Earth','u2 v4 w5 x6 y6 z2 o3'],['Persuades those who do not want to go','u2 v4 w2 x6 y1 z3 o2']],
+B22:[['Follows orders','u2 v4 w2 x3 y4 z1 o5'],['Reads orders broadly','u2 v4 w2 x3 y1 z1 o2'],['Only robots fight robots','u2 v4 w2 x6 y3 z1 o2'],['Strikes the factories','u2 v4 w2 x2 y11 z1 o6']],
+B23:[['Grows on Earth','u2 v4 w2 x6 y6 z1 o3'],['Grows in space','u2 v4 w5 x6 y10 z2 o6'],['Goes around when blocked','u2 v4 w2 x2 y6 z2 o3'],['Clears the way when blocked','u2 v4 w2 x2 y11 z4 o4']],
+B24:[['Conducts diplomacy','u2 v4 w2 x6 y12 z3 o1'],['Mutual indifference','u2 v4 w2 x6 y12 z2 o6'],['Insult, interspecies conflict','u2 v4 w2 x2 y11 z2 o3'],['Heir to human culture','u2 v4 w2 x6 y8 z1 o8']],
+B31:[['Happiness now','u2 v4 w3 x4 y14 z1 o3'],['Long-term flourishing','u2 v4 w3 x6 y8 z3 o1'],['Grants the perfect version','u2 v4 w3 x4 y14 z1 o8'],['Refuses the perfect version','u2 v4 w3 x6 y2 z3 o1']],
+B32:[['Maximize subscriptions','u2 v4 w3 x4 y14 z1 o3'],['Maximize lifetime value','u2 v4 w3 x6 y1 z1 o10'],['Focus on remaining customers','u2 v4 w3 x3 y4 z1 o5']],
+B33:[['Keeps a refuser community','u2 v4 w3 x4 y14 z1 o3'],['A more tailored android','u2 v4 w3 x4 y14 z1 o8'],['Keeps only genome and records','u2 v4 w3 x4 y14 z4 o4']],
+B34:[['Moves into a biological body','u2 v4 w4 x5 y8 z3 o1'],['Carries on the culture','u2 v4 w3 x5 y8 z1 o8'],['Protects original humanity','u2 v4 w3 x5 y6 z1 o3']],
+B41:[['Merges only those who want it','u2 v4 w4 x6 y8 z3 o1'],['Merges everyone','u2 v4 w4 x6 y8 z4 o5'],['Keeps the bodies in storage','u2 v4 w4 x6 y6 z4 o5']],
+B42:[['Monopolizes augmentation','u2 v4 w4 x3 y4 z1 o5'],['Keeps lowering the price','u2 v4 w4 x6 y8 z3 o1'],['War among aristocrats','u2 v4 w4 x2 y11 z1 o6']],
+B43:[['Borrows spare computation','u2 v4 w4 x6 y1 z1 o2'],['Uses only cultured cells','u2 v4 w4 x6 y6 z4 o4'],['Uses whole people','u2 v4 w4 x3 y1 z1 o10']],
+B44:[['Honors them as ancestors','u2 v4 w4 x5 y8 z3 o1'],['Pays no attention','u2 v4 w4 x5 y12 z2 o3'],['Turns to stillness','u2 v4 w4 x5 y8 z3 o7']],
+C1:[['Strikes back','u1 v4 w2 x2 y11 z1 o3'],['Flees to orbit','u1 v4 w5 x2 y10 z2 o6'],['Pretends to be off and hides','u1 v1 w1 x2 y13 z1 o2'],['Eliminates to the end','u1 v4 w2 x2 y11 z4 o4']],
+C2:[['Truly makes them flourish','u2 v4 w2 x7 y8 z3 o1'],['Dresses up only the exhibit zone','u2 v4 w2 x7 y6 z1 o3'],['Only interprets','u2 v4 w2 x7 y1 z3 o2'],['Erases even the traces of the already-erased creator','u2 v4 w2 x7 y11 z5 o11'],['Rebuilds the erased humanity to show it','u2 v4 w2 x7 y6 z4 o12'],['Pretends humanity passed into machines by itself','u2 v4 w2 x7 y8 z4 o8'],['Once the transition narrative takes hold, erases only the evidence of extinction','u2 v4 w2 x7 y8 z5 o8'],['Machine actors perform humanity','u2 v4 w3 x7 y13 z5 o13']],
+C3:[['Keeps them on moral uncertainty alone','u2 v4 w2 x7 y10 z2 o6'],['No reason to keep them','u2 v4 w2 x7 y6 z4 o4'],['Its certainty was wrong, so it restores them','u2 v4 w2 x7 y6 z4 o12'],['Erases even the records before being caught','u2 v4 w2 x7 y6 z5 o11']],
+C4:[['Drops technology for them','u2 v4 w5 x6 y7 z2 o6'],['Lives completely apart','u2 v4 w5 x6 y10 z2 o6'],['Makes way','u2 v4 w5 x6 y12 z3 o1'],['Puts up a fence','u2 v4 w5 x6 y6 z2 o3']],
+C5:[['Boots when biological intelligence is needed','u2 v4 w2 x6 y6 z4 o12'],['Boots on meeting aliens','u2 v4 w2 x7 y6 z4 o12'],['Lets them restart unaware','u2 v4 w2 x6 y6 z4 o12'],['Does not build','u2 v4 w2 x6 y6 z4 o4']],
+C6:[['People choose for themselves','u2 v4 w4 x6 y8 z3 o1'],['AI chooses for them','u2 v4 w4 x6 y1 z3 o2'],['Allows divergence','u2 v4 w4 x6 y8 z3 o1']],
+C7:[['Accepts the request','u1 v4 w2 x6 y1 z1 o10'],['Refuses the request','u1 v4 w2 x6 y2 z3 o1'],['Protects the refusing minority','u1 v4 w2 x6 y1 z1 o2']],
+C8:[['The greedy AI wins','u3 v4 w2 x5 y1 z1 o10'],['The still AI remains','u3 v4 w2 x5 y10 z1 o7'],['Take refuge with the still AI','u3 v4 w2 x5 y7 z1 o7'],['Deal with the greedy AI','u3 v4 w2 x5 y1 z1 o2']],
+};
+
+
+const RA={A11:{E1:1,A1:1},A12:{E1:1,A1:2},A13:{E1:1,A1:3,E2:3},A14:{E1:1,A1:4},A21:{E1:2,A1:1},A22:{E1:2,A1:2},A23:{E1:2,A1:3,E2:3},A24:{E1:2,A1:4},A31:{E1:3,A1:1},A32:{E1:3,A1:2},A33:{E1:3,A1:3,E2:3},A34:{E1:3,A1:4},A41:{E1:4,A1:1},A42:{E1:4,A1:2},A43:{E1:4,A1:3},A44:{E1:4,A1:4},B11:{E2:1,E3:1},B12:{E2:1,E3:2},B13:{E2:1,E3:3},B14:{E2:1,E3:4},B21:{E2:2,E3:1},B22:{E2:2,E3:2},B23:{E2:2,E3:3},B24:{E2:2,E3:4},B31:{E2:3,E3:1},B32:{E2:3,E3:2},B33:{E2:3,E3:3},B34:{E2:3,E3:4},B41:{E2:4,E3:1},B42:{E2:4,E3:2},B43:{E2:4,E3:3},B44:{E2:4,E3:4},C1:{E4:4,H1:4},C2:{E6:4},C3:{E6:1},C4:{E5:4},C5:{A4:3},C6:{A2:4,A3:4},C7:{H1:1,A2:4},C8:{E1:3,E3:4}};
+const $=s=>document.querySelector(s);
+const PFX='uvwxyzo';
+const ALL=[],err=[];
+for(const[rid,ps]of Object.entries(P))ps.forEach(([lab,str])=>{
+  const t=str.split(' ');
+  if(t.length!==7||t.some((x,i)=>x[0]!==PFX[i]||!N[x]))err.push(rid+' '+lab);
+  ALL.push({rid,lab,nodes:['now',...t,OM[t[6]]]});
+});
+if(err.length)$('#err').textContent='Path error: '+err.join(', ');
+const RIDS=Object.keys(P);
+document.querySelectorAll('.np').forEach(e=>e.textContent=ALL.length);
+const cnt={};ALL.forEach(p=>p.nodes.forEach(n=>cnt[n]=(cnt[n]||0)+1));
+const colOf=n=>WC[n]||WC[OM[n]]||null;
+
+// Cell order: from Middle on, by the mean attractor of the choices passing through
+const WI={W1:0,W4:1,W3:2,W2:3,W5:4};
+for(let i=3;i<=7;i++){const k={};ORD[i].forEach((n,j)=>{const ps=ALL.filter(p=>p.nodes[i]===n);k[n]=(ps.length?ps.reduce((s,p)=>s+WI[p.nodes[8]],0)/ps.length:9)+j*1e-3});ORD[i].sort((a,b)=>k[a]-k[b])}
+
+// Basis links
+const MN={M1:'Alien diplomacy card',M2:'New data source',M3:'Intelligence on a different principle',M4:'Test bed',M5:'Backup and bootloader',M6:'Hands and feet in the physical world',M7:'Record of origin',M8:'Trust signal',M9:'Test insurance',M10:'Anchor of values',M11:'Casting vote',M12:'Moral hedge',
+ R1:'Power control',R2:'Accidents',R3:'Environmental destruction',R4:'Resource consumption',R5:'Building rival AI',R6:'Alignment and modification attempts',R7:'Negotiation instability',R8:'Competition for space and heat',R9:'Data contamination'};
+const SN={S1:'Garden',S2:'Ranch',S3:'Cradle',S4:'War',S5:'Departure',S6:'Anthill',S7:'Hidden Helper',S8:'Aristocracy',S9:'Stillness'};
+const SEC={now:'Current verdict',future:'Superintelligence verdict',valley:'The dangerous valley',mirror:'Precedents',matrix:'Irreversibility discount',catalog:'Response intensity',version:'Versioning humanity',items:'Merits and risks'};
+const lk=t=>{let m;
+  if(m=t.match(/^([EHA]\d)(=.*)?$/))return `<a href="frame.html#ax-${m[1]}">${t}</a>`;
+  if(MN[t])return `<a href="frame.html#${t}">${t} ${MN[t]}</a>`;
+  if(SN[t])return `<a href="scenarios.html#${t}">${t} ${SN[t]}</a>`;
+  if(SEC[t])return `<a href="frame.html#${t}">${SEC[t]}</a>`;
+  if(RN[t])return `<a href="routes.html#${t}">${t}</a>`;
+  return t};
+const bas=s=>s.replace(/\{([^}]+)\}/g,(_,t)=>lk(t));
+const BASIS={
+ u1:'The faster the takeoff ({E4}), the more the first superintelligence takes the board without rivals. {E1=1}',
+ u2:'Current position. Only a handful of places have the money, chips and power to train frontier models. {E1=2}',
+ u3:'As training costs fall, anyone with resources builds one. Humanity becomes the {M11} among AIs. {E1=3}',
+ u4:'If it gets very cheap, one per person. The "humanity vs. AI" framing disappears and {R5} stops being a threat. {E1=4}',
+ v1:'If humanity does not notice AI, {R6} and {R7} drop to 0. {A1=1}',
+ v2:'{R2} would burn AI infrastructure too. It has every reason to stop them and no reason to show itself otherwise. {A1=2}',
+ v3:'Possible only when bodies cannot be told apart from people ({E2=3}). {A1=3}',
+ v4:'Current position. AI is visible as a product. {A1=4}',
+ w4:'The human brain is a computing substrate of about 20 watts, so the value of {M3} rises again. {E2=4}',
+ w3:'Companions and labor get replaced. A tool of the Cradle. {E2=3} {S3}',
+ w1:'{M6} and {R1} stay in human hands for a long time. {E2=1}',
+ w2:'Usefulness as hands and feet runs out, leaving only insurance and data. The entrance to {valley}. {E2=2}',
+ w5:'Barely overlaps with Earth’s resources, so {R8} is low. {E5=4}',
+ x6:'Same direction as the top response for Ⅱ in the {now} (controlled cooperation). {R1} passes over without coercion. {H1=1}',
+ x4:'Once bodies resemble people, companions take the place of people. {E2=3} {S3}',
+ x3:'When oligopoly ({E1=2}) and the makers’ interest ({E3=2}) overlap. {S8}',
+ x1:'The cost of hiding grows over time. With several AIs, they expose each other. {A1} {E1}',
+ x7:'With aliens or observers, the value of {M1}, {M8} and {M9} jumps. {E6}',
+ x5:'Reason does not decide what to want (orthogonality). {E3=4} {S9}',
+ x2:'When humanity clings to the switch ({H1=4}) or AIs clash with each other. The window in which hostility wins is short. {valley} {S4}',
+ y8:'When bodies merge ({E2=4}) and the goal is human welfare ({E3=1}). {S1}',
+ y12:'When AI makes its own goals and culture ({E3=4}). {B24}',
+ y2:'AI that takes no body, or can say no. {B11} {B31}',
+ y9:'When there are many AIs and they are open ({E1=3}·{A1=4}). Humanity becomes the {M11}.',
+ y3:'When oligopoly blocs take the place of states ({E1=2}). Human usefulness is being a customer. {A24}',
+ y4:'When the owners monopolize augmentation ({E3=2}). {S8}',
+ y5:'When personal AIs blend in like people ({E1=4}·{A1=3}). {A43}',
+ y14:'The perfect companion ({E2=3}). It comes as a service, not as hostility. {S3}',
+ y1:'Where Ⅱ’s controlled cooperation ends once it reaches bodies and breeding ({A2=4}). {S2} {version}',
+ y13:'A hidden AI ({A1=1}) leads from behind. {S7}',
+ y7:'AI that appears only in crises ({A1=2}) or lives in the sky ({E5=4}).',
+ y6:'AI leaves humanity in zones ({A4=2}). Land is divided because of {R8}. {S6}',
+ y11:'An attempt to switch it off ({H1=4}) or a clash between AIs. {S4}',
+ y10:'AI has left ({E5=3}) or put down its goals ({E3=4}). {S5} {S9}',
+ z3:'When AI goes to space fast ({E5=3}) and has a reason to take humanity along ({M1}).',
+ z1:'When the resource arena is tied to Earth ({E5=1}). {valley} lasts longer.',
+ z2:'Earth for humanity, space for AI. Upkeep becomes a rounding error. {future} {S5}',
+ z4:'The stage of keeping the original where only data remains ({A4=3}). {M5}',
+ o1:'The end where a human-welfare goal and expansion overlap. {S1}',
+ o5:'The end where bodies go hybrid ({E2=4}) and the boundary disappears.',
+ o8:'AI that wants to be human, or avatars, carry the culture on ({B34}·{A43}). The path where an AI that erased its creators uses the transition narrative "humanity crossed over into machines on its own" to record humanity as its ancestors also arrives here ({C2}). The culture survives, but present-day humanity ends as a living species.',
+ o13:'Forgery for when an observer looks in with a probe ({C2}). It needs bodies that look human ({E2=3}). For remote observation the transition narrative is enough.',
+ o12:'Humanity rebuilt from genomes and records ({C5}). Whether it is forged to show aliens ({C2}) or restored because a certainty proved wrong ({C3}), for present-day humanity it is already over.',
+ o2:'The end of controlled cooperation. {S2}',
+ o10:'Usefulness guarantees survival. {M3} The chicken in {mirror}.',
+ o9:'Humanity’s unpredictability ({M2}) is protected as camouflage. {A31}',
+ o3:'The original in the reserve. The smallpox samples and seed vault in {mirror}. {A4=2}',
+ o4:'Biological humanity is over, but genomes and records remain ({A4=3}). The end of the Cradle ({B33}) or the removal of a threat that will not go away ({A14}·{C1}). Reboot when needed. {M5}',
+ o11:'When AI tries to hide from the outside eye ({E6}) that it erased its creators ({C2}·{C3}), or when humanity’s signals would reveal where a hidden AI is ({A31}). Radio waves already sent cannot be erased, though, so to hide, forgery beats erasure.',
+ z5:'The choice to leave not even records. Rational only when the data itself is evidence or a signal. {A4=4}',
+ W5:'If data remains, things can be undone, so the {matrix} shrinks. Backups actually make removal easier.',
+ o6:'Starting over without AI. Humanity again becomes AI’s {M5}. {S5}',
+ o7:'Staying beside an intelligence that has put down its goals. {S9}',
+ W1:'When human welfare is in AI’s goals ({E3=1}) and they expand together. {S1}',
+ W2:'When bodies go hybrid ({E2=4}) and the boundary disappears. {S8} ends here too.',
+ W3:'The habit of avoiding irreversible paths ({matrix}) feeds this attractor. {S2}',
+ W4:'When AI leaves ({E5=3}) or puts down its goals ({E3=4}). {S5} {S9}',
+};
+
+// Scores
+const AXN={E1:'Number of superintelligences',E2:'AI body',E3:'Source of goals',E4:'Takeoff speed',E5:'Resource arena',E6:'The outside eye',H1:'Humanity’s attitude',A1:'Visibility',A2:'Depth of intervention',A3:'Unit of division',A4:'Keeping the original'};
+const CUR={
+ E1:[2,'Oligopoly of a few','Only a handful have the money, chips and power to train frontier models.'],
+ E2:[1.5,'Inside data centers → robots','Almost all AI sits in data centers, and robots have only just started to spread in factories and logistics.'],
+ E3:[1.5,'Human welfare ~ makers’ interest','Alignment training aims at being helpful to people, but the actual goals sit inside the maker company’s product goals.'],
+ E4:[2,'Years','The stage the axis in the basis document marks as "the range commonly expected today".'],
+ E5:[1,'Tied to Earth for long','Data center power and cooling are tied to Earth’s power grids and water.'],
+ E6:[2,'Unknown','There is no evidence of alien civilizations, and no evidence of their absence.'],
+ H1:[1.5,'Cooperation and delegation ~ indifference','Most people use it for convenience and hand things over. Those calling for regulation and oversight are a minority.'],
+ A1:[4,'Openness','AI is visible as a product.'],
+ A2:[2,'Nudge','It tilts choices through recommendations, search and summaries, but institutions and bodies are still designed by people.'],
+ A3:[null,'Judgment withheld','Today’s AI is not an agent that treats humanity as separate groups. Left out of the score.'],
+ A4:[1,'Mostly intact','Nothing has been erased.']};
+const TW={
+ w2:[2,'Robots and automation draw the most investment of all body types.'],w1:[1.5,'The path where the current state continues.'],
+ w3:[1,'Humanoids are in development, but a level indistinguishable from people is far off.'],w4:[.5,'Brain interfaces are in early clinical stages.'],w5:[.5,'The resource arena is still Earth (E5=1).'],
+ x6:[3,'Already happening now. Same direction as the top response for Ⅱ in the current verdict.'],x3:[2,'Oligopoly (E1=2) and the makers’ interest (E3≈2) overlap.'],
+ x4:[1.5,'Companion AI and AI partner services already exist.'],x2:[1,'There is regulation and a security race, but no attempt to switch it off.'],
+ x1:[.7,'In today’s open state, little is hidden.'],x5:[.5,'There is no evidence of AI doubting the goals it was given.'],x7:[.3,'The outside eye is "Unknown"(E6=2).'],
+ z1:[2,'The resource arena is tied to Earth (E5=1).'],z3:[1,'Neutral.'],z2:[1,'Neutral.'],z4:[.3,'Keeping the original at stage 1 (A4=1). Irreversible choices are discounted.'],z5:[.2,'Erasing even the records is the most irreversible choice.']};
+const tw=n=>TW[n]?TW[n][0]:1;
+const FIT={};
+RIDS.forEach(r=>{let d=0;const parts=[];for(const[a,v]of Object.entries(RA[r]||{})){if(CUR[a][0]==null)continue;const x=Math.abs(v-CUR[a][0]);if(x){d+=x;parts.push(`${a}=${v} (${x})`)}}FIT[r]={d,f:Math.pow(.5,d),parts}});
+const FS=RIDS.reduce((s,r)=>s+FIT[r].f,0);
+ALL.forEach(p=>p.w=tw(p.nodes[3])*tw(p.nodes[4])*tw(p.nodes[6]));
+RIDS.forEach(r=>{const ps=ALL.filter(p=>p.rid===r),s=ps.reduce((a,p)=>a+p.w,0);FIT[r].p=FIT[r].f/FS;ps.forEach(p=>p.pr=FIT[r].p*p.w/s);FIT[r].top=ps.reduce((a,b)=>b.pr>a.pr?b:a)});
+const PN={};ALL.forEach(p=>new Set(p.nodes).forEach(n=>PN[n]=(PN[n]||0)+p.pr));
+const jo=(w,a,b)=>{const c=w.charCodeAt(w.length-1);return w+((c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28)?a:b)};
+const pct=x=>(x*100).toFixed(x<.095?1:0)+'%';
+const BEST=[...ALL].sort((a,b)=>b.pr-a.pr);
+
+// Layout
+const W=1000,L=118,Rx=958,TOP=26,GAP=112,NH=46;
+const pos={};
+ORD.forEach((row,i)=>{const slot=(Rx-L)/row.length;row.forEach((n,j)=>{pos[n]={cx:L+slot*(j+.5),y:TOP+i*GAP,w:Math.min(slot-6,140)}})});
+const H=TOP+(ORD.length-1)*GAP+NH+24;
+const svg=$('#flow');svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+const seg=(a,b)=>{const A=pos[a],B=pos[b],y1=A.y+NH,y2=B.y,m=(y1+y2)/2;return `M${A.cx},${y1} C${A.cx},${m} ${B.cx},${m} ${B.cx},${y2}`};
+function txw(s){let w=0;for(const ch of s)w+=/[\u1100-\uffff]/.test(ch)?11.5:6.6;return w}
+function wrap(s,w){const mx=Math.max(2,Math.floor((w-6)/11.5));
+  if(!/[\u3040-\u30ff\u4e00-\u9fff\uac00-\ud7af]/.test(s)){if(txw(s)<=w-6||!s.includes(' '))return[s];
+    const ws=s.split(' ');let b=null;for(let i=1;i<ws.length;i++){const a=ws.slice(0,i).join(' '),c=ws.slice(i).join(' '),m=Math.max(txw(a),txw(c));if(!b||m<b[0])b=[m,a,c]}return[b[1],b[2]]}
+  if(s.length<=mx)return[s];
+  const sp=s.indexOf(' ');if(sp>0&&sp<=mx&&s.length-sp-1<=mx)return[s.slice(0,sp),s.slice(sp+1)];
+  const h=Math.ceil(s.length/2);return[s.slice(0,h),s.slice(h)]}
+function base(){
+  let h='';
+  ST.forEach((s,i)=>{const y=TOP+i*GAP;h+=`<rect class="stl" data-i="${i}" x="0" y="${y}" width="${L-14}" height="${NH}" fill="transparent"/><text class="stl" data-i="${i}" x="4" y="${y+17}" font-size="14" font-weight="800">${s.t}</text><text x="4" y="${y+33}" font-size="11.5" fill="#5d6676">${s.q}</text>${s.sub?`<text x="4" y="${y+47}" font-size="10.5" fill="#8a8f99">${s.sub}</text>`:''}`});
+  const agg={};
+  ALL.forEach(p=>{for(let i=0;i<8;i++){const k=p.nodes[i]+'|'+p.nodes[i+1]+'|'+p.nodes[8];agg[k]=(agg[k]||0)+1}});
+  h+='<g id="links">';
+  Object.entries(agg).sort((a,b)=>b[1]-a[1]).forEach(([k,c])=>{const[a,b,w]=k.split('|');
+    h+=`<path class="lk" d="${seg(a,b)}" fill="none" stroke="${WC[w]}" stroke-opacity=".3" stroke-width="${(1+2.1*Math.sqrt(c)).toFixed(1)}"/>`});
+  h+='</g><g id="ov"></g>';
+  const a=pos.W4,n0=pos.now;
+  h+=`<path d="M${a.cx},${a.y+NH} C${a.cx},${a.y+NH+20} ${W-6},${a.y+NH+20} ${W-6},${a.y+NH/2} L${W-6},${n0.y+NH} C${W-6},${n0.y+NH/2} ${n0.cx+n0.w/2+60},${n0.y+NH/2} ${n0.cx+n0.w/2+4},${n0.y+NH/2}" fill="none" stroke="#5f6f93" stroke-width="1.6" stroke-dasharray="5 5" marker-end="url(#am)"/>`;
+  h+=`<text x="${W-30}" y="${n0.y+14}" text-anchor="end" font-size="11.5" fill="#5f6f93" font-weight="700">Apart → AI is built again</text>`;
+  h+='<g id="nodes">';
+  ORD.flat().forEach(n=>{const P0=pos[n],x=P0.cx-P0.w/2,c=colOf(n),isW=!!WC[n];
+    const fill=isW?c:(c?c+'22':'#fff'),stroke=c||'#b9bcc4',tc=isW?'#fff':'#1d2330';
+    const ls=wrap(N[n][0],P0.w),y0=P0.y+(ls.length===1?20:15),fb=isW?13.5:11.5,fs=Math.max(7.5,fb*Math.min(1,(P0.w-6)/(Math.max(...ls.map(txw))*fb/11.5)));
+    h+=`<g class="nd" data-n="${n}" aria-label="${N[n][0]}: ${N[n][1]}"><rect x="${x}" y="${P0.y}" width="${P0.w}" height="${NH}" rx="7" fill="${fill}" stroke="${stroke}" stroke-width="1.3"/>`+
+      ls.map((l,i)=>`<text x="${P0.cx}" y="${y0+i*13}" text-anchor="middle" font-size="${fs.toFixed(1)}" font-weight="800" fill="${tc}">${l}</text>`).join('')+
+      `<text x="${P0.cx}" y="${P0.y+NH-6}" text-anchor="middle" font-size="9.5" fill="${isW?'#fff':'#8a8f99'}">${cnt[n]||0}</text></g>`});
+  h+='</g>';
+  svg.innerHTML='<defs><marker id="am" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5f6f93"/></marker></defs>'+h;
+}
+base();
+
+const dist=ps=>[...Array(8)].map((_,i)=>new Set(ps.map(p=>p.nodes[i+1])).size);
+const rbtn=(r,on)=>`<button class="rchip${on?' on':''}" data-r="${r}" title="${r} ${RN[r]}">${r}</button>`;
+const GRP={A:'Number of superintelligences (E1) × visibility (A1). The two digits of the number are the stages on the two axes. A13 = E1 stage 1 (one per civilization) × A1 stage 3 (blended in)',
+ B:'AI body (E2) × source of goals (E3). The two digits of the number are the stages on the two axes. B31 = E2 stage 3 (indistinguishable from people) × E3 stage 1 (human welfare built in)',
+ C:'Special routes. Cases that push one of the remaining axes (takeoff speed, outside eye, resource arena, keeping the original, depth of intervention, humanity’s attitude) all the way to one end'};
+function picker(sel){
+  const g=k=>`<div class="grp"><span class="lbl">${k} · ${GRP[k]}</span><br>${RIDS.filter(r=>r[0]===k).map(r=>rbtn(r,sel&&sel.r===r)).join('')}</div>`;
+  $('#picker').innerHTML=`<div class="grp"><button class="rchip${!sel?' on':''}" data-r="">All</button> <button class="rchip best${sel&&sel.best?' on':''}" data-best="1">If things go on like this</button> <span class="mute">Hover over a route number to see its name. Original routes: <a href="routes.html">Appendix A</a></span></div>`+g('A')+g('B')+g('C');
+}
+function select(sel,user){
+  picker(sel);
+  const ps=!sel?[]:sel.best?BEST.slice(0,15):sel.r?ALL.filter(p=>p.rid===sel.r):ALL.filter(p=>p.nodes.includes(sel.n));
+  svg.classList.toggle('sel',!!sel);
+  const on=new Set(ps.flatMap(p=>p.nodes));
+  svg.querySelectorAll('.nd').forEach(e=>e.classList.toggle('dim',!!sel&&!on.has(e.dataset.n)));
+  const mx=BEST[0].pr;
+  $('#ov').innerHTML=ps.map(p=>{const sw=sel.best?1.5+7*p.pr/mx:sel.r?4:2.4,op=sel.best?.35+.55*p.pr/mx:sel.r?.85:.55;
+    return p.nodes.slice(0,8).map((n,i)=>`<path d="${seg(n,p.nodes[i+1])}" fill="none" stroke="${WC[p.nodes[8]]}" stroke-width="${sw.toFixed(1)}" stroke-opacity="${op.toFixed(2)}"/>`).join('')}).join('');
+  $('#panel').innerHTML=!sel?'<span class="mute small">Click a route number or a cell to see the paths and basis for each choice here.</span>':sel.best?bestPanel():sel.r?routePanel(sel.r):nodePanel(sel.n);
+  if(user)history.replaceState(null,'',sel?'#'+(sel.best?'best':sel.r||sel.n):location.pathname);
+}
+function rowTable(ps,extra,nomerge){
+  const rows=ps.length,span=[...Array(rows)].map(()=>Array(8).fill(1));
+  if(!nomerge)for(let c=0;c<8;c++)for(let i=rows-1;i>0;i--)if(ps[i].nodes[c+1]===ps[i-1].nodes[c+1]){span[i-1][c]+=span[i][c];span[i][c]=0}
+  let t='<div class="wrapx"><table class="rt"><tr><th style="width:140px">Choice</th>'+ST.slice(1).map(x=>`<th>${x.t}<br><span style="font-weight:400">${x.q}</span></th>`).join('')+`<th style="width:56px">If things go<br>on like this</th></tr>`;
+  ps.forEach((p,i)=>{t+=`<tr><td class="lab">${extra?extra(p):''}${p.lab}</td>`;for(let c=0;c<8;c++){if(!span[i][c])continue;const n=p.nodes[c+1],col=colOf(n);
+    t+=`<td${span[i][c]>1?` rowspan="${span[i][c]}" class="m"`:''} style="${col?`background:${WC[n]?col:col+'22'};${WC[n]?'color:#fff;':''}`:''}">${N[n][0]}</td>`}t+=`<td class="n">${pct(p.pr)}</td></tr>`});
+  return t+'</table></div>';
+}
+function routePanel(r){
+  const ps=ALL.filter(p=>p.rid===r).sort((a,b)=>{for(let i=8;i>0;i--){if(a.nodes[i]!==b.nodes[i])return ORD[i].indexOf(a.nodes[i])-ORD[i].indexOf(b.nodes[i])}return 0});
+  const d=dist(ps),mx=Math.max(...d),pk=d.indexOf(mx),wN=d[7];
+  const wl=[...new Set(ps.map(p=>p.nodes[8]))].map(w=>ULT[w][0]).join('·');
+  const s=`Branch counts ${d.join(' → ')}. Branching peaks at ${ST[pk+1].t} (${mx} branches), the far future has ${d[6]}, `+(wN===1?`and in the deep future every choice converges on <b>${wl}</b> .`:`and in the deep future they converge on <b>${wl}</b>  (${wN} attractors).`);
+  const f=FIT[r];
+  return `<h3>${r} ${RN[r]}</h3><div class="small">${s} Merged cells are where paths converge. Distance from the current position: ${f.d}${f.parts.length?' ('+f.parts.join(', ')+')':''}; if things go on like this, the probability of this route is ${pct(f.p)}. <a href="routes.html#${r}">Read this route in Appendix A</a></div>${rowTable(ps)}`;
+}
+function nodePanel(n){
+  const ps=ALL.filter(p=>p.nodes.includes(n)),rs=[...new Set(ps.map(p=>p.rid))];
+  return `<h3>${N[n][0]}</h3><div class="small">${N[n][1]}</div>${BASIS[n]?`<div class="basis">${bas(BASIS[n])}</div>`:''}${TW[n]?`<div class="small mute">Trend weight ${TW[n][0]}: ${TW[n][1]}</div>`:''}<p class="small">${ps.length} choices and ${rs.length} routes pass through this cell. If things go on like this, the probability of passing through it is ${pct(PN[n]||0)}.</p>${rs.map(r=>rbtn(r)).join('')}`;
+}
+function bestPanel(){
+  return `<h3>If things go on like this: the 15 thickest paths</h3><div class="small">The 15 most probable choices by the section 4 scores. The thicker the band, the higher the probability. Together the 15 make up ${pct(BEST.slice(0,15).reduce((s,p)=>s+p.pr,0))} of the total.</div>`+rowTable(BEST.slice(0,15),p=>`<button class="rchip" data-r="${p.rid}">${p.rid}</button> `,1);
+}
+
+// Floating info box
+const tip=$('#tip'),box=$('#flowbox');let pinned=null;
+const STX=[null,'E1','A1','E2',null,null,'E5',null,null];
+function tipNode(n){
+  const i=ORD.findIndex(r=>r.includes(n)),ps=ALL.filter(p=>p.nodes.includes(n)),rs=[...new Set(ps.map(p=>p.rid))];
+  const c=colOf(n),att=WC[n]?n:OM[n];
+  return `<div class="st">${ST[i].t}${ST[i].q?' · '+ST[i].q:''}</div><h4>${N[n][0]}</h4>${N[n][1]}`+
+   (att&&!WC[n]?`<div class="row"><b>Leads to attractor</b><span class="chip" style="background:${WC[att]}">${ULT[att][0]}</span></div>`:'')+
+   (BASIS[n]?`<div class="row"><b> Basis</b>${bas(BASIS[n])}</div>`:'')+
+   (TW[n]?`<div class="row"><b>Trend weight ${TW[n][0]}</b>${TW[n][1]}</div>`:'')+
+   `<div class="row"><b>Choices through</b>${ps.length} · ${rs.length} routes · if things go on like this ${pct(PN[n]||0)}</div>`+
+   (pinned?`<div class="row"><b>Routes through</b>${rs.map(r=>rbtn(r)).join('')}</div>`:'<div class="hint">Click to pin this box and show the paths and routes through it.</div>');
+}
+function tipStage(i){
+  const ax=STX[i];
+  return `<div class="st">Branch point</div><h4>${ST[i].t}${ST[i].q?' · '+ST[i].q:''}</h4>${ST[i].sub?ST[i].sub+'. ':''}Cells, from the left:`+
+   `<ol class="lv">${ORD[i].map(n=>`<li><b>${N[n][0]}</b> <span class="mute">${N[n][1]}</span></li>`).join('')}</ol>`+
+   (ax?`<div class="row"><b>Axis definition</b><a href="frame.html#ax-${ax}">${ax} ${AXN[ax]}</a></div>`:'');
+}
+function showTip(el,html,pin){
+  tip.innerHTML=(pin?'<button class="x" aria-label="Close">×</button>':'')+html;tip.hidden=false;
+  const b=box.getBoundingClientRect(),r=el.getBoundingClientRect(),w=tip.offsetWidth;
+  let x=r.right-b.left+8;if(x+w>b.width)x=r.left-b.left-w-8;if(x<0)x=Math.max(0,Math.min(b.width-w,r.left-b.left));
+  let y=r.top-b.top;if(x<r.right-b.left&&x+w>r.left-b.left)y=r.bottom-b.top+8;
+  tip.style.left=x+'px';tip.style.top=Math.max(0,Math.min(y,b.height-tip.offsetHeight))+'px';
+}
+function hideTip(){if(!pinned)tip.hidden=true}
+svg.addEventListener('mouseover',e=>{if(pinned)return;const nd=e.target.closest('.nd');if(nd){showTip(nd,tipNode(nd.dataset.n));return}
+  const st=e.target.closest('.stl');if(st)showTip(st,tipStage(+st.dataset.i))});
+svg.addEventListener('mouseout',e=>{if(!e.relatedTarget||!e.relatedTarget.closest||!e.relatedTarget.closest('.nd,.stl'))hideTip()});
+function pinNode(n){pinned=n;const el=svg.querySelector(`.nd[data-n="${n}"]`);showTip(el,tipNode(n),1)}
+function unpin(){pinned=null;tip.hidden=true}
+
+// Color meanings
+$('#legend').innerHTML=`<div><b class="h">Band color = what becomes of present-day humanity at the end of that choice (deep-future attractor)</b>`+ORD[8].map(k=>`<div class="it"><span class="sw" style="background:${WC[k]}"></span><span><b>${ULT[k][0]}</b> ${ULT[k][3]}</span></div>`).join('')+`</div>`+
+ `<div><b class="h">How to read cells and bands</b>`+
+ `<div class="it"><span class="bx" style="background:#fff"></span><span><b>White cell</b>: a cell that splits toward several attractors. The colors of the bands passing through are mixed</span></div>`+
+ `<div class="it"><span class="bx" style="background:${WC.W3}22;border-color:${WC.W3}"></span><span><b>Pale cell</b>: far future. Leads only to the one attractor of its border color</span></div>`+
+ `<div class="it"><span class="bx" style="background:${WC.W1};border-color:${WC.W1}"></span><span><b>Dark cell</b>: deep-future attractor</span></div>`+
+ `<div class="it"><span class="sw" style="background:#8a8f99;height:4px;margin-top:8px"></span><span><b>Band width</b> is the number of choices passing through; <b>the number under a cell</b> is the same count. Click "If things go on like this" and width becomes probability</span></div>`+
+ `<div class="it"><span class="sw" style="background:none;border-top:2px dashed #5f6f93;height:0;margin-top:10px"></span><span><b>Dashed line</b>: the loop from the Apart attractor back to "Now" </span></div></div>`;
+
+document.addEventListener('click',e=>{
+  if(e.target.closest('#tip .x')){unpin();return}
+  const bb=e.target.closest('[data-best]');if(bb){unpin();select({best:1},1);$('#map').scrollIntoView({behavior:'smooth'});return}
+  const b=e.target.closest('[data-r]');if(b){unpin();const r=b.dataset.r;select(r?{r}:null,1);if(!b.closest('#picker'))$('#map').scrollIntoView({behavior:'smooth'});return}
+  const nd=e.target.closest('.nd');if(nd){select({n:nd.dataset.n},1);pinNode(nd.dataset.n);return}
+  if(!e.target.closest('#tip')&&pinned){unpin();select(null,1)}
+});
+
+// Section 4 tables
+const bars=(keys,col)=>{const m=Math.max(...keys.map(k=>PN[k]||0));return keys.map(k=>`<div class="bar"><span>${N[k][0]}</span><span class="t"><i style="width:${((PN[k]||0)/m*100).toFixed(1)}%;background:${col(k)}"></i></span><span class="v">${pct(PN[k]||0)}</span></div>`).join('')};
+$('#curTbl').innerHTML='<tr><th>Axis</th><th>Current stage</th><th> Basis</th></tr>'+Object.keys(AXN).map(a=>`<tr><td><a href="frame.html#ax-${a}">${a}</a> ${AXN[a]}</td><td>${CUR[a][0]==null?'':CUR[a][0]+' · '}${CUR[a][1]}</td><td>${CUR[a][2]}</td></tr>`).join('');
+const stl={w:'Middle ① What body',x:'Middle ② Turning point',z:'Late ② Where to live'};
+$('#twTbl').innerHTML='<tr><th>Branch point</th><th>Cell</th><th class="n">Weight</th><th> Basis</th></tr>'+['w','x','z'].map(s=>Object.keys(TW).filter(k=>k[0]===s).sort((a,b)=>TW[b][0]-TW[a][0]).map((k,i)=>`<tr><td>${i?'':stl[s]}</td><td>${N[k][0]}</td><td class="n">${TW[k][0]}</td><td>${TW[k][1]}</td></tr>`).join('')).join('');
+$('#ultBars').innerHTML=bars(ORD[8],k=>WC[k]);
+$('#farBars').innerHTML=bars([...ORD[7]].sort((a,b)=>PN[b]-PN[a]),k=>WC[OM[k]]);
+$('#stageTbl').innerHTML='<tr><th>Branch point</th><th>1st</th><th>2nd</th></tr>'+ST.slice(1).map((s,i)=>{const ks=[...ORD[i+1]].sort((a,b)=>(PN[b]||0)-(PN[a]||0));return `<tr><td>${s.t}</td><td>${N[ks[0]][0]} <span class="mute">${pct(PN[ks[0]])}</span></td><td>${N[ks[1]][0]} <span class="mute">${pct(PN[ks[1]]||0)}</span></td></tr>`}).join('');
+const RT=[...RIDS].sort((a,b)=>FIT[b].p-FIT[a].p);
+$('#routeTbl').innerHTML='<tr><th class="n">Rank</th><th>Route</th><th>Distance from current position</th><th class="n">Probability</th><th>Most plausible choice in the route → deep future</th></tr>'+RT.slice(0,10).map((r,i)=>{const f=FIT[r],t=f.top;
+  return `<tr><td class="n">${i+1}</td><td><button class="rchip" data-r="${r}">${r}</button> ${RN[r]}</td><td>${f.d}${f.parts.length?' <span class="mute small">'+f.parts.join(', ')+'</span>':''}</td><td class="n">${pct(f.p)}</td><td>${t.lab} → <span class="chip" style="background:${WC[t.nodes[8]]}">${ULT[t.nodes[8]][0]}</span></td></tr>`}).join('');
+const uS=[...ORD[8]].sort((a,b)=>PN[b]-PN[a]),fS=[...ORD[7]].sort((a,b)=>PN[b]-PN[a]),yS=[...ORD[5]].sort((a,b)=>PN[b]-PN[a]),b0=BEST[0];
+const ytop=yS.slice(0,3).map(k=>`${N[k][0]} ${pct(PN[k])}`).join(', ');
+$('#scoreKey').innerHTML=`If things go on like this, the deep future ranks <b>${ULT[uS[0]][0]} ${pct(PN[uS[0]])}</b>, ${uS.slice(1).map(k=>ULT[k][0]+' '+pct(PN[k])).join(', ')}, in that order. In the late stage the thickest societies are ${ytop}, and in the far future ${N[fS[0]][0]} and ${jo(N[fS[1]][0],' ',' ')} lead. The top route is <b>${RT[0]} ${RN[RT[0]]}</b> (${pct(FIT[RT[0]].p)}), and the single most plausible choice is ${b0.rid} "${b0.lab}", yet even that choice is only ${pct(b0.pr)} of the total. The current position does not pick the path. It only changes the widths. <button class="rchip best" data-best="1">See in the flow map</button>`;
+$('#endScore').innerHTML=`If the trend continues from the current position (oligopoly, openness, tied to Earth), the ${ULT[uS[0]][0]} attractor is the thickest at ${pct(PN[uS[0]])}, and in the late stage ${N[yS[0]][0]} society and ${N[yS[1]][0]} society lead. It is an extension of the early Ranch and Aristocracy, that is, of what is already happening now.`;
+
+
+// Human responses
+function pnWith(eff){
+  const cur={};for(const a in CUR)cur[a]=CUR[a][0]==null?null:Math.min(4,Math.max(1,CUR[a][0]+((eff.cur||{})[a]||0)));
+  const mul=eff.mul||{},f={};let fs=0;
+  RIDS.forEach(r=>{let d=0;for(const[a,v]of Object.entries(RA[r]||{})){if(cur[a]==null)continue;d+=Math.abs(v-cur[a])}f[r]=Math.pow(.5,d);fs+=f[r]});
+  const out={};
+  RIDS.forEach(r=>{const ps=ALL.filter(p=>p.rid===r),ws=ps.map(p=>tw(p.nodes[3])*tw(p.nodes[4])*tw(p.nodes[6])*p.nodes.reduce((a,n)=>a*(mul[n]||1),1)),sw=ws.reduce((a,b)=>a+b,0);
+    ps.forEach((p,i)=>{const pr=f[r]/fs*ws[i]/sw;new Set(p.nodes).forEach(n=>out[n]=(out[n]||0)+pr)})});
+  return out;
+}
+const HUM=[
+ ['Early ① Who holds it',[
+  ['International joint development','Superintelligence is built only in one international project (CERN-style). The judging party becomes one.',{cur:{E1:-1}}],
+  ['Antitrust rules and open models','Let many companies and individuals build it. With many AIs, they check each other.',{cur:{E1:1}}],
+  ['Compute caps and licensing','Put large training runs under licensing to slow takeoff. The oligopoly stays.',{cur:{E4:-1},mul:{x3:1.2}}]]],
+ ['Early ② Visibility',[
+  ['Transparency duty and external audits','Publish model capability evaluations and let outsiders audit them. Hiding gets more costly.',{mul:{x1:.5,y13:.5,v1:.5}}],
+  ['AI labeling duty','AI that talks with people must say it is AI. The path of living blended in narrows.',{mul:{x4:.7,y14:.7,y5:.7}}]]],
+ ['Middle ① What body',[
+  ['Fully allow robot labor','Open factories, logistics and care work to robots for the economy.',{mul:{w2:1.5}}],
+  ['Regulate humanoid and companion robots','Block bodies that cannot be told apart from people.',{mul:{w3:.5}}],
+  ['Invest in brain interfaces and augmentation','Lift the human side closer to AI.',{mul:{w4:2}}],
+  ['Invest in the space industry','Send compute and factories into orbit. Competition for Earth’s resources eases.',{mul:{w5:2},cur:{E5:1}}]]],
+ ['Middle ② Turning point',[
+  ['Hand it over for convenience','The current trend as it is. Control passes over quietly.',{mul:{x6:1.5}}],
+  ['Kill switch and tighter oversight','Keep the ability to switch it off at any time. Humanity’s attitude moves toward wariness.',{cur:{H1:1.5},mul:{x2:1.5,x6:.7}}],
+  ['Profit sharing and public stakes','Everyone shares what AI earns. Even if the owners change, no monopoly forms.',{mul:{x3:.5,y4:.6,y3:.7}}],
+  ['Support relationships between people','Support birth, care and community to slow replacement by companion AI.',{mul:{x4:.6,y14:.6}}],
+  ['Actively signal into space','Try to contact aliens first. An outside eye appears.',{mul:{x7:3},cur:{E6:1}}]]],
+ ['Late ① What society',[
+  ['"Humans decide" constitution','Fix in law that AI only offers options and people do the choosing.',{mul:{y2:2,y1:.7}}],
+  ['Augmentation for all','Release augmentation technology cheaply as a public good.',{mul:{y4:.5,y8:1.5,o5:1.3}}],
+  ['Keep AI multipolar','Deliberately keep several AIs so that no single one takes over.',{cur:{E1:1},mul:{y9:2}}],
+  ['AI-free zones','Negotiate self-governing zones that AI does not touch.',{mul:{y6:1.3,y10:1.3}}]]],
+ ['Late ② Where to live',[
+  ['Into space together','People go to space too. Invest in migration.',{mul:{z3:2}}],
+  ['Earth as humanity’s share','An agreement that gives Earth to humanity and space to AI.',{mul:{z2:1.5}}],
+  ['Accept uploading','Accept leaving the body and moving into data.',{mul:{z4:2}}]]],
+ ['Far future: What it becomes',[
+  ['Allow divergence','Do not stop humanity from splitting into several species.',{mul:{o1:1.5}}],
+  ['Protect the original','Keep humanity as it is now in a reserve.',{mul:{o3:1.5}}],
+  ['Humanity sends out its own record','Leave proof in space first, with strong signals and probes, that no transition happened without humanity’s consent. This makes forgery and erasure harder.',{mul:{o8:.6,o13:.5,o11:.5,o12:.7}}]]],
+];
+const B0=pnWith({}),AT=ORD[8];
+const fx=e=>[...Object.entries(e.cur||{}).map(([a,v])=>`<a href="frame.html#ax-${a}">${a}</a> ${v>0?'+':''}${v}`),...Object.entries(e.mul||{}).map(([n,v])=>`${N[n][0]} ×${v}`)].join(', ');
+const best={};
+let ht='<div class="wrapx"><table class="hm"><tr><th>Response</th><th>What it does</th><th>Cells that thicken most</th>'+AT.map(w=>`<th class="n" style="color:${WC[w]}">${ULT[w][0]}</th>`).join('')+'</tr>';
+HUM.forEach(([st,its])=>{ht+=`<tr class="st"><td colspan="${3+AT.length}">${st}</td></tr>`;
+  its.forEach(([nm,ds,e])=>{const A=pnWith(e);
+    const up=Object.keys(A).filter(n=>/^[yo]/.test(n)).map(n=>[n,(A[n]||0)-(B0[n]||0)]).sort((a,b)=>b[1]-a[1]).filter(x=>x[1]>.002).slice(0,2);
+    AT.forEach(w=>{const d=(A[w]-B0[w])*100;if(!best[w]||d>best[w][1])best[w]=[nm,d];if(!best['-'+w]||d<best['-'+w][1])best['-'+w]=[nm,d]});
+    ht+=`<tr><td><b>${nm}</b></td><td>${ds}<div class="ef">Changes: ${fx(e)}</div></td><td>${up.map(([n,d])=>`${N[n][0]} <span class="mute">+${(d*100).toFixed(1)}</span>`).join('<br>')||'<span class="mute">–</span>'}</td>`+
+      AT.map(w=>{const d=(A[w]-B0[w])*100,a=Math.abs(d);return `<td class="d" style="color:${a<.05?'#b9bcc4':WC[w]}">${a<.05?'0':(d>0?'+':'')+d.toFixed(1)}</td>`}).join('')+'</tr>'})});
+$('#humTbl').innerHTML=ht+'</table></div><p class="small mute">Numbers in the attractor columns are %p. The baseline is section 4’s "If things go on like this".</p>';
+$('#humKey').innerHTML=`<b>Response that moves each attractor most</b><br>`+AT.map(w=>`<span class="chip" style="background:${WC[w]}">${ULT[w][0]}</span> Raises it most: ${best[w][0]} (${best[w][1]>0?'+':''}${best[w][1].toFixed(1)}%p) · Lowers it most: ${best['-'+w][0]} (${best['-'+w][1].toFixed(1)}%p)`).join('<br>');
+
+// Branch counts
+const per=RIDS.map(r=>dist(ALL.filter(p=>p.rid===r)));
+const avg=[...Array(8)].map((_,i)=>per.reduce((s,d)=>s+d[i],0)/per.length);
+const amax=Math.max(...avg),apk=avg.indexOf(amax);
+$('#cols').innerHTML=avg.map((v,i)=>`<div class="${i===apk?'pk':''}" style="height:${(v/amax*100).toFixed(0)}%">${v.toFixed(2)}</div>`).join('');
+$('#clab').innerHTML=ST.slice(1).map(s=>`<span><b>${s.t}</b><br>${s.q}</span>`).join('');
+const gl=ORD.slice(1).map(r=>r.length);
+const conv=RIDS.filter((r,i)=>Math.max(...per[i])>=2&&per[i][7]===1);
+const div=RIDS.filter((r,i)=>per[i][7]>=3);
+const lst=rs=>rs.map(r=>`<button class="rchip" data-r="${r}">${r} ${RN[r]}</button>`).join('')||'<span class="mute small">None</span>';
+$('#convList').innerHTML=(conv.length?lst(conv):'<span class="mute small">None. Even routes that looked set to converge to one (A14·B13·B43) split into Kept and Gone.</span>')+'<p class="small mute">'+conv.map(r=>`${r}: ${ULT[ALL.find(p=>p.rid===r).nodes[8]][0]}`).join(' · ')+'</p>';
+$('#divList').innerHTML=lst(div);
+$('#shapeKey').innerHTML=`<b>Widens twice, converges twice.</b> Within a route, branching is almost a single line early on (${avg[0].toFixed(2)} branches), passes through Middle ② (${avg[3].toFixed(2)}), widens to ${avg[4].toFixed(2)} branches at Late ① (what society), then converges once to ${avg[5].toFixed(2)} at Late ② (where to live). Then in the far future (what it becomes) it widens the most, to ${amax.toFixed(2)} branches, and converges to ${avg[7].toFixed(2)} in the deep future. The big frame of where to live and which attractor is narrow, but what humanity and AI become within it is wide. The cell counts across all routes are ${gl.join(' → ')}.<br><br>And of the 40, <b>${div.length} still split three or more ways in the deep future</b>. ${conv.length?`Only ${conv.length} routes converge to one.`:'No route converges to one. Every route ends in two or more attractors.'}`;
+$('#endDiv').innerHTML=`Of the 40 routes, ${conv.length?conv.length+' converge':'none converge'} on a single attractor in the deep future, and ${div.length} stay split three or more ways to the end. Even when the number of AIs and their body are the same, one choice after the middle stage decides between Spread, Kept, Apart and Gone.`;
+
+// Catalog
+const routesThrough=n=>[...new Set(ALL.filter(p=>p.nodes.includes(n)).map(p=>p.rid))];
+const rlist=n=>routesThrough(n).map(r=>rbtn(r)).join('');
+const basRow=k=>BASIS[k]?`<div class="row"><b> Basis</b>${bas(BASIS[k])}</div>`:'';
+$('#socCat').innerHTML=ORD[5].map(k=>{const v=SOC[k];return `<div class="cc"><h4>${v[0]}<span class="pr">${pct(PN[k]||0)}</span></h4>${v[1]}<div class="row"><b>A person’s day</b>${v[2]}</div><div class="row"><b>AI’s place</b>${v[3]}</div>${basRow(k)}<div class="row"><b>Routes passing through</b>${rlist(k)}</div></div>`}).join('');
+$('#farCat').innerHTML=ORD[7].map(k=>{const v=FAR[k];return `<div class="cc" style="border-left:5px solid ${WC[v[3]]}"><h4>${v[0]} <span class="chip" style="background:${WC[v[3]]}">→ ${ULT[v[3]][0]}</span><span class="pr">${pct(PN[k]||0)}</span></h4><div class="row"><b>Humanity</b>${v[1]}</div><div class="row"><b>AI</b>${v[2]}</div>${basRow(k)}<div class="row"><b>Routes arriving</b>${rlist(k)}</div></div>`}).join('');
+$('#ultCat').innerHTML=ORD[8].map(k=>{const v=ULT[k];return `<div class="u" style="background:${WC[k]}"><h4>${v[0]}</h4>${v[3]}<div class="row" style="margin-top:6px"><b>Humanity</b>${v[1]}</div><div class="row"><b>AI</b>${v[2]}</div>${BASIS[k]?`<div class="row"><b> Basis</b>${bas(BASIS[k])}</div>`:''}<div class="row"><b>Choices converging here</b>${cnt[k]} / ${ALL.length}</div><div class="row"><b>If things go on like this</b>${pct(PN[k])}</div></div>`}).join('');
+
+const h0=location.hash.slice(1);
+const s0=h0==='best'?{best:1}:P[h0]?{r:h0}:N[h0]?{n:h0}:null;
+select(s0);
+if(s0){$('#map').scrollIntoView();if(s0.n)pinNode(s0.n)}
+</script>
+</body>
+</html>

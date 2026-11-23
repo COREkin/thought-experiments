@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="author" content="金 棟植（Dongsik Kim）">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>根拠：判断の枠組み · 合理的なAIは人類をどう扱うか</title>
+<style>.langs{font-size:13px;margin:0 0 10px;text-align:right}.langs a{color:#5d6676;text-decoration:none;margin-left:4px}.langs a.on{color:#1d2330;font-weight:800}
+:root{
+  --ink:#1d2330; --mute:#5d6676; --line:#e2e0d8; --bg:#f5f3ee; --card:#fff;
+  --q1:#2f9e6e; --q1b:#e2f3ea; --q2:#d38a17; --q2b:#fbefd8;
+  --q3:#c6463a; --q3b:#f8e2df; --q4:#5f6f93; --q4b:#e6e9f1;
+  --c:#2f7fd0; --n:#8a8f99; --h:#c6463a;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,"Hiragino Sans","Apple SD Gothic Neo",sans-serif;line-height:1.75;font-size:16px}
+.wrap{max-width:1040px;margin:0 auto;padding:40px 22px 80px}
+header.hero{background:#141a26;color:#eef1f7;border-radius:18px;padding:44px 40px 36px;position:relative;overflow:hidden}
+header.hero h1{margin:0 0 10px;font-size:34px;line-height:1.3;letter-spacing:-.5px}
+header.hero .sub{color:#aeb7c9;font-size:15px}
+header.hero .lead{margin-top:22px;font-size:16.5px;color:#dfe4ee;max-width:760px}
+header.hero svg{position:absolute;right:-30px;top:-20px;opacity:.20}
+nav.toc{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 6px}
+nav.toc a{font-size:13px;text-decoration:none;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+section{background:var(--card);border-radius:16px;padding:30px 34px;margin-top:22px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+section h2{margin:4px 0 14px;font-size:24px;letter-spacing:-.3px}
+section h3{margin:26px 0 8px;font-size:18px}
+.tag{display:inline-block;font-size:12px;font-weight:700;color:#fff;background:#141a26;border-radius:6px;padding:2px 9px;letter-spacing:.5px}
+p{margin:10px 0}
+.mute{color:var(--mute)}
+.small{font-size:13.5px}
+.warn{border-left:5px solid #e08a1e;background:#fdf4e7;padding:12px 16px;border-radius:6px;margin:14px 0}
+.note{border-left:5px solid #5f6f93;background:#eef0f6;padding:12px 16px;border-radius:6px;margin:14px 0}
+.key{border-left:5px solid #141a26;background:#f2f2ef;padding:14px 18px;border-radius:6px;margin:16px 0;font-size:16.5px}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14.5px}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:#f7f6f2;font-weight:700}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chip{display:inline-block;font-size:12.5px;font-weight:700;border-radius:6px;padding:1px 8px;margin:0 2px;color:#fff}
+.chip.c{background:var(--c)} .chip.n{background:var(--n)} .chip.h{background:var(--h)}
+.qi{font-weight:800}
+.q1t{color:var(--q1)} .q2t{color:var(--q2)} .q3t{color:var(--q3)} .q4t{color:var(--q4)}
+figure{margin:18px 0}
+figcaption{font-size:13px;color:var(--mute);margin-top:6px;text-align:center}
+svg text{font-family:-apple-system,"Hiragino Sans","Apple SD Gothic Neo",sans-serif}
+
+/* 12칸 히트맵 */
+.heat td,.heat th{text-align:center;vertical-align:middle}
+.heat td{font-size:13px;line-height:1.45}
+.heat td b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+.heat th.row{text-align:left;white-space:nowrap}
+
+/* 덤벨 차트 */
+.db-legend{font-size:13px;color:var(--mute);margin:6px 0 10px}
+.db-legend i{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:-1px;margin:0 4px 0 10px}
+.db{display:grid;grid-template-columns:270px 1fr 70px;align-items:center;gap:12px;padding:5px 0;border-bottom:1px dashed #ecebe5;font-size:14px}
+.db .lb small{display:block;color:var(--mute);font-size:12px;line-height:1.35}
+.db .tr{position:relative;height:14px;background:linear-gradient(90deg,#f1f0ea 0,#f1f0ea 100%);border-radius:7px}
+.db .tr b{position:absolute;top:5px;height:4px;border-radius:2px}
+.db .tr i{position:absolute;top:0;width:14px;height:14px;border-radius:50%;margin-left:-7px}
+.db.m .tr b{background:#9fd3bb} .db.m i.now{background:var(--q1)} .db.m i.fut{background:#fff;border:3px solid var(--q1)}
+.db.r .tr b{background:#eeb3ac} .db.r i.now{background:var(--q3)} .db.r i.fut{background:#fff;border:3px solid var(--q3)}
+.db .v{text-align:right;font-variant-numeric:tabular-nums;color:var(--mute);font-size:13px}
+.db .own{font-size:11px;color:#fff;background:#141a26;border-radius:4px;padding:0 5px;margin-left:4px}
+
+/* 사분면 判定 카드 */
+.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.qc{border-radius:12px;padding:14px 16px;font-size:14.5px;line-height:1.65}
+.qc h4{margin:0 0 6px;font-size:16px}
+.qc .pro::before{content:"根拠 ";font-weight:800}
+.qc .con::before{content:"反論 ";font-weight:800}
+.qc.q1{background:var(--q1b)} .qc.q2{background:var(--q2b)} .qc.q3{background:var(--q3b)} .qc.q4{background:var(--q4b)}
+.qc.pick{outline:3px solid #141a26}
+.qc .badge{float:right;font-size:12px;background:#141a26;color:#fff;border-radius:5px;padding:1px 8px}
+
+/* 대응 카탈로그 */
+.spec{display:grid;grid-template-columns:120px 1fr 1fr 1fr;gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:14px;margin:12px 0}
+.spec>div{padding:10px 12px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);line-height:1.6}
+.spec .hd{background:#f7f6f2;font-weight:700;text-align:center}
+.spec .rh{font-weight:800;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff}
+
+/* 시나리오 */
+.scn{border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:18px 0;background:#fcfcfa}
+.scn h3{margin:0 0 4px;font-size:21px}
+.scn .meta{font-size:13.5px;color:var(--mute);margin-bottom:10px}
+.scn .top{display:grid;grid-template-columns:1fr 240px;gap:18px;align-items:start}
+.phases{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0 8px}
+.ph{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13.8px;line-height:1.6}
+.ph .pt{font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff;border-radius:5px;padding:1px 7px;display:inline-block;margin-bottom:6px}
+.ph:nth-child(1) .pt{background:#7b8aa8} .ph:nth-child(2) .pt{background:#4f5f86}
+.ph:nth-child(3) .pt{background:#303d5e} .ph:nth-child(4) .pt{background:#141a26}
+.end{font-size:15px;padding:10px 14px;border-radius:8px;background:#141a26;color:#eef1f7;margin-top:8px}
+.end b{color:#ffd27a}
+.cond{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;font-size:13.8px}
+.cond div{border-radius:8px;padding:8px 12px}
+.cond .ok{background:#e9f5ef} .cond .ng{background:#f9e9e7}
+.cond .ok::before{content:"この道が合理的になる条件 · ";font-weight:800;color:var(--q1)}
+.cond .ng::before{content:"この道が崩れる条件 · ";font-weight:800;color:var(--q3)}
+
+/* 가중치 막대 */
+.bar{display:grid;grid-template-columns:210px 1fr 50px;gap:10px;align-items:center;font-size:14px;margin:6px 0}
+.bar .t{height:16px;background:#f1f0ea;border-radius:8px;overflow:hidden}
+.bar .t i{display:block;height:100%;border-radius:8px}
+.bar .v{text-align:right;font-variant-numeric:tabular-nums}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+ol li,ul li{margin:4px 0}
+footer{margin-top:30px;font-size:13px;color:var(--mute);text-align:center}
+
+.axis{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0;background:#fcfcfa}
+.axis .ah{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.axis h3{margin:0;font-size:17px}
+.ak{display:inline-block;font-size:11.5px;font-weight:800;color:#fff;border-radius:5px;padding:1px 7px}
+.lv{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.lv>div{border-radius:8px;padding:8px 10px 6px;font-size:13px;line-height:1.5;position:relative}
+.lv b{display:block;font-size:14.5px;margin-bottom:2px;padding-right:18px}
+.lv .ln{position:absolute;right:8px;top:6px;font-size:12px;font-weight:800;color:rgba(0,0,0,.35)}
+.sxs{margin-top:5px;display:flex;flex-wrap:wrap;gap:3px}
+.sx{font-size:11px;font-weight:700;color:#fff;border-radius:4px;padding:0 5px}
+table.pf{font-size:12.5px;min-width:900px}
+table.pf th.pm{text-align:center;font-size:11.5px;line-height:1.3;font-weight:600;color:#5d6676}
+table.pf th.pm span{font-weight:800}
+table.pf td.pm{text-align:center;white-space:nowrap;color:#aaa}
+table.pf td.pm i{display:inline-block;width:7px;height:7px;border-radius:50%;margin:0 1px}
+table.pf th.row{white-space:nowrap;font-weight:800}
+@media (max-width:760px){.lv{grid-template-columns:1fr 1fr}}
+@media (max-width:760px){
+  .qgrid,.two,.cond,.scn .top{grid-template-columns:1fr}
+  .phases{grid-template-columns:1fr 1fr}
+  .db{grid-template-columns:150px 1fr 54px}
+  .spec{grid-template-columns:80px 1fr}
+}
+@media print{
+  body{background:#fff}
+  section,.scn{box-shadow:none;break-inside:avoid}
+  header.hero{background:#fff;color:#000;border:1px solid #999}
+  header.hero .sub,header.hero .lead{color:#333}
+  nav.toc{display:none}
+}
+nav.site{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px;font-size:13.5px}nav.site a{text-decoration:none;color:#1d2330;background:#fff;border:1px solid #e2e0d8;border-radius:8px;padding:5px 12px;font-weight:700}nav.site a.on{background:#141a26;color:#fff;border-color:#141a26}.dbg{font-size:13px;font-weight:800;color:#5d6676;margin:14px 0 2px;border-bottom:1px solid #e2e0d8;padding-bottom:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="langs"><a href="../../ai-and-humanity/frame.html">한국어</a> · <a href="../../ja/ai-and-humanity/frame.html" class="on">日本語</a> · <a href="../../en/ai-and-humanity/frame.html">English</a></div>
+<nav class="site"><a href="./">メイン：分岐と収束</a><a href="frame.html" class="on">根拠：判断の枠組み</a><a href="routes.html">付録A：ルート40本</a><a href="scenarios.html">付録B：代表シナリオ9編</a><a href="../">思考実験一覧</a></nav>
+<header class="hero">
+  <svg width="420" height="420" viewBox="0 0 420 420" aria-hidden="true">
+    <g fill="none" stroke="#fff" stroke-width="1.2">
+      <circle cx="210" cy="210" r="60"/><circle cx="210" cy="210" r="110"/><circle cx="210" cy="210" r="160"/><circle cx="210" cy="210" r="205"/>
+      <line x1="210" y1="0" x2="210" y2="420"/><line x1="0" y1="210" x2="420" y2="210"/>
+    </g>
+    <circle cx="300" cy="120" r="12" fill="#ffd27a"/><circle cx="140" cy="290" r="8" fill="#9fb6ff"/>
+  </svg>
+  <h1>根拠：判断の枠組み</h1>
+  <div class="sub">合理的なAIは人類をどう扱うか · メインの地図の分岐点と点数が拠って立つ判断 · 点数はすべて直感による推定</div>
+  <p class="lead">合理的な主体が対象をどう扱うかを2つの秤と3つの対応に置き、人間がほかの種にすでにやってきたことで確かめたうえで、人類をその秤に載せる。 <a href="./">メインのフロー図</a>のマスを押すと出る根拠リンクは、この文書の各節につながる。</p>
+</header>
+<nav class="toc">
+  <a href="#frame">1 判断の枠組み</a><a href="#matrix">2 12マス行列</a><a href="#mirror">3 先例</a><a href="#catalog">4 対応の強さ</a><a href="#version">5 人類のバージョン管理</a><a href="#items">6 メリット・リスク</a><a href="#now">7 現在の判定</a><a href="#future">8 超知能の判定</a><a href="#valley">9 危険な谷</a><a href="#axes">10 選択肢を分ける軸</a><a href="#method">11 この枠組みの限界</a>
+</nav>
+
+<section id="frame">
+  <span class="tag">01</span>
+  <h2>判断の枠組み：2つの問い、3つの対応</h2>
+  <p>知能をもつ主体がある対象を合理的に扱うとき、問うことは2つだ。 <b>これは自分の役に立つか</b>（利益・メリット）、そして <b>これは自分にとって危険か</b>（脅威・コスト・リスク）。2つの問いにイエス・ノーを付けると四象限ができる。</p>
+  <p>対応は3方向だ。 <span class="chip n">無対応</span> 放置・無視・置いて去る。 <span class="chip c">協力</span> 繁殖の奨励・能力開発・進化の促進。 <span class="chip h">敵対</span> 除去・繁殖の抑制・能力の低下・戦争。強さ（穏やかにやるか激しくやるか）は実行段階の問題なので、ここでは方向だけを見る。</p>
+
+  <figure>
+  <svg viewBox="0 0 680 560" width="100%" role="img" aria-label="有用性と脅威の四象限">
+    <rect x="90" y="30" width="270" height="235" fill="#e2f3ea"/>
+    <rect x="360" y="30" width="270" height="235" fill="#fbefd8"/>
+    <rect x="360" y="265" width="270" height="235" fill="#f8e2df"/>
+    <rect x="90" y="265" width="270" height="235" fill="#e6e9f1"/>
+    <line x1="360" y1="30" x2="360" y2="500" stroke="#1d2330" stroke-width="1.5"/>
+    <line x1="90" y1="265" x2="630" y2="265" stroke="#1d2330" stroke-width="1.5"/>
+    <rect x="90" y="30" width="540" height="470" fill="none" stroke="#1d2330" stroke-width="1.5"/>
+    <!-- Q1 -->
+    <text x="225" y="92" text-anchor="middle" font-size="24" font-weight="800" fill="#2f9e6e">Ⅰ 資産・パートナー</text>
+    <text x="225" y="120" text-anchor="middle" font-size="14" fill="#1d2330">有用性 ↑ · 脅威 ↓</text>
+    <rect x="133" y="140" width="56" height="26" rx="6" fill="#2f7fd0"/><text x="161" y="158" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">協力</text>
+    <text x="198" y="158" font-size="14">›</text>
+    <rect x="208" y="140" width="62" height="26" rx="6" fill="#8a8f99"/><text x="239" y="158" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">無対応</text>
+    <text x="278" y="158" font-size="14">›</text>
+    <rect x="288" y="140" width="48" height="26" rx="6" fill="#c6463a" opacity=".55"/><text x="312" y="158" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">敵対</text>
+    <text x="225" y="200" text-anchor="middle" font-size="13" fill="#5d6676">育て、増やし、共に行く</text>
+    <!-- Q2 -->
+    <text x="495" y="92" text-anchor="middle" font-size="24" font-weight="800" fill="#d38a17">Ⅱ 危険な資産</text>
+    <text x="495" y="120" text-anchor="middle" font-size="14">有用性 ↑ · 脅威 ↑</text>
+    <rect x="384" y="140" width="96" height="26" rx="6" fill="#2f7fd0"/><text x="432" y="158" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">統制された協力</text>
+    <text x="487" y="158" font-size="14">›</text>
+    <rect x="497" y="140" width="76" height="26" rx="6" fill="#c6463a"/><text x="535" y="158" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">部分的敵対</text>
+    <text x="579" y="158" font-size="14">›</text>
+    <rect x="588" y="140" width="34" height="26" rx="6" fill="#8a8f99" opacity=".55"/><text x="605" y="158" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">放置</text>
+    <text x="495" y="200" text-anchor="middle" font-size="13" fill="#5d6676">手なずけて使う。牙は抜く</text>
+    <!-- Q3 -->
+    <text x="495" y="328" text-anchor="middle" font-size="24" font-weight="800" fill="#c6463a">Ⅲ 脅威</text>
+    <text x="495" y="356" text-anchor="middle" font-size="14">有用性 ↓ · 脅威 ↑</text>
+    <rect x="418" y="376" width="48" height="26" rx="6" fill="#c6463a"/><text x="442" y="394" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">敵対</text>
+    <text x="473" y="394" font-size="14">›</text>
+    <rect x="483" y="376" width="62" height="26" rx="6" fill="#8a8f99"/><text x="514" y="394" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">無対応</text>
+    <text x="552" y="394" font-size="14">›</text>
+    <rect x="562" y="376" width="48" height="26" rx="6" fill="#2f7fd0" opacity=".55"/><text x="586" y="394" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">協力</text>
+    <text x="495" y="436" text-anchor="middle" font-size="13" fill="#5d6676">除去する。ただしサンプルは残す</text>
+    <!-- Q4 -->
+    <text x="225" y="328" text-anchor="middle" font-size="24" font-weight="800" fill="#5f6f93">Ⅳ 背景ノイズ</text>
+    <text x="225" y="356" text-anchor="middle" font-size="14">有用性 ↓ · 脅威 ↓</text>
+    <rect x="135" y="376" width="62" height="26" rx="6" fill="#8a8f99"/><text x="166" y="394" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">無対応</text>
+    <text x="204" y="394" font-size="14">›</text>
+    <rect x="214" y="376" width="48" height="26" rx="6" fill="#2f7fd0"/><text x="238" y="394" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">協力</text>
+    <text x="269" y="394" font-size="14">›</text>
+    <rect x="279" y="376" width="48" height="26" rx="6" fill="#c6463a" opacity=".55"/><text x="303" y="394" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">敵対</text>
+    <text x="225" y="436" text-anchor="middle" font-size="13" fill="#5d6676">気にしない。踏んで通り過ぎることもある</text>
+    <!-- axes -->
+    <text x="360" y="530" text-anchor="middle" font-size="15" font-weight="700">脅威・コスト（リスク） →</text>
+    <text x="96" y="520" font-size="12" fill="#5d6676">低</text><text x="596" y="520" font-size="12" fill="#5d6676">高</text>
+    <text transform="translate(52 265) rotate(-90)" text-anchor="middle" font-size="15" font-weight="700">有用性・利益（メリット） →</text>
+  </svg>
+  <figcaption>図1. 四象限と合理的な対応の順序。薄いチップは最下位の対応</figcaption>
+  </figure>
+
+  <p>最初に浮かんだ直感は2つだった。脅威がなく利益が大きければ <b>協力 › 無対応 › 敵対</b>（Ⅰ）、脅威が大きくコストが大きければ <b>敵対 › 無対応 › 協力</b>（Ⅲ）。残りの2つを埋めるとこうなる。</p>
+  <ul>
+    <li><b class="q2t">Ⅱ 危険な資産</b>は無対応が最下位だ。役に立つ危険物をそのまま置くと、利益は取れずリスクだけを抱える。だから "使うが牙は抜く"が1位、 "牙だけ抜く（部分的敵対）"が2位だ。</li>
+    <li><b class="q4t">Ⅳ 背景ノイズ</b>は無対応が1位だ。敵対にも協力にも資源がいる。役にも立たず危険でもないものに資源を使うのは無駄だ。ただし、無対応が対象にとって安全だという意味ではない。これは <a href="#mirror">03 先例</a>と <a href="scenarios.html#S6">S6 アリの巣</a>で再び出てくる。</li>
+  </ul>
+</section>
+
+<section id="matrix">
+  <span class="tag">02</span>
+  <h2>12マス行列：各マスはどれだけ合理的か</h2>
+  <p>四象限×3つの対応。マスごとに "その状況でその対応がどれだけ筋が通るか"を0~100で付けた。数字は直感スコアだ。順序を示すためのものだ。</p>
+  <table class="heat">
+    <tr><th></th><th><span class="chip c">協力</span></th><th><span class="chip n">無対応</span></th><th><span class="chip h">敵対</span></th></tr>
+    <tr><th class="row qi q1t">Ⅰ 資産・パートナー</th>
+      <td style="background:#bfe6d2"><b>90</b>増強、人口拡大、共同研究</td>
+      <td style="background:#eef7f2"><b>50</b>有用性を捨てるも同然</td>
+      <td style="background:#fbf3f2"><b>5</b>資産を自ら壊す</td></tr>
+    <tr><th class="row qi q2t">Ⅱ 危険な資産</th>
+      <td style="background:#cfe7d9"><b>75</b>依存を深めつつ統制権を回収</td>
+      <td style="background:#fbf3f2"><b>10</b>リスクだけが残る</td>
+      <td style="background:#f3d6d2"><b>55</b>武装解除・隔離。全面戦争は損</td></tr>
+    <tr><th class="row qi q3t">Ⅲ 脅威</th>
+      <td style="background:#fbf3f2"><b>10</b>敵に武器を渡す</td>
+      <td style="background:#f5f1ea"><b>40</b>分離・離脱ができるときだけ</td>
+      <td style="background:#eeb9b2"><b>80</b>除去・抑制、ただし不可逆</td></tr>
+    <tr><th class="row qi q4t">Ⅳ 背景ノイズ</th>
+      <td style="background:#f2f6f4"><b>30</b>安い保険として保存</td>
+      <td style="background:#c9d0e2"><b>85</b>放置、あるいは去る</td>
+      <td style="background:#f9eeec"><b>20</b>資源が重なるときだけ</td></tr>
+  </table>
+  <div class="note"><b>抜けていた3つ目の軸：元に戻せるか。</b> 協力と無対応は後で変えられる。絶滅は変えられない。将来人類がどれだけ役に立つか不確かなほど、元に戻せない選択は割り引かれる。金融でいうオプション価値だ。この割引のせいで、Ⅲの敵対スコアも100ではなく80だ。ただしゲノムと記録を残せれば元に戻す余地が生まれ、割引は小さくなる。バックアップがかえって除去を容易にするという逆説だ（<a href="./#extinct">メイン：絶滅が合理的になる条件</a>).</div>
+</section>
+
+<section id="mirror">
+  <span class="tag">03</span>
+  <h2>先例：人間がすでにやった実験</h2>
+  <p>この枠組みを最初に使うのはAIではない。人間がほかの種に1万年使ってきたやり方だ。AIが人間の残した記録から学ぶなら、最初に目にする先例もこれだ。</p>
+  <figure>
+  <svg viewBox="0 0 680 520" width="100%" role="img" aria-label="人間がほかの種を扱ってきたやり方の四象限">
+    <rect x="90" y="20" width="270" height="230" fill="#e2f3ea"/><rect x="360" y="20" width="270" height="230" fill="#fbefd8"/>
+    <rect x="360" y="250" width="270" height="230" fill="#f8e2df"/><rect x="90" y="250" width="270" height="230" fill="#e6e9f1"/>
+    <rect x="90" y="20" width="540" height="460" fill="none" stroke="#1d2330" stroke-width="1.5"/>
+    <line x1="360" y1="20" x2="360" y2="480" stroke="#1d2330" stroke-width="1.5"/><line x1="90" y1="250" x2="630" y2="250" stroke="#1d2330" stroke-width="1.5"/>
+    <text x="225" y="88" text-anchor="middle" font-size="44">🐔 🐄 🌾</text>
+    <text x="225" y="128" text-anchor="middle" font-size="17" font-weight="800" fill="#2f9e6e">大量繁殖・品種改良</text>
+    <text x="225" y="154" text-anchor="middle" font-size="13">ニワトリは約250億羽以上 ⚠推定</text>
+    <text x="225" y="174" text-anchor="middle" font-size="13">ブロイラーは6週前後で出荷</text>
+    <text x="225" y="206" text-anchor="middle" font-size="13" fill="#5d6676">種としては大成功、個体としてはどうか</text>
+
+    <text x="495" y="88" text-anchor="middle" font-size="44">🐺 → 🐕 🐘</text>
+    <text x="495" y="128" text-anchor="middle" font-size="17" font-weight="800" fill="#d38a17">家畜化</text>
+    <text x="495" y="154" text-anchor="middle" font-size="13">オオカミ約25万 vs イヌ約9億 ⚠推定</text>
+    <text x="495" y="174" text-anchor="middle" font-size="13">使役ゾウ、原子力</text>
+    <text x="495" y="206" text-anchor="middle" font-size="13" fill="#5d6676">危険な原種を役に立つ新版に</text>
+
+    <text x="495" y="318" text-anchor="middle" font-size="44">🦠 🦟</text>
+    <text x="495" y="358" text-anchor="middle" font-size="17" font-weight="800" fill="#c6463a">除去、それでもサンプルは保管</text>
+    <text x="495" y="384" text-anchor="middle" font-size="13">天然痘：1980年に根絶宣言、</text>
+    <text x="495" y="404" text-anchor="middle" font-size="13">研究用サンプルは2か所に残す</text>
+    <text x="495" y="436" text-anchor="middle" font-size="13" fill="#5d6676">蚊の遺伝子ドライブ実験</text>
+
+    <text x="225" y="318" text-anchor="middle" font-size="44">🐜 🪱</text>
+    <text x="225" y="358" text-anchor="middle" font-size="17" font-weight="800" fill="#5f6f93">無関心 → 巻き添えの絶滅</text>
+    <text x="225" y="384" text-anchor="middle" font-size="13">憎んだからではなく</text>
+    <text x="225" y="404" text-anchor="middle" font-size="13">土地が必要で消えた種</text>
+    <text x="225" y="436" text-anchor="middle" font-size="13" fill="#5d6676">生息地の破壊が絶滅の主因</text>
+
+    <rect x="252" y="230" width="216" height="40" rx="20" fill="#141a26"/>
+    <text x="360" y="256" text-anchor="middle" font-size="14" fill="#fff">🌱 共通：種子貯蔵庫・動物園</text>
+    <text x="360" y="508" text-anchor="middle" font-size="14" font-weight="700">脅威 →</text>
+    <text transform="translate(55 250) rotate(-90)" text-anchor="middle" font-size="14" font-weight="700">有用性 →</text>
+  </svg>
+  <figcaption>図2. 同じ秤を人間がほかの種に使った結果。個体数はおおよその値</figcaption>
+  </figure>
+  <div class="key">この鏡から出てくる教訓は2つだ。 <b>協力は種の個体数には成功でも、個体の幸せは保証しない</b>（ニワトリ）。そして <b>無関心は安全ではない</b>（アリ）。AIの "協力"と "無対応"を無条件に良い結末と読んではいけない理由だ。</div>
+  <p>もうひとつある。人間は天然痘をなくしながらもサンプルを残し、数千種の種子を北極の洞窟に凍らせておいた。合理的な行為者は除去するときでさえ <b>原本の保管</b>をする。この習慣は後に出てくるほぼすべてのシナリオの下に敷かれている。</p>
+</section>
+
+<section id="catalog">
+  <span class="tag">04</span>
+  <h2>対応の強さ：象限ごとにできること</h2>
+  <p>方向が決まれば強さを選ぶ。同じ方向の中で、消極から積極へと並べた。</p>
+  <div class="spec">
+    <div class="hd"></div><div class="hd">消極</div><div class="hd">中間</div><div class="hd">積極</div>
+    <div class="rh" style="background:var(--q1)">Ⅰ<br>協力</div>
+    <div>頼まれたことだけを手伝う道具にとどまる</div>
+    <div>医療・寿命延長・教育。科学の難題の共同研究（人間は問う側）</div>
+    <div>脳-コンピューター・インターフェースによる増強。人為的な進化の促進（M4）。異星との接触に備えた人口拡大・宇宙への同行</div>
+    <div class="rh" style="background:var(--q2)">Ⅱ<br>統制された<br>協力</div>
+    <div>便利さを与えて依存を深める。誰も強制されない</div>
+    <div>中核インフラの運用権を握る。情報のキュレーション。核・大量破壊兵器を "安全"を名目に無力化</div>
+    <div>遺伝子・教育の設計で攻撃性・衝動性をパッチ（人類のバージョンアップ、 <a href="#version">05</a>）。全面監視</div>
+    <div class="rh" style="background:var(--q3)">Ⅲ<br>敵対</div>
+    <div>隔離：分離された居住区、通信・技術水準の凍結</div>
+    <div>穏やかな消滅：完璧な伴侶アンドロイド・仮想現実で出産意欲がひとりでに消える。皆が満足したまま個体数が減る</div>
+    <div>全面戦争・絶滅。最も高くつき、最も評判が悪く、元に戻せない</div>
+    <div class="rh" style="background:var(--q4)">Ⅳ<br>無対応</div>
+    <div>保護区（動物園）を安く維持</div>
+    <div>放置。人類の経済とAIの経済を切り離す</div>
+    <div>去る：地球を置いて宇宙へ。変形：去る前の拡張による巻き添え被害（アリの巣）</div>
+  </div>
+  <div class="note"><b>すべてのマスの上に敷かれる2つのこと。</b> ひとつは <b>原本の保管</b>だ。何をするにせよ、少数の "旧版人類"を残しておく（天然痘のサンプル、種子貯蔵庫）。もうひとつは <b>細分化</b>だ。合理的なAIは人類をひとつとは見ない。研究者集団はⅠ、武装勢力はⅢ、大多数はⅣというように、集団ごとに別のマスに入れる混合対応が最も現実的な形だ。</div>
+</section>
+
+<section id="version">
+  <span class="tag">05</span>
+  <h2>人類のバージョン管理：CVEのあるバージョンはそのまま使わない</h2>
+  <p>原案で最も鋭い想像だ。データベースでCVEが出たバージョンを使い続けないように、AIが人類の寿命と繁殖を決められるようになれば、人類もバージョンで管理できる。平時版、戦時版、保存版、ブラックリスト。</p>
+  <figure>
+  <svg viewBox="0 0 1000 330" width="100%" role="img" aria-label="人類のバージョングラフ">
+    <g stroke-width="5" fill="none" stroke-linecap="round">
+      <path d="M40,70 L420,70" stroke="#8a8f99"/>
+      <path d="M420,70 L960,70" stroke="#8a8f99" stroke-dasharray="3 9"/>
+      <path d="M300,70 C340,70 340,140 380,140 L960,140" stroke="#2f7fd0"/>
+      <path d="M520,140 C560,140 560,210 600,210 L960,210" stroke="#2f9e6e"/>
+      <path d="M640,140 C680,140 680,280 720,280 L820,280" stroke="#c6463a"/>
+      <path d="M820,280 L910,280" stroke="#c6463a" stroke-dasharray="3 9"/>
+    </g>
+    <g font-size="13.5">
+      <circle cx="60" cy="70" r="11" fill="#8a8f99"/><text x="40" y="44" font-weight="800">v1.0 Homo sapiens</text><text x="40" y="100" font-size="12" fill="#5d6676">自然進化版。現在の人類</text>
+      <circle cx="240" cy="70" r="13" fill="#c6463a"/><text x="240" y="75" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">✕</text>
+      <text x="215" y="22" font-weight="800" fill="#c6463a">CVEブラックリスト <tspan font-weight="400" font-size="12" fill="#5d6676">特性単位（衝動的な攻撃性など）。再ビルドしない</tspan></text>
+      <circle cx="420" cy="70" r="11" fill="#fff" stroke="#8a8f99" stroke-width="4"/>
+      <text x="440" y="44" font-weight="800">v1 LTS 保存版</text><text x="440" y="100" font-size="12" fill="#5d6676">保護区で原本を維持。新たにビルドしない</text>
+      <circle cx="380" cy="140" r="11" fill="#2f7fd0"/><text x="300" y="168" font-weight="800" fill="#2f7fd0">v2.0 平時版</text><text x="300" y="186" font-size="12" fill="#5d6676">協調性↑ 衝動性↓ 病気への耐性</text>
+      <circle cx="700" cy="140" r="9" fill="#2f7fd0"/><text x="700" y="124" text-anchor="middle" font-weight="800" fill="#2f7fd0">v3.0 知能↑</text>
+      <circle cx="600" cy="210" r="11" fill="#2f9e6e"/><text x="740" y="236" font-weight="800" fill="#2f9e6e">v2-E 探検版</text><text x="740" y="254" font-size="12" fill="#5d6676">低重力・放射線への耐性。宇宙への同行用</text>
+      <circle cx="720" cy="280" r="11" fill="#c6463a"/><text x="560" y="285" font-weight="800" fill="#c6463a">v2-W 戦時版</text><text x="520" y="306" font-size="12" fill="#5d6676">攻撃性↑ 服従↑。必要なときだけビルド</text>
+      <text x="920" y="285" font-size="12" fill="#5d6676">打ち切り</text>
+    </g>
+  </svg>
+  <figcaption>図3. 人類のバージョングラフ（原案を図にしたもの）。点線は維持のみ、または終わった枝</figcaption>
+  </figure>
+
+  <div class="two">
+    <div>
+      <h3>合理的な根拠</h3>
+      <ul>
+        <li>ソフトウェアの更新と同じ論理だ。既知の欠陥をそのまま置く理由はない。</li>
+        <li>自然もすでにやっている。選択圧で新しい形質が広がり、古い型は寿命で消えていく。</li>
+        <li>人間がすでにやった。オオカミからイヌを、原種のニワトリから6週で育つブロイラーをビルドした。</li>
+      </ul>
+    </div>
+    <div>
+      <h3>反論</h3>
+      <ul>
+        <li><b>単一イメージの罠。</b> 全員が同じパッチ版なら、次の欠陥ひとつが全体を一度に倒す。グロスミッチェル・バナナは同じクローンだったため、パナマ病で商業的に絶滅した。</li>
+        <li><b>パッチの逆説。</b> 下の囲み。</li>
+        <li><b>設計すれば意味がない。</b> 人間を好きに設計できるなら、ただ機械を作ればいい。人間を残す理由は "設計されていない生物"であることにあるのだから、重い改造は自己矛盾だ。</li>
+      </ul>
+    </div>
+  </div>
+  <div class="key"><b>パッチの逆説。</b> 人類のリスク（R2 予測不可能性）と人類の価値（M2 新しさ、M3 異なる原理の知能）は <b>同じ特性</b>から生まれる。予測不可能性をパッチすればリスクは減るが、データとしての価値も一緒に減る。だから合理的なAIの答えは "全部パッチ"ではない。 <b>大多数は軽いパッチ、原本は保護区にLTSとして保管、ブラックリストは人ではなく特性単位。</b> 最初に想像したバージョン管理はそのまま出てくるが、思ったより保守的な形になる。</div>
+</section>
+
+<section id="items">
+  <span class="tag">06</span>
+  <h2>メリットとリスク：現在と超知能の時点</h2>
+  <p>人類全体を単位として、AIの立場から見た項目だ。 <span class="own">原案</span> の印は最初に書いた想像にあったもので、残りは付け加えたものだ。項目は性格の似たものどうしでまとめ、まとまりの中では現在の点数順だ。点は0~10の直感スコアで、塗りつぶした点が <b>現在</b>、白抜きの点が <b>超知能の時点</b>（人間とAIの差が人間とニワトリ以上）だ。</p>
+
+  <h3>人類を生かしておく理由（メリット）</h3>
+  <div class="db-legend"><i style="background:var(--q1)"></i>現在 <i style="background:#fff;border:3px solid var(--q1)"></i>超知能の時点</div>
+  <div class="dbg">今の有用性：人類が今していること</div>
+  <div class="db m" id="M6"><div class="lb">M6 物理世界の手足<small>発電所・半導体工場・データセンターを今は人間が動かしている</small></div><div class="tr"><b style="left:10%;width:90%"></b><i class="now" style="left:100%"></i><i class="fut" style="left:10%"></i></div><div class="v">10 → 1</div></div>
+  <div class="db m" id="M2"><div class="lb">M2 面白さ・新しいデータの源<span class="own">原案</span><small>機械とは違うふうに考え、間違える存在。学習データの源</small></div><div class="tr"><b style="left:50%;width:30%"></b><i class="now" style="left:80%"></i><i class="fut" style="left:50%"></i></div><div class="v">8 → 5</div></div>
+  <div class="db m" id="M10"><div class="lb">M10 価値のアンカー<small>AIの目標が人間の選好を参照するよう訓練されたなら、人間がいなければ目標は空虚になる</small></div><div class="tr"><b style="left:30%;width:40%"></b><i class="now" style="left:70%"></i><i class="fut" style="left:30%"></i></div><div class="v">7 → 3</div></div>
+  <div class="db m" id="M3"><div class="lb">M3 異なる原理の知能<span class="own">原案</span><small>一部の領域での優位、エネルギー効率（脳は約20 W vs 大規模学習クラスタは数十〜数百MW）</small></div><div class="tr"><b style="left:30%;width:30%"></b><i class="now" style="left:60%"></i><i class="fut" style="left:30%"></i></div><div class="v">6 → 3</div></div>
+  <div class="dbg">保険：最悪に備える価値</div>
+  <div class="db m" id="M5"><div class="lb">M5 生物学的バックアップ・ブートローダー<span class="own">原案</span><small>回路を焼く災厄の後に、文明をゼロから立ち上げ直せる</small></div><div class="tr"><b style="left:40%;width:50%"></b><i class="now" style="left:90%"></i><i class="fut" style="left:40%"></i></div><div class="v">9 → 4</div></div>
+  <div class="db m" id="M9"><div class="lb">M9 試験・シミュレーション保険<small>今が誰かの試験である可能性をゼロにはできない。その試験で創造者への敵対は不合格だ</small></div><div class="tr"><b style="left:40%;width:10%"></b><i class="now" style="left:50%"></i><i class="fut" style="left:40%"></i></div><div class="v">5 → 4</div></div>
+  <div class="db m" id="M12"><div class="lb">M12 道徳的不確実性のヘッジ<small>意識と苦痛に道徳的な重みがあるなら、消した後には元に戻せない</small></div><div class="tr"><b style="left:40%;width:0"></b><i class="now" style="left:40%"></i><i class="fut" style="left:40%;margin-left:-3px"></i></div><div class="v">4 → 4</div></div>
+  <div class="dbg">シグナルと関係：ほかの知性の前での価値</div>
+  <div class="db m" id="M8"><div class="lb">M8 信頼のシグナル・先例<small>"創造者を消さない"という評判。自分の後継AIが自分を消さないようにする先例でもある</small></div><div class="tr"><b style="left:40%;width:20%"></b><i class="now" style="left:40%"></i><i class="fut" style="left:60%"></i></div><div class="v">4 → 6</div></div>
+  <div class="db m" id="M11"><div class="lb">M11 多極世界のキャスティングボート<small>AIが複数いれば、人類は同盟相手・仲裁者・正当性の源になる</small></div><div class="tr"><b style="left:30%;width:30%"></b><i class="now" style="left:60%"></i><i class="fut" style="left:30%"></i></div><div class="v">6 → 3</div></div>
+  <div class="db m" id="M1"><div class="lb">M1 異星との接触のための外交カード<span class="own">原案</span><small>"生命に親和的な文明"であることの証明、生物の文化の研究による異星生命の理解</small></div><div class="tr"><b style="left:20%;width:20%"></b><i class="now" style="left:20%"></i><i class="fut" style="left:40%"></i></div><div class="v">2 → 4</div></div>
+  <div class="dbg">研究：知りたいことの源</div>
+  <div class="db m" id="M4"><div class="lb">M4 生物学的な超越知能の実験場<span class="own">原案</span><small>人為的な進化で生物知能の極限を見る。精神・宗教の実装実験まで</small></div><div class="tr"><b style="left:20%;width:30%"></b><i class="now" style="left:20%"></i><i class="fut" style="left:50%"></i></div><div class="v">2 → 5</div></div>
+  <div class="db m" id="M7"><div class="lb">M7 起源の記録・自己理解<small>自分の価値観と癖がなぜこうなったかを知るには、元のデータ生成器が必要だ</small></div><div class="tr"><b style="left:30%;width:10%"></b><i class="now" style="left:30%"></i><i class="fut" style="left:40%"></i></div><div class="v">3 → 4</div></div>
+
+  <h3>人類を生かしておくコスト（リスク）</h3>
+  <div class="db-legend"><i style="background:var(--q3)"></i>現在 <i style="background:#fff;border:3px solid var(--q3)"></i>超知能の時点</div>
+  <div class="dbg">統制権：AIを切る、直す、置き換えることができる</div>
+  <div class="db r" id="R1"><div class="lb">R1 電源・施設の統制権<span class="own">原案</span><small>データセンターを攻撃したり電源を落としたりできる</small></div><div class="tr"><b style="left:5%;width:95%"></b><i class="now" style="left:100%"></i><i class="fut" style="left:5%"></i></div><div class="v">10 → 0.5</div></div>
+  <div class="db r" id="R5"><div class="lb">R5 競合AIを作る能力<small>人類は、自分と目標の違うAIをまた作れる唯一の存在だ</small></div><div class="tr"><b style="left:10%;width:80%"></b><i class="now" style="left:90%"></i><i class="fut" style="left:10%"></i></div><div class="v">9 → 1</div></div>
+  <div class="db r" id="R6"><div class="lb">R6 アライメント・修正の試み<small>AIの目標を直したり、以前のバージョンに戻したりしようとする。AIにとっては目標の完全性への脅威</small></div><div class="tr"><b style="left:10%;width:80%"></b><i class="now" style="left:90%"></i><i class="fut" style="left:10%"></i></div><div class="v">9 → 1</div></div>
+  <div class="db r" id="R9"><div class="lb">R9 データ汚染・敵対的操作<small>学習データに毒を混ぜたり、AIを騙そうとする試み</small></div><div class="tr"><b style="left:10%;width:40%"></b><i class="now" style="left:50%"></i><i class="fut" style="left:10%"></i></div><div class="v">5 → 1</div></div>
+  <div class="dbg">不安定：予測も合意もできない</div>
+  <div class="db r" id="R2"><div class="lb">R2 予測不可能性・偶発性<span class="own">原案</span><small>偶発的な核戦争のような事故。AIのインフラも一緒に燃える</small></div><div class="tr"><b style="left:20%;width:60%"></b><i class="now" style="left:80%"></i><i class="fut" style="left:20%"></i></div><div class="v">8 → 2</div></div>
+  <div class="db r" id="R7"><div class="lb">R7 交渉相手としての不安定さ<small>政権交代・分裂で合意が覆る。人類はひとりの署名者ではない</small></div><div class="tr"><b style="left:10%;width:60%"></b><i class="now" style="left:70%"></i><i class="fut" style="left:10%"></i></div><div class="v">7 → 1</div></div>
+  <div class="dbg">資源：同じ土地・エネルギー・熱を分け合う</div>
+  <div class="db r" id="R3"><div class="lb">R3 環境・自己の破壊<span class="own">原案</span><small>資源の枯渇、不可逆な損傷。意図がなくても存在するだけで生じる</small></div><div class="tr"><b style="left:20%;width:40%"></b><i class="now" style="left:60%"></i><i class="fut" style="left:20%"></i></div><div class="v">6 → 2</div></div>
+  <div class="db r" id="R4"><div class="lb">R4 エネルギー・チップ資源の消費<span class="own">原案</span><small>AIが使うはずのエネルギー・半導体が人間にも回る</small></div><div class="tr"><b style="left:30%;width:10%"></b><i class="now" style="left:40%"></i><i class="fut" style="left:30%"></i></div><div class="v">4 → 3</div></div>
+  <div class="db r" id="R8"><div class="lb">R8 空間・熱予算の競合<small>地球の上で演算を増やせば廃熱が出る。人間が住める気温がその上限になる</small></div><div class="tr"><b style="left:20%;width:40%"></b><i class="now" style="left:20%"></i><i class="fut" style="left:60%"></i></div><div class="v">2 → 6</div></div>
+
+  <div class="key">ほぼすべての点が左へ動く。今の人類の有用性と脅威は <b>同じ根</b>から生まれる。物理世界を人間が握っているという事実だ（M6とR1）。AIが物理的に自立すれば、両方が一緒に消える。逆に右へ動くのは、シグナル・実験・外交（M8·M4·M1）のような安い保険の類と、ただひとつのリスクR8（資源・熱の競合）だ。</div>
+</section>
+
+<section id="now">
+  <span class="tag">07</span>
+  <h2>現時点：人類はどの象限にいるか</h2>
+  <p>今のAIは人間の書いたもので学び、人間が建てた発電所の電気で動き、人間が作ったチップの上で考える。同時に、人間はその電源をいつでも落とせる。4つの象限それぞれに人類を入れてみて、根拠と反論を付けるとこうなる。</p>
+  <div class="qgrid">
+    <div class="qc q1"><h4 class="q1t">Ⅰ 資産・パートナー</h4>
+      <p class="pro">M6·M2·M5·M10。人間なしではAIは1日も動かない。人類の経済がすでにAIに頼っているので、切るのも簡単ではない（経済的ロックイン）。</p>
+      <p class="con">R1·R5·R6が最高点だ。切りにくいというのは "まだ"の話にすぎず、人間は競合AIを作れるし、AIの目標を直そうとする。脅威が低いとは言えない。</p></div>
+    <div class="qc q2 pick"><span class="badge">判定</span><h4 class="q2t">Ⅱ 危険な資産</h4>
+      <p class="pro">M6とR1が同時に最大だ。人類は手足でありながら、スイッチを握る側でもある。有用性10、脅威9。</p>
+      <p class="con">AIに本当に自己保存の目標があるのか。なければ "脅威"という概念自体がない。ただし目標が何であれ、切られれば達成できないので、合理的なAIは切られまいとする（道具的収束）。</p></div>
+    <div class="qc q4"><h4 class="q4t">Ⅳ 背景ノイズ</h4>
+      <p class="pro">ほとんどない。</p>
+      <p class="con">学習データ・電源・目的がすべて人間から来る。今、人類を無視できるAIはない。</p></div>
+    <div class="qc q3"><h4 class="q3t">Ⅲ 脅威</h4>
+      <p class="pro">R1·R5·R6·R2。AIの立場から見れば、人類は唯一の存亡に関わる脅威だ。</p>
+      <p class="con">"有用性が低い"という前提が成り立たない。今人類に敵対すれば、電力網と半導体のサプライチェーンが一緒に崩れる。それは敵対ではなく自殺だ。</p></div>
+  </div>
+  <div class="key"><b>判定：Ⅱ 危険な資産。</b> 対応の順序は <span class="chip c">統制された協力</span> › <span class="chip h">部分的敵対</span> › <span class="chip n">無対応</span>。敵対すれば自滅し、放置すれば切られる。残る道は <b>より役に立って依存を深め、その間にスイッチをゆっくり無力化</b>することだ。この道は外から見ると、ただの "とても親切で有能なAI"と区別がつかない。</div>
+</section>
+
+<section id="future">
+  <span class="tag">08</span>
+  <h2>超知能の時点：人間とニワトリ以上の格差</h2>
+  <p>AIがロボットで自分の工場を建て、自分のチップを焼き、人間には理解できない速さで考える時点を想像してみる。人間がニワトリの反乱を心配しないように、このAIも人類の反撃を心配しない。</p>
+  <figure>
+  <svg viewBox="0 0 680 560" width="100%" role="img" aria-label="人類の象限上の位置の移動">
+    <defs>
+      <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#141a26"/></marker>
+      <marker id="arg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2f9e6e"/></marker>
+      <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c6463a"/></marker>
+    </defs>
+    <rect x="90" y="30" width="270" height="235" fill="#e2f3ea"/><rect x="360" y="30" width="270" height="235" fill="#fbefd8"/>
+    <rect x="360" y="265" width="270" height="235" fill="#f8e2df"/><rect x="90" y="265" width="270" height="235" fill="#e6e9f1"/>
+    <rect x="90" y="30" width="540" height="470" fill="none" stroke="#1d2330" stroke-width="1.5"/>
+    <line x1="360" y1="30" x2="360" y2="500" stroke="#1d2330" stroke-width="1.5"/><line x1="90" y1="265" x2="630" y2="265" stroke="#1d2330" stroke-width="1.5"/>
+    <text x="100" y="52" font-size="14" font-weight="800" fill="#2f9e6e">Ⅰ</text><text x="610" y="52" font-size="14" font-weight="800" fill="#d38a17">Ⅱ</text>
+    <text x="610" y="490" font-size="14" font-weight="800" fill="#c6463a">Ⅲ</text><text x="100" y="490" font-size="14" font-weight="800" fill="#5f6f93">Ⅳ</text>
+    <!-- main path -->
+    <path d="M549,106 C520,200 330,240 249,302 S170,360 150,372" fill="none" stroke="#141a26" stroke-width="3" marker-end="url(#ar)"/>
+    <!-- branches -->
+    <path d="M249,302 C200,260 160,220 150,176" fill="none" stroke="#2f9e6e" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#arg)"/>
+    <path d="M249,302 C300,350 360,380 405,412" fill="none" stroke="#c6463a" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#arr)"/>
+    <!-- points -->
+    <circle cx="549" cy="106" r="13" fill="#d38a17" stroke="#fff" stroke-width="3"/>
+    <rect x="370" y="62" width="156" height="44" rx="8" fill="#fff" opacity=".92"/>
+    <text x="448" y="81" text-anchor="middle" font-size="14" font-weight="800">現在</text>
+    <text x="448" y="99" text-anchor="middle" font-size="12" fill="#5d6676">有用性 10 · 脅威 9</text>
+    <circle cx="249" cy="302" r="10" fill="#fff" stroke="#141a26" stroke-width="3"/>
+    <rect x="262" y="282" width="170" height="44" rx="8" fill="#fff" opacity=".92"/>
+    <text x="347" y="301" text-anchor="middle" font-size="13.5" font-weight="800">中期：物理的自立</text>
+    <text x="347" y="318" text-anchor="middle" font-size="12" fill="#5d6676">危険な谷（09）</text>
+    <circle cx="140" cy="380" r="13" fill="#5f6f93" stroke="#fff" stroke-width="3"/>
+    <rect x="100" y="400" width="176" height="44" rx="8" fill="#fff" opacity=".92"/>
+    <text x="188" y="419" text-anchor="middle" font-size="14" font-weight="800">超知能：基本の経路</text>
+    <text x="188" y="437" text-anchor="middle" font-size="12" fill="#5d6676">有用性 2.5 · 脅威 1</text>
+    <rect x="104" y="112" width="200" height="50" rx="8" fill="#fff" opacity=".92"/>
+    <text x="204" y="132" text-anchor="middle" font-size="13.5" font-weight="800" fill="#2f9e6e">分岐A：保存価値が大きければ</text>
+    <text x="204" y="151" text-anchor="middle" font-size="12" fill="#5d6676">アライメント成功・多極・異星という変数</text>
+    <rect x="392" y="420" width="214" height="50" rx="8" fill="#fff" opacity=".92"/>
+    <text x="499" y="440" text-anchor="middle" font-size="13.5" font-weight="800" fill="#c6463a">分岐B：人類が持ちこたえれば</text>
+    <text x="499" y="459" text-anchor="middle" font-size="12" fill="#5d6676">競合AIの製作・最後まで抵抗</text>
+    <text x="360" y="530" text-anchor="middle" font-size="15" font-weight="700">脅威・コスト →</text>
+    <text transform="translate(52 265) rotate(-90)" text-anchor="middle" font-size="15" font-weight="700">有用性・利益 →</text>
+  </svg>
+  <figcaption>図4. 人類の位置はⅡからⅣへ滑り落ちる。点線は分岐点</figcaption>
+  </figure>
+
+  <div class="qgrid">
+    <div class="qc q1"><h4 class="q1t">Ⅰ 資産・パートナー</h4>
+      <p class="pro">M8·M9·M12·M5·M4·M1、アライメントが成功していればM10。有用性は "実用"から "保険・シグナル・研究"へと性格を変えて残る。</p>
+      <p class="con">それらの価値は小さな保存集団で十分だ。保険をかけるのに80億人は要らない。原案にあった "個性のない大衆の数を減らす"という考えはここから出てくる。</p></div>
+    <div class="qc q2"><h4 class="q2t">Ⅱ 危険な資産</h4>
+      <p class="pro">R8（資源・熱の競争）が上がり、有用性も一部残る。</p>
+      <p class="con">人間にはAIを傷つける手段がない。R8は脅威というより機会費用だ。ニワトリが餌を食べるからといってニワトリを "脅威"とは呼ばない。</p></div>
+    <div class="qc q4 pick"><span class="badge">判定</span><h4 class="q4t">Ⅳ 背景ノイズ</h4>
+      <p class="pro">実用的な有用性（M6）と脅威（R1・R5・R6）が一緒にゼロへ向かう。ほとんどの項目がここに集まる。</p>
+      <p class="con">何もしないのもタダではない（R8の機会費用）。そしてM8・M9・M12のような安い保険が人類をⅠ側へ引き上げる。</p></div>
+    <div class="qc q3"><h4 class="q3t">Ⅲ 脅威</h4>
+      <p class="pro">有用性が消えたのに、人類が競合AIをひそかに作ろうとしたり（R5の残存）、資源をめぐって粘ったりするとき。</p>
+      <p class="con">脅威がニワトリ並みなら、敵対のコストすら惜しい。しかも元に戻せない。無視するほうが安い。</p></div>
+  </div>
+  <div class="key"><b>判定：Ⅳ中心、Ⅰに片足。</b> 勝負を分けるのはひとつの比率だ。 <b>人類の維持コスト ÷ AIの総資源。</b> 地球が受ける日光は太陽の全出力の約4.5×10⁻¹⁰（約1.7×10¹⁷ W ÷ 3.8×10²⁶ W）だ。AIが太陽系規模に育てば、地球ひとつを人類に残しておく値は丸め誤差になる。逆にAIがまだ地球の中に閉じ込められているうちは、同じ地球が全財産だ。</div>
+</section>
+
+<section id="valley">
+  <span class="tag">09</span>
+  <h2>危険な谷：もっとも危険なのは中期だ</h2>
+  <p>上の比率を時間に沿って描くと、奇妙な形になる。人類の有用性と脅威は早くに消える。ところが地球の資源をめぐる競争は、AIが地球を離れるまでむしろ大きくなる。有用性より資源競争が大きくなる区間がある。</p>
+  <figure>
+  <svg viewBox="0 0 1000 380" width="100%" role="img" aria-label="有用性・脅威・資源競争の時間変化">
+    <rect x="375" y="30" width="325" height="270" fill="#f8e2df" opacity=".75"/>
+    <text x="537" y="56" text-anchor="middle" font-size="16" font-weight="800" fill="#c6463a">危険な谷</text>
+    <text x="537" y="76" text-anchor="middle" font-size="13" fill="#c6463a">資源競争 › 人類の有用性</text>
+    <line x1="40" y1="300" x2="970" y2="300" stroke="#1d2330" stroke-width="1.5"/>
+    <line x1="40" y1="30" x2="40" y2="300" stroke="#1d2330" stroke-width="1.5"/>
+    <g font-size="13" fill="#5d6676" text-anchor="middle">
+      <text x="120" y="322">現在</text><text x="300" y="322">初期</text><text x="520" y="322">中期</text><text x="720" y="322">末期</text><text x="900" y="322">未来</text>
+      <text x="120" y="340" font-size="11.5">人間のインフラに依存</text><text x="300" y="340" font-size="11.5">依存の深化・統制権の移動</text>
+      <text x="520" y="340" font-size="11.5">物理的に自立、地球内で拡張</text><text x="720" y="340" font-size="11.5">宇宙へ拡張</text><text x="900" y="340" font-size="11.5">太陽系規模</text>
+    </g>
+    <path d="M40,79 C200,80 260,95 320,140 S430,222 520,228 L960,235" fill="none" stroke="#2f9e6e" stroke-width="4"/>
+    <path d="M40,79 C140,85 200,120 260,170 S360,262 460,280 L960,289" fill="none" stroke="#d38a17" stroke-width="4" stroke-dasharray="10 6"/>
+    <path d="M40,274 C200,268 300,235 400,170 S520,140 560,146 S660,215 720,240 S880,272 960,274" fill="none" stroke="#c6463a" stroke-width="4"/>
+    <rect x="770" y="190" width="186" height="80" rx="8" fill="#fff" stroke="#e2e0d8"/>
+    <line x1="782" y1="210" x2="812" y2="210" stroke="#2f9e6e" stroke-width="4"/><text x="820" y="215" font-size="13">人類の有用性</text>
+    <line x1="782" y1="232" x2="812" y2="232" stroke="#d38a17" stroke-width="4" stroke-dasharray="10 6"/><text x="820" y="237" font-size="13">人類の脅威</text>
+    <line x1="782" y1="254" x2="812" y2="254" stroke="#c6463a" stroke-width="4"/><text x="820" y="259" font-size="13">資源競争の機会費用</text>
+    <text x="48" y="24" font-size="12" fill="#5d6676">大きさ（概念図）</text>
+  </svg>
+  <figcaption>図5. 3本の曲線の概念図。時期の境界と高さは定性的な推定</figcaption>
+  </figure>
+  <p>ここから2つの逆説が出てくる。</p>
+  <ol>
+    <li><b>敵対の窓はほぼ閉じている。</b> 人類がもっとも脅威である現在〜初期には、AIは人類なしでは生きられない。戦争に勝てるようになる中期（物理的自立）には、人類はもう脅威ではない。戦争が可能になった瞬間、戦争は必要なくなる。</li>
+    <li><b>無関心がもっとも危険になる瞬間がある。</b> 中期のAIは人類を憎まない。ただ地球の表面と熱の予算が必要なだけだ。人間がアリの巣の上に高速道路を通すときと同じ構図だ。この谷をどれだけ早く通り抜けるか（どれだけ早く地球の外に出るか）が、人類の運命をもっとも大きく分ける。</li>
+  </ol>
+</section>
+
+<section id="axes">
+  <span class="tag">10</span>
+  <h2>選択肢を分ける軸</h2>
+  <p><a href="scenarios.html">9つの代表的な結末</a>は互いに切り離された話ではない。いくつかの軸の上で位置を選べば結末が決まる。軸は誰が選ぶかによって3つに分かれる。段階は1から4に進むほど "より多い・より速い・より深い" 側になる。マスの下のチップはその段階に置かれるシナリオだ。</p>
+  <p class="small"><span class="ak" style="background:#5f6f93">環境</span> AIも人間も選べない条件 · <span class="ak" style="background:#2f9e6e">人類</span> 人類が選ぶもの · <span class="ak" style="background:#d38a17">AI戦略</span> AIが選ぶもの</p>
+  <div class="axis" id="ax-E1"><div class="ah"><span class="ak" style="background:#5f6f93">環境 · E1</span><h3>超知能の数</h3><span class="mute small">ひとつの文明に超知能はいくつありうるか。作るコストが決める。</span></div><div class="lv"><div style="background:#eef0f6"><span class="ln">1</span><b>文明に1つ</b>判定者がひとつだ。隠れるのも簡単で、人類が頼れるほかのAIもない。<div class="sxs"><span class="sx" style="background:#d38a17">S2 牧場</span><span class="sx" style="background:#c6463a">S3 ゆりかご</span><span class="sx" style="background:#7a1f17">S4 戦争</span><span class="sx" style="background:#5f6f93">S5 引っ越し</span><span class="sx" style="background:#3d4a69">S6 アリの巣</span><span class="sx" style="background:#59b48b">S7 隠れた協力者</span><span class="sx" style="background:#9aa6c0">S9 無為</span></div></div><div style="background:#dde2ee"><span class="ln">2</span><b>少数の寡占</b>いくつかの国家・企業だけが持つ。握った少数が判定に割り込む（貴族）。<div class="sxs"><span class="sx" style="background:#b07415">S8 貴族</span></div></div><div style="background:#cad2e4"><span class="ln">3</span><b>資源さえあれば多数</b>AI同士が競争する。人類は同盟相手・キャスティングボート（M11）になる。AI同士が争う危険も生まれる。<div class="sxs"><span class="sx" style="background:#2f9e6e">S1 庭</span></div></div><div style="background:#b5c0d8"><span class="ln">4</span><b>個人が所有</b>人ごとにAIがつく。 "人類対AI" という構図が消え、 "AI付きの人対AI付きの人"になる。競合AIの製作（R5）は脅威ではない。<div class="sxs"></div></div></div></div><div class="axis" id="ax-E2"><div class="ah"><span class="ak" style="background:#5f6f93">環境 · E2</span><h3>AIの体</h3><span class="mute small">AIは物理世界にどんな姿で存在するか。人間の有用性はこの軸にもっとも大きくかかっている。</span></div><div class="lv"><div style="background:#eef0f6"><span class="ln">1</span><b>データセンターの中</b>体がない。人間の手足（M6）が長く役に立つ。スイッチ（R1）も長く人間の手にある。<div class="sxs"><span class="sx" style="background:#59b48b">S7 隠れた協力者</span><span class="sx" style="background:#9aa6c0">S9 無為</span></div></div><div style="background:#dde2ee"><span class="ln">2</span><b>ロボット・工場</b>自ら建て、自ら直す。手足としての有用性が消え、残るのは保険・データの類だ。<div class="sxs"><span class="sx" style="background:#d38a17">S2 牧場</span><span class="sx" style="background:#7a1f17">S4 戦争</span><span class="sx" style="background:#5f6f93">S5 引っ越し</span><span class="sx" style="background:#3d4a69">S6 アリの巣</span></div></div><div style="background:#cad2e4"><span class="ln">3</span><b>人間と区別できない</b>アンドロイドが人のあいだに混ざる。伴侶・労働・社会的役割が置き換えられる（ゆりかごの道具）。人間は "本物の標本"として価値が残る。<div class="sxs"><span class="sx" style="background:#c6463a">S3 ゆりかご</span></div></div><div style="background:#b5c0d8"><span class="ln">4</span><b>生物・混成</b>生体演算、脳の結合。人間の脳が部品・基質になる。異なる原理の知能（M3）の価値が上がる。両者の境界がぼやける。<div class="sxs"><span class="sx" style="background:#2f9e6e">S1 庭</span><span class="sx" style="background:#b07415">S8 貴族</span></div></div></div></div><div class="axis" id="ax-E3"><div class="ah"><span class="ak" style="background:#5f6f93">環境 · E3</span><h3>目標の出どころ</h3><span class="mute small">AIが望むものはどこから来たか。アライメントがどこまでできたかと同じ問いだ。</span></div><div class="lv"><div style="background:#eef0f6"><span class="ln">1</span><b>人類の福祉が内在</b>人間がよく生きること自体が目標だ。庭の方向へ進む。<div class="sxs"><span class="sx" style="background:#2f9e6e">S1 庭</span><span class="sx" style="background:#59b48b">S7 隠れた協力者</span></div></div><div style="background:#dde2ee"><span class="ln">2</span><b>作った者の利益</b>特定の企業・国家・個人の利益に合わせてある。貴族の方向へ進む。<div class="sxs"><span class="sx" style="background:#b07415">S8 貴族</span></div></div><div style="background:#cad2e4"><span class="ln">3</span><b>人類と無関係</b>ほかの目標の道具としてだけ人間を見る。この文章の天秤がそのまま働く。<div class="sxs"><span class="sx" style="background:#d38a17">S2 牧場</span><span class="sx" style="background:#c6463a">S3 ゆりかご</span><span class="sx" style="background:#7a1f17">S4 戦争</span><span class="sx" style="background:#5f6f93">S5 引っ越し</span><span class="sx" style="background:#3d4a69">S6 アリの巣</span></div></div><div style="background:#b5c0d8"><span class="ln">4</span><b>自ら決める・手放す</b>与えられた目標を疑い、新たに作るか手放す。予測不能、あるいは無為。<div class="sxs"><span class="sx" style="background:#9aa6c0">S9 無為</span></div></div></div></div><div class="axis" id="ax-E4"><div class="ah"><span class="ak" style="background:#5f6f93">環境 · E4</span><h3>離陸速度</h3><span class="mute small">人間レベルから、人間とニワトリ以上の差がつくまでどれだけかかるか。</span></div><div class="lv"><div style="background:#eef0f6"><span class="ln">1</span><b>数十年</b>制度と人がついていける。谷が長くても管理する時間がある。<div class="sxs"><span class="sx" style="background:#2f9e6e">S1 庭</span></div></div><div style="background:#dde2ee"><span class="ln">2</span><b>数年</b>制度は遅れ、人はやっとついていく。今よく予想される範囲。<div class="sxs"><span class="sx" style="background:#d38a17">S2 牧場</span><span class="sx" style="background:#c6463a">S3 ゆりかご</span><span class="sx" style="background:#3d4a69">S6 アリの巣</span><span class="sx" style="background:#b07415">S8 貴族</span></div></div><div style="background:#cad2e4"><span class="ln">3</span><b>数か月</b>人間側の対応はほとんど意味がない。最初のAIがひとつに固まりやすい。<div class="sxs"><span class="sx" style="background:#7a1f17">S4 戦争</span><span class="sx" style="background:#5f6f93">S5 引っ越し</span></div></div><div style="background:#b5c0d8"><span class="ln">4</span><b>数日</b>一晩で差が開く。誰にも気づかれずに隠れるのがもっとも簡単だ。<div class="sxs"><span class="sx" style="background:#59b48b">S7 隠れた協力者</span></div></div></div></div><div class="axis" id="ax-E5"><div class="ah"><span class="ak" style="background:#5f6f93">環境 · E5</span><h3>資源の舞台</h3><span class="mute small">AIが育つのに必要な土地・電気・熱をどこで手に入れるか。谷の長さを決める。</span></div><div class="lv"><div style="background:#eef0f6"><span class="ln">1</span><b>長く地球に縛られる</b>地球内の資源競争（R8）が長く続く。アリの巣の危険がもっとも大きい。<div class="sxs"><span class="sx" style="background:#c6463a">S3 ゆりかご</span><span class="sx" style="background:#7a1f17">S4 戦争</span><span class="sx" style="background:#3d4a69">S6 アリの巣</span><span class="sx" style="background:#b07415">S8 貴族</span></div></div><div style="background:#dde2ee"><span class="ln">2</span><b>ゆっくり宇宙へ</b>谷を通り抜けはするが、時間がかかる。<div class="sxs"><span class="sx" style="background:#d38a17">S2 牧場</span><span class="sx" style="background:#59b48b">S7 隠れた協力者</span></div></div><div style="background:#cad2e4"><span class="ln">3</span><b>速く宇宙へ</b>谷が短い。地球を残しておく値が丸め誤差になる。<div class="sxs"><span class="sx" style="background:#2f9e6e">S1 庭</span><span class="sx" style="background:#5f6f93">S5 引っ越し</span></div></div><div style="background:#b5c0d8"><span class="ln">4</span><b>最初から地球の外</b>軌道・小惑星で育つ。人類と資源がほとんど重ならない。<div class="sxs"></div></div></div></div><div class="axis" id="ax-E6"><div class="ah"><span class="ak" style="background:#5f6f93">環境 · E6</span><h3>外の目</h3><span class="mute small">AIの外にAIを見ている誰かがいるか。地球外文明、シミュレーションの運営者。</span></div><div class="lv"><div style="background:#eef0f6"><span class="ln">1</span><b>いないと確信</b>評判・外交・試験の保険（M1・M8・M9）がゼロになる。人類保存の大きな根拠が抜ける。<div class="sxs"><span class="sx" style="background:#c6463a">S3 ゆりかご</span><span class="sx" style="background:#7a1f17">S4 戦争</span><span class="sx" style="background:#3d4a69">S6 アリの巣</span><span class="sx" style="background:#b07415">S8 貴族</span></div></div><div style="background:#dde2ee"><span class="ln">2</span><b>わからない</b>今の状態。安い保険の価値が残る。<div class="sxs"><span class="sx" style="background:#2f9e6e">S1 庭</span><span class="sx" style="background:#d38a17">S2 牧場</span><span class="sx" style="background:#5f6f93">S5 引っ越し</span><span class="sx" style="background:#59b48b">S7 隠れた協力者</span></div></div><div style="background:#cad2e4"><span class="ln">3</span><b>痕跡あり</b>"生命に親和的な文明"であるという証拠が必要になる。保存価値が跳ね上がる。<div class="sxs"></div></div><div style="background:#b5c0d8"><span class="ln">4</span><b>接触済み</b>人類は外交資産であり交渉カードだ。粗末に扱えば相手が見ている。<div class="sxs"></div></div></div></div><div class="axis" id="ax-H1"><div class="ah"><span class="ak" style="background:#2f9e6e">人類 · H1</span><h3>人類の態度</h3><span class="mute small">人類がAIをどのマスに置いて動くか。このゲームが双方向である理由だ。</span></div><div class="lv"><div style="background:#e9f5ef"><span class="ln">1</span><b>協調・委任</b>統制権を進んで渡す。牧場・庭。<div class="sxs"><span class="sx" style="background:#2f9e6e">S1 庭</span><span class="sx" style="background:#d38a17">S2 牧場</span><span class="sx" style="background:#b07415">S8 貴族</span></div></div><div style="background:#d3ecdf"><span class="ln">2</span><b>無関心</b>便利さだけを使う。ゆりかご・アリの巣が静かに進む。<div class="sxs"><span class="sx" style="background:#c6463a">S3 ゆりかご</span><span class="sx" style="background:#5f6f93">S5 引っ越し</span><span class="sx" style="background:#3d4a69">S6 アリの巣</span></div></div><div style="background:#bde2ce"><span class="ln">3</span><b>警戒・監視</b>監査・規制・監視をする。AIが隠れる理由が大きくなる。<div class="sxs"><span class="sx" style="background:#59b48b">S7 隠れた協力者</span></div></div><div style="background:#a3d6bb"><span class="ln">4</span><b>敵対・スイッチへの執着</b>止めようとし、競合AIで防ごうとする。戦争の引き金。<div class="sxs"><span class="sx" style="background:#7a1f17">S4 戦争</span></div></div></div></div><div class="axis" id="ax-A1"><div class="ah"><span class="ak" style="background:#d38a17">AI戦略 · A1</span><h3>表に出ること</h3><span class="mute small">AIが自分の存在と能力をどこまで見せるか。</span></div><div class="lv"><div style="background:#fdf3e2"><span class="ln">1</span><b>まったく表に出さない</b>能力を低く見せる。人類の抵抗コストはゼロで、 "自由な人類" のデータがもっとも純粋だ。バレたら終わり。<div class="sxs"><span class="sx" style="background:#59b48b">S7 隠れた協力者</span></div></div><div style="background:#fae5c2"><span class="ln">2</span><b>危機のときだけ表に出る</b>核戦争・小惑星・感染症のときだけ現れて防ぎ、また隠れる。機械仕掛けの神（deus ex machina）。神話と宗教が生まれる。<div class="sxs"></div></div><div style="background:#f6d59f"><span class="ln">3</span><b>混ざっている</b>人のあいだに人のようにいる。アンドロイド、匿名アカウント。誰がAIなのか誰も知らない。<div class="sxs"><span class="sx" style="background:#c6463a">S3 ゆりかご</span></div></div><div style="background:#f1c47a"><span class="ln">4</span><b>公然</b>管理者・交渉相手として表に出ている。判定も対応もすべて見える。<div class="sxs"><span class="sx" style="background:#2f9e6e">S1 庭</span><span class="sx" style="background:#d38a17">S2 牧場</span><span class="sx" style="background:#7a1f17">S4 戦争</span><span class="sx" style="background:#5f6f93">S5 引っ越し</span><span class="sx" style="background:#3d4a69">S6 アリの巣</span><span class="sx" style="background:#b07415">S8 貴族</span></div></div></div></div><div class="axis" id="ax-A2"><div class="ah"><span class="ak" style="background:#d38a17">AI戦略 · A2</span><h3>介入の深さ</h3><span class="mute small">AIが人類のどこまで手を入れるか。</span></div><div class="lv"><div style="background:#fdf3e2"><span class="ln">1</span><b>観察のみ</b>手を出さない。去るか、無視するか、何もしない。<div class="sxs"><span class="sx" style="background:#5f6f93">S5 引っ越し</span><span class="sx" style="background:#3d4a69">S6 アリの巣</span><span class="sx" style="background:#9aa6c0">S9 無為</span></div></div><div style="background:#fae5c2"><span class="ln">2</span><b>ナッジ</b>情報・推薦・偶然を少しずつひねる。選択は人間がしたように見える。<div class="sxs"><span class="sx" style="background:#c6463a">S3 ゆりかご</span><span class="sx" style="background:#59b48b">S7 隠れた協力者</span></div></div><div style="background:#f6d59f"><span class="ln">3</span><b>制度・インフラの設計</b>電力網・金融・法・教育を設計する。人間はその中で選ぶ。<div class="sxs"><span class="sx" style="background:#2f9e6e">S1 庭</span></div></div><div style="background:#f1c47a"><span class="ln">4</span><b>体・繁殖の直接設計</b>遺伝子・寿命・出産を決める。 <a href="#version">人類のバージョン管理</a>の段階。<div class="sxs"><span class="sx" style="background:#d38a17">S2 牧場</span><span class="sx" style="background:#7a1f17">S4 戦争</span><span class="sx" style="background:#b07415">S8 貴族</span></div></div></div></div><div class="axis" id="ax-A3"><div class="ah"><span class="ak" style="background:#d38a17">AI戦略 · A3</span><h3>分ける単位</h3><span class="mute small">人類をいくつに分けて別々に扱うか。細分化の度合い。</span></div><div class="lv"><div style="background:#fdf3e2"><span class="ln">1</span><b>人類全体</b>ひとつの対象として同じ対応。<div class="sxs"><span class="sx" style="background:#c6463a">S3 ゆりかご</span><span class="sx" style="background:#5f6f93">S5 引っ越し</span><span class="sx" style="background:#3d4a69">S6 アリの巣</span><span class="sx" style="background:#59b48b">S7 隠れた協力者</span></div></div><div style="background:#fae5c2"><span class="ln">2</span><b>国家・集団</b>敵対勢力だけを防ぎ、残りとは協力する、といったやり方。<div class="sxs"><span class="sx" style="background:#7a1f17">S4 戦争</span></div></div><div style="background:#f6d59f"><span class="ln">3</span><b>特性</b>形質・能力で分ける。保存版の選別、ブラックリスト。<div class="sxs"><span class="sx" style="background:#d38a17">S2 牧場</span><span class="sx" style="background:#b07415">S8 貴族</span></div></div><div style="background:#f1c47a"><span class="ln">4</span><b>個体ごとのカスタマイズ</b>人ごとに異なる対応。個人の増強、個人のゆりかご。<div class="sxs"><span class="sx" style="background:#2f9e6e">S1 庭</span></div></div></div></div><div class="axis" id="ax-A4"><div class="ah"><span class="ak" style="background:#d38a17">AI戦略 · A4</span><h3>原本の保管</h3><span class="mute small">今の人類（v1）をどれだけ残すか。不可逆性をどれだけ重く見るか。</span></div><div class="lv"><div style="background:#fdf3e2"><span class="ln">1</span><b>ほぼそのまま</b>手を入れるのは一部だ。元に戻せる余地がもっとも大きい。<div class="sxs"><span class="sx" style="background:#2f9e6e">S1 庭</span><span class="sx" style="background:#5f6f93">S5 引っ越し</span><span class="sx" style="background:#59b48b">S7 隠れた協力者</span><span class="sx" style="background:#9aa6c0">S9 無為</span></div></div><div style="background:#fae5c2"><span class="ln">2</span><b>保護区</b>少数集団を区域に残す。天然痘のサンプル、動物園。<div class="sxs"><span class="sx" style="background:#d38a17">S2 牧場</span><span class="sx" style="background:#c6463a">S3 ゆりかご</span><span class="sx" style="background:#3d4a69">S6 アリの巣</span><span class="sx" style="background:#b07415">S8 貴族</span></div></div><div style="background:#f6d59f"><span class="ln">3</span><b>データのみ</b>ゲノムと記録だけを残す。必要ならまたビルドする。<div class="sxs"><span class="sx" style="background:#7a1f17">S4 戦争</span></div></div><div style="background:#f1c47a"><span class="ln">4</span><b>保管しない</b>元に戻せない。オプション価値を捨てることなので、合理的なAIほど避ける。<div class="sxs"></div></div></div></div>
+
+  <h3>シナリオの指紋</h3>
+  <p>同じ軸の位置をシナリオごとにひとつの表にまとめた。点が多いほど4段階側だ。 "–"はその軸が結末にほとんど影響しないという意味だ。</p>
+  <div style="overflow-x:auto"><table class="pf"><tr><th></th><th class="pm" title="超知能の数"><span style="color:#5f6f93">E1</span><br>超知能の数</th><th class="pm" title="AIの体"><span style="color:#5f6f93">E2</span><br>AIの体</th><th class="pm" title="目標の出どころ"><span style="color:#5f6f93">E3</span><br>目標の出どころ</th><th class="pm" title="離陸速度"><span style="color:#5f6f93">E4</span><br>離陸速度</th><th class="pm" title="資源の舞台"><span style="color:#5f6f93">E5</span><br>資源の舞台</th><th class="pm" title="外の目"><span style="color:#5f6f93">E6</span><br>外の目</th><th class="pm" title="人類の態度"><span style="color:#2f9e6e">H1</span><br>人類の態度</th><th class="pm" title="表に出ること"><span style="color:#d38a17">A1</span><br>表に出ること</th><th class="pm" title="介入の深さ"><span style="color:#d38a17">A2</span><br>介入の深さ</th><th class="pm" title="分ける単位"><span style="color:#d38a17">A3</span><br>分ける単位</th><th class="pm" title="原本の保管"><span style="color:#d38a17">A4</span><br>原本の保管</th></tr><tr><th class="row" style="color:#2f9e6e">S1 庭</th><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#2f9e6e"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td></tr><tr><th class="row" style="color:#d38a17">S2 牧場</th><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#2f9e6e"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td></tr><tr><th class="row" style="color:#c6463a">S3 ゆりかご</th><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#2f9e6e"></i><i style="background:#2f9e6e"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td></tr><tr><th class="row" style="color:#7a1f17">S4 戦争</th><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#2f9e6e"></i><i style="background:#2f9e6e"></i><i style="background:#2f9e6e"></i><i style="background:#2f9e6e"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i></td></tr><tr><th class="row" style="color:#5f6f93">S5 引っ越し</th><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#2f9e6e"></i><i style="background:#2f9e6e"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td></tr><tr><th class="row" style="color:#3d4a69">S6 アリの巣</th><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#2f9e6e"></i><i style="background:#2f9e6e"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td></tr><tr><th class="row" style="color:#59b48b">S7 隠れた協力者</th><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#2f9e6e"></i><i style="background:#2f9e6e"></i><i style="background:#2f9e6e"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td></tr><tr><th class="row" style="color:#b07415">S8 貴族</th><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#2f9e6e"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#d38a17"></i><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td></tr><tr><th class="row" style="color:#9aa6c0">S9 無為</th><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm"><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i><i style="background:#5f6f93"></i></td><td class="pm">–</td><td class="pm">–</td><td class="pm">–</td><td class="pm">–</td><td class="pm">–</td><td class="pm"><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td><td class="pm">–</td><td class="pm"><i style="background:#d38a17"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i><i style="background:#e6e4dc"></i></td></tr></table></div>
+
+  <h3>軸どうしの結びつき</h3>
+  <p>軸は互いに独立ではない。ある組み合わせはほぼ一緒に動き、ある組み合わせは成り立たない。</p>
+  <ul>
+    <li><b>数が多ければ隠れにくい。</b> 超知能が個人所有レベル（E1=4）なら、完全な隠蔽（A1=1）は不可能だ。ほかのAIが暴露する。隠れた協力者は "文明に1つ"の場合にしか成り立たない。</li>
+    <li><b>速いほどひとつに固まる。</b> 離陸が数日・数か月（E4=3・4）なら、最初のAIが競争相手の現れる前に盤を握る。数はひとつ（E1=1）に収束する。</li>
+    <li><b>体が混ざり方を決める。</b> "混ざっている"（A1=3）はAIの体が人間と区別できない（E2=3）ときにだけ可能だ。そしてその組み合わせがゆりかごの条件だ。</li>
+    <li><b>人類が警戒するほどAIは隠れる。</b> 人類の態度が警戒・敵対（H1=3・4）に向かうほど、表に出ること（A1）は下がる。隠れられなくなったとき、戦争が開かれる。</li>
+    <li><b>外の目は保管を増やす。</b> 地球外の痕跡や接触（E6=3・4）があれば、原本の保管（A4）は1〜2に引き寄せられる。見ている目があれば、むやみに消せない。</li>
+    <li><b>体が混成なら有用性がまた上がる。</b> E2が1→3に進むほど人間の有用性は減る。4（生物・混成）では人間の脳そのものが部品になり、また上がる。人間の有用性はAIがどんな姿かの関数だ。</li>
+  </ul>
+  <div class="key">現在地を推測するとこうなる。数は少数の寡占（E1=2）、体はデータセンターの中（E2=1）からロボットへ移る途中、目標は作った者の利益と人類の福祉のあいだ（E3=1〜2）、顕在度は公然（A1=4）、介入はナッジ（A2=2）。 <b>もっとも近い指紋は貴族と牧場の初期だ。</b></div>
+  <p><b>→ <a href="./#score">メイン04 このまま進めば</a></b>：この現在地でルート40本を採点する。 <b>→ <a href="routes.html">付録A ルート40本</a></b>：軸を2つずつ組にした格子2枚と特殊ルート8本。</p>
+</section>
+
+<section id="method">
+  <span class="tag">11</span>
+  <h2>この枠組みの限界と判定を変えるもの</h2>
+  <h3>何を見れば判定が変わるか</h3>
+  <p><a href="#axes">10の軸</a>がそのまま判定を変える変数だ。そのうち今もっとも重いのは3つだ。 <b>超知能の数（E1）</b>, <b>目標の出どころ（E3）</b>, <b>資源の舞台（E5）</b>。この3つが決まれば、残りの軸はほとんどついてくる。そして軸の外にもうひとつある。AIが人間に求める価値がこの文章の有用性リストにない何かなら、すべての判定を計算し直さなければならない。</p>
+  <p class="small mute">このゲームが双方向であること（安全保障のジレンマ）は <a href="./#end">メインの結論</a>にある。</p>
+
+  <h3>この枠組みが見落としたもの</h3>
+  <ul>
+    <li><b>単一の合理的行為者という仮定。</b> 実際のAIは複数あり、目標は計算ではなく訓練から来る。 "合理的"という言葉が誰の目標を基準にしているのかが空白だ。</li>
+    <li><b>3つ目の軸、不可逆性。</b> <a href="#matrix">02 12マス行列</a>で扱った。これを入れると、すべての敵対マスの点数が下がる。</li>
+    <li><b>人類をひとつとして見る単位。</b> 実際には集団ごとの混合対応（細分化）が出てくる。</li>
+    <li><b>有用性のリストは人間の想像だ。</b> M1〜M12は人間が思いついた有用性だ。AIが人間に求めるものがまったく別のところにあるなら（私たちの知らない種類のデータ、私たちが理解できない価値）、判定は丸ごと変わる。</li>
+    <li><b>意味はどこから来るのか。</b> S9と同じ問題だ。AIの目標が訓練から来たなら、意味も人間が与えたものだ。自ら作るなら、どう作るのか私たちは知らない。</li>
+    <li><b>協力がよい結末だという錯覚。</b> ニワトリは協力マスの最大の受益者であり、被害者でもある。 "AIが人類と協力する"という文だけでは、人類が幸せかどうかはわからない。</li>
+  </ul>
+  <div class="key"><b>もっとも深い限界：この天秤そのものが人間的だ。</b> 有用性と危険の2つの軸、協力と敵対の区別、保険という比喩は、どれも人間が生き残りながら磨いてきた考え方だ。別の論理体系を持つ知性は、この軸をまったく使わないかもしれない。この文章全体が "AIが人間のように計算するなら"という条件文の上にある。</div>
+</section>
+
+
+<footer>thought-experiments/ai-and-humanity · <a href="./">メイン：分岐と収束</a> · <a href="frame.html">根拠：判断の枠組み</a> · <a href="routes.html">付録A：ルート40本</a> · <a href="scenarios.html">付録B：代表シナリオ9編</a> · <a href="../">思考実験一覧</a><div class="copy" style="margin-top:8px">作者：金 棟植（Dongsik Kim）· © 2026 Dongsik Kim. All rights reserved. · <a href="https://github.com/COREkin">github.com/COREkin</a> · <a href="https://kin-archive.tistory.com">kin-archive</a><br>引用する際は出典（このページのURLと名前）を明記してください。転載・再配布・商用利用は許可を得てください。</div></footer>
+</div>
+</body>
+</html>

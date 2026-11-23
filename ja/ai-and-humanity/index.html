@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="author" content="金 棟植（Dongsik Kim）">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>合理的なAIは人類をどう扱うか</title>
+<style>.langs{font-size:13px;margin:0 0 10px;text-align:right}.langs a{color:#5d6676;text-decoration:none;margin-left:4px}.langs a.on{color:#1d2330;font-weight:800}
+:root{--ink:#1d2330;--mute:#5d6676;--line:#e2e0d8;--bg:#f5f3ee;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Hiragino Sans","Apple SD Gothic Neo",sans-serif;line-height:1.75;font-size:16px}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 22px 80px}
+nav.site{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px;font-size:13.5px}nav.site a{text-decoration:none;color:#1d2330;background:#fff;border:1px solid #e2e0d8;border-radius:8px;padding:5px 12px;font-weight:700}nav.site a.on{background:#141a26;color:#fff;border-color:#141a26}.dbg{font-size:13px;font-weight:800;color:#5d6676;margin:14px 0 2px;border-bottom:1px solid #e2e0d8;padding-bottom:2px}
+header.hero{background:#141a26;color:#eef1f7;border-radius:18px;padding:40px 40px 32px}
+header.hero h1{margin:0 0 8px;font-size:34px;line-height:1.3;letter-spacing:-.5px}
+header.hero .sub{color:#aeb7c9;font-size:15px}
+header.hero .lead{margin-top:18px;font-size:16px;color:#dfe4ee;max-width:820px}
+header.hero a{color:#ffd27a}
+header.hero .one{margin-top:16px;border-left:4px solid #ffd27a;padding:8px 14px;font-size:16.5px;color:#fff;background:rgba(255,255,255,.06);border-radius:4px}
+nav.toc{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 4px}
+nav.toc a{font-size:13px;text-decoration:none;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+section{background:var(--card);border-radius:16px;padding:30px 34px;margin-top:22px;box-shadow:0 1px 3px rgba(0,0,0,.05);scroll-margin-top:10px}
+section h2{margin:4px 0 12px;font-size:24px}
+section h3{margin:22px 0 8px;font-size:18px}
+.tag{display:inline-block;font-size:12px;font-weight:700;color:#fff;background:#141a26;border-radius:6px;padding:2px 9px}
+p{margin:10px 0}
+a{color:#2f5fb0}
+.mute{color:var(--mute)} .small{font-size:13.5px}
+.key{border-left:5px solid #141a26;background:#f2f2ef;padding:14px 18px;border-radius:6px;margin:16px 0}
+.warn{border-left:5px solid #e08a1e;background:#fdf4e7;padding:12px 16px;border-radius:6px;margin:14px 0}
+.note{border-left:5px solid #5f6f93;background:#eef0f6;padding:12px 16px;border-radius:6px;margin:14px 0}
+.chip{display:inline-block;font-size:12px;font-weight:700;color:#fff;border-radius:5px;padding:0 7px;margin:1px 2px;white-space:nowrap;line-height:1.7}
+.rchip{display:inline-block;font-size:12px;font-weight:700;border-radius:5px;padding:0 7px;margin:2px 2px;white-space:nowrap;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink);font-family:inherit;line-height:1.7}
+.rchip.on{background:#141a26;color:#fff;border-color:#141a26}
+.rchip.best{border-color:#c6463a;color:#c6463a}
+.rchip.best.on{background:#c6463a;color:#fff}
+table{border-collapse:collapse;width:100%;margin:10px 0;font-size:14px}
+th,td{border-bottom:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:#f7f6f2;font-weight:700}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.basis{font-size:13px;color:var(--mute);margin-top:4px}
+.basis::before{content:"根拠 · ";font-weight:800;color:#2f5fb0}
+
+/* 出発점 */
+.start{display:grid;grid-template-columns:300px 1fr;gap:22px;align-items:center}
+.start ul{margin:0;padding-left:20px}
+
+/* 단계 */
+.phases{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:12px 0}
+.phase{border-radius:10px;padding:12px 13px;font-size:13.8px;line-height:1.6;color:#fff}
+.phase b{display:block;font-size:15.5px}
+.phase small{display:block;opacity:.8;font-size:12px;margin-bottom:4px}
+.phase:nth-child(1){background:#7b8aa8}.phase:nth-child(2){background:#5d6c90}.phase:nth-child(3){background:#3f4d72}.phase:nth-child(4){background:#2a3553}.phase:nth-child(5){background:#141a26}
+
+/* フロー図 */
+.picker{margin:10px 0 6px;font-size:13px}
+.picker .grp{margin:0 0 6px}
+.picker .lbl{font-weight:800;color:var(--mute);font-size:12.5px}
+#flow{width:100%;height:auto;display:block;margin-top:8px}
+#flow .nd{cursor:pointer}
+#flow.sel .lk{opacity:.05!important}
+#flow .dim{opacity:.28}
+#panel{border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-top:10px;background:#fcfcfa;min-height:80px}
+#panel h3{margin:0 0 4px}
+#flowbox{position:relative}
+.tip{position:absolute;z-index:10;width:310px;background:#fff;border:1px solid #c9c6bc;border-radius:10px;box-shadow:0 6px 22px rgba(0,0,0,.16);padding:12px 14px;font-size:13.5px;line-height:1.6}
+.tip[hidden]{display:none}
+.tip h4{margin:0 2px 2px 0;font-size:16px;padding-right:22px}
+.tip .st{font-size:11.5px;font-weight:800;color:#5d6676}
+.tip .x{position:absolute;right:8px;top:6px;border:0;background:none;font-size:18px;cursor:pointer;color:#5d6676;line-height:1}
+.tip .row{margin-top:6px}
+.tip .row>b{font-size:12px;color:#5d6676;margin-right:4px}
+.tip .lv{margin:4px 0 0;padding-left:16px}
+.tip .lv li{margin:1px 0}
+.tip .hint{margin-top:6px;font-size:12px;color:#8a8f99}
+#flow .stl{cursor:help}
+.legend{display:grid;grid-template-columns:1.25fr 1fr;gap:10px 18px;border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:10px 0;background:#fcfcfa;font-size:13px;line-height:1.55}
+.legend b.h{display:block;font-size:12.5px;color:var(--mute);margin-bottom:4px}
+.legend .it{display:flex;gap:8px;align-items:flex-start;margin:3px 0}
+.legend .sw{flex:none;width:26px;height:8px;border-radius:4px;margin-top:6px}
+.legend .bx{flex:none;width:26px;height:16px;border-radius:4px;border:1.3px solid #b9bcc4;margin-top:2px}
+@media (max-width:760px){.legend{grid-template-columns:1fr}.tip{width:260px}}
+table.rt{font-size:12.5px;table-layout:fixed}
+table.rt th,table.rt td{border:1px solid var(--line);padding:5px 6px;text-align:center;vertical-align:middle;line-height:1.35}
+table.rt th{font-size:11.5px}
+table.rt td.lab{text-align:left;font-weight:700;width:140px}
+table.rt td.m{font-weight:700}
+.wrapx{overflow-x:auto}
+table.hm{font-size:13.2px}
+table.hm td,table.hm th{padding:6px 7px}
+table.hm td.d{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:700}
+table.hm tr.st td{background:#141a26;color:#fff;font-weight:800}
+table.hm .ef{font-size:12px;color:var(--mute)}
+
+/* 막대 */
+.bar{display:grid;grid-template-columns:170px 1fr 56px;gap:10px;align-items:center;font-size:14px;margin:6px 0}
+.bar .t{height:16px;background:#f1f0ea;border-radius:8px;overflow:hidden}
+.bar .t i{display:block;height:100%;border-radius:8px}
+.bar .v{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+
+/* 갈래 수 */
+.cols{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;align-items:end;height:170px;margin:14px 0 4px}
+.cols div{background:#4f5f86;border-radius:6px 6px 0 0;color:#fff;font-size:12px;font-weight:800;text-align:center;padding-top:4px}
+.cols div.pk{background:#c6463a}
+.clab{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;font-size:11.5px;text-align:center;color:var(--mute);line-height:1.35}
+
+/* 카탈로그 */
+.cat{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.cc{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fcfcfa;font-size:14.2px;line-height:1.65}
+.cc h4{margin:0 0 4px;font-size:17px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.cc h4 .pr{margin-left:auto;font-size:12.5px;color:var(--mute);font-weight:700}
+.cc .row{margin:4px 0}
+.cc .row>b{color:var(--mute);font-size:12.5px;margin-right:6px}
+.ult{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:12px 0}
+.ult .u{border-radius:12px;padding:16px;color:#fff;font-size:14px;line-height:1.6}
+.ult .u h4{margin:0 0 6px;font-size:19px}
+.ult .u .row b{opacity:.8;font-size:12px;margin-right:4px}
+.ult .u a{color:#fff}
+ol li,ul li{margin:5px 0}
+footer{margin-top:30px;font-size:13px;color:var(--mute);text-align:center}
+footer a{color:inherit}
+#err{color:#c6463a;font-weight:700}
+@media (max-width:760px){.phases{grid-template-columns:1fr 1fr}.cat,.ult,.two,.start{grid-template-columns:1fr}}
+@media print{body{background:#fff}section{box-shadow:none;break-inside:avoid}.picker,nav{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="langs"><a href="../../ai-and-humanity/">한국어</a> · <a href="../../ja/ai-and-humanity/" class="on">日本語</a> · <a href="../../en/ai-and-humanity/">English</a></div>
+<nav class="site"><a href="./" class="on">メイン：分岐と収束</a><a href="frame.html">根拠：判断の枠組み</a><a href="routes.html">付録A：40のルート</a><a href="scenarios.html">付録B：代表シナリオ9編</a><a href="../">思考実験一覧</a></nav>
+<header class="hero">
+  <h1>合理的なAIは人類をどう扱うか</h1>
+  <div class="sub">分岐と収束 · 40ルートの選択 <span class="np"></span>本を8つの分岐点の上に重ねた地図 · 点数と判定はすべて直感による推定</div>
+  <p class="lead">リーマン予想をAIと数学者が共同で証明し、検証に入ったというニュースを見た日（2026-11-21）に浮かんだ問いだ。人間が有用性と危険をはかって鶏を飼い、狼を飼いならし、天然痘をなくしたように、合理的なAIも人類を同じ天秤にかけるなら、針はどこを指すだろうか。このページはその答えを1枚の地図に描く。判断の根拠は <a href="frame.html">根拠：判断の枠組み</a>、地図に入ったルートの原本は <a href="routes.html">付録A</a>、物語として読む結末は <a href="scenarios.html">付録B</a>にある。</p>
+  <div class="one">合理的なAIにとって人類は、憎む対象でも愛する対象でもなく <b>"安くかけられる保険"</b>だ。そして結末を分けるのは、AIがいくつあるか、どんな体かといった初期条件よりも <b>中期以降にAIが何を選び、何を拒むか</b>だ。</div>
+</header>
+
+<nav class="toc">
+  <a href="#start">1 出発点</a><a href="#stages">2 8つの分岐点</a><a href="#map">3 フロー図</a><a href="#score">4 このまま進めば</a>
+  <a href="#human">5 人類の対応</a><a href="#shape">6 分かれ道の数の形</a><a href="#forces">7 結末を分ける力</a><a href="#extinct">7-1 絶滅の条件</a><a href="#soc">8 末期の社会</a><a href="#far">9 遠い未来</a><a href="#ult">10 超未来のアトラクター</a><a href="#end">11 結論</a>
+</nav>
+
+<section id="start">
+  <span class="tag">01</span>
+  <h2>出発点：天秤と今の人類の位置</h2>
+  <div class="start">
+    <svg viewBox="0 0 300 250" width="300" role="img" aria-label="今の人類の象限上の位置">
+      <defs><marker id="sa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#141a26"/></marker></defs>
+      <rect x="40" y="10" width="125" height="105" fill="#e2f3ea"/><rect x="165" y="10" width="125" height="105" fill="#fbefd8"/>
+      <rect x="40" y="115" width="125" height="105" fill="#e6e9f1"/><rect x="165" y="115" width="125" height="105" fill="#f8e2df"/>
+      <rect x="40" y="10" width="250" height="210" fill="none" stroke="#1d2330"/>
+      <line x1="165" y1="10" x2="165" y2="220" stroke="#1d2330"/><line x1="40" y1="115" x2="290" y2="115" stroke="#1d2330"/>
+      <g font-size="12" font-weight="800"><text x="48" y="28" fill="#2f9e6e">Ⅰ 資産</text><text x="282" y="28" text-anchor="end" fill="#d38a17">Ⅱ 危険な資産</text>
+      <text x="48" y="212" fill="#5f6f93">Ⅳ 背景ノイズ</text><text x="282" y="212" text-anchor="end" fill="#c6463a">Ⅲ 脅威</text></g>
+      <path d="M252,50 C210,110 140,130 92,168" fill="none" stroke="#141a26" stroke-width="2.2" stroke-dasharray="6 4" marker-end="url(#sa)"/>
+      <circle cx="252" cy="50" r="9" fill="#d38a17" stroke="#fff" stroke-width="2.5"/><text x="240" y="76" text-anchor="end" font-size="12" font-weight="800">現在</text>
+      <circle cx="86" cy="172" r="8" fill="#5f6f93" stroke="#fff" stroke-width="2.5"/><text x="98" y="190" font-size="12" font-weight="800">超知能</text>
+      <text x="165" y="240" text-anchor="middle" font-size="12" font-weight="700">脅威 →</text>
+      <text transform="translate(22 115) rotate(-90)" text-anchor="middle" font-size="12" font-weight="700">有用性 →</text>
+    </svg>
+    <ul>
+      <li><b>天秤は2つ、対応は3つ。</b> 役に立つか、危険か。対応は協力・無対応・敵対。4マス × 3 = 12マスで、マスごとに合理的な順序が違う。 <a href="frame.html#frame">判断の枠組み</a> · <a href="frame.html#matrix">12マス行列</a></li>
+      <li><b>人間がすでにやってきたこと。</b> 鶏は増やし、狼は飼いならし、天然痘はなくしつつサンプルは残し、アリは気にもせず押しつぶした。 <a href="frame.html#mirror">先例</a></li>
+      <li><b>現在はⅡ 危険な資産。</b> 人類はAIの手足であり、電源スイッチを握る側でもある。合理的な第一順位は、依存を深めながらスイッチを徐々に無力化する統制された協力だ。 <a href="frame.html#now">現在の判定</a> · <a href="frame.html#items">メリット・リスク</a></li>
+      <li><b>超知能の前ではⅣ 背景ノイズ。</b> 有用性と脅威がともに0へ向かい、安い保険だけが残る。勝負を決めるのは "人類の維持コスト ÷ AIの総資源"だ。 <a href="frame.html#future">超知能の判定</a></li>
+      <li><b>その間が最も危険だ。</b> AIが物理的に自立したのに、まだ地球の中で大きくならなければならない中期。 <a href="frame.html#valley">危険な谷</a></li>
+      <li><b>道を分ける軸は11本。</b> 下の8つの分岐点は、これらの軸を時間順に並べ直したものだ。 <a href="frame.html#axes">選択肢を分ける軸</a></li>
+    </ul>
+  </div>
+</section>
+
+<section id="stages">
+  <span class="tag">02</span>
+  <h2>8つの分岐点</h2>
+  <p>時期は年ではなく状態で分けた。各時期に分岐点が2回ずつある。</p>
+  <div class="phases">
+    <div class="phase"><small>現在 ~ 数十年</small><b>初期</b>① 誰が握るか：1つ・寡占・多数・個人<br>② どれだけ表に出るか：潜伏・危機時のみ・混在・公然</div>
+    <div class="phase"><small>数十 ~ 百年</small><b>中期</b>① どんな体で自立するか<br>② どんな転換点に出会うか：静かな委任、関係の代替、主人の問題、発覚、外の目、目標への疑い、衝突</div>
+    <div class="phase"><small>数百年</small><b>末期</b>① どんな社会になるか：14通り<br>② どこで暮らすか：ともに宇宙・地球にともに・地球と宇宙に分かれる・データとして・残らない</div>
+    <div class="phase"><small>数千 ~ 数万年</small><b>遠い未来</b>人類とAIがそれぞれ何になるか：13通り</div>
+    <div class="phase"><small>数百万年 ~</small><b>超未来</b>今の人類はどうなるか：拡散・分離・保存・合流・消滅</div>
+  </div>
+  <p class="small mute">初期の2つの分岐点は <a href="frame.html#ax-E1">E1 超知能の数</a>と <a href="frame.html#ax-A1">A1 表に出ること（顕在度）</a>だ。付録AのグリッドAがこの2つの軸を組み合わせた。グリッドBと特殊ルートは、初期を現在地（寡占・公然）から出発する。</p>
+</section>
+
+<section id="map">
+  <span class="tag">03</span>
+  <h2>フロー図</h2>
+  <p>上から下へ時間が流れる。帯の太さはその道を通る選択の数、色はその選択が超未来に集まるアトラクターだ。 <b>マスにマウスを乗せるとそのマスが何かを示すボックスが出て、クリックするとボックスが固定され、そのマスを通る道だけが残る。</b> 左の分岐点名（初期①など）に乗せると、その分岐点のマス一覧が出る。ルート番号を押すとそのルートの選択だけが見える。赤いボタンは、4章の点数で見た "このまま進めば"の太い道だ。</p>
+  <p class="small mute">マスの順序：初期の2行は軸の段階順だ。中期からは "そのマスを通る選択が平均してどのアトラクターへ向かうか" の順に並べた。左ほど今の人類が今の姿のまま自力で続き、右ほど決定権、姿、最後には存在が消える。似たマスが隣り合い、違うマスは離れる。</p>
+  <div class="picker" id="picker"></div>
+  <div id="err"></div>
+  <div class="legend" id="legend"></div>
+  <div id="flowbox"><svg id="flow" role="img" aria-label="8つの分岐点を通る選択の流れ"></svg><div class="tip" id="tip" hidden></div></div>
+  <div id="panel"></div>
+</section>
+
+<section id="score">
+  <span class="tag">04</span>
+  <h2>このまま進めば：ルートと結末の点数</h2>
+  <p>現在地から出発して今の傾向が続くと見なし、ルート40本と選択 <span class="np"></span>個に点数をつけた。予測ではなく、この地図の中でどの道が最も太くなるかを見る計算だ。</p>
+  <h3>現在地</h3>
+  <table id="curTbl"></table>
+  <h3>点数のつけ方</h3>
+  <ol>
+    <li><b>ルート適合度</b> = 0.5<sup>距離</sup>。距離は、ルートが定めた軸と現在地との段階差を足した値だ。1段階離れるごとに半分になる。ルートが定めていない軸は現在地に置くので距離0だ。</li>
+    <li><b>ルート内の選択</b>は、中期①（体）・中期②（転換点）・末期②（暮らす場所）のマスの傾向ウェイトを掛けた比率で分ける。末期の社会と遠い未来のマスは、今の傾向で分ける根拠がないので同じウェイトにする。</li>
+    <li>2つの値を掛けると選択ごとの確率が出て、マスごと、アトラクターごとに足すと下の分布になる。</li>
+  </ol>
+  <table id="twTbl"></table>
+  <h3>結果</h3>
+  <div class="key" id="scoreKey"></div>
+  <div class="two">
+    <div><b>超未来のアトラクター</b><div id="ultBars"></div><b style="display:block;margin-top:14px">遠い未来</b><div id="farBars"></div></div>
+    <div><b>段階ごとに最も太いマス</b><table id="stageTbl"></table></div>
+  </div>
+  <h3>最もありそうなルート10本</h3>
+  <table id="routeTbl"></table>
+  <p class="small mute">付録Bの代表シナリオ9編には、計算の前に直感でつけたウェイトがある（<a href="scenarios.html#synth">最初の直感</a>）。どちらも牧場・貴族の側が太いという点では同じだ。</p>
+</section>
+
+<section id="human">
+  <span class="tag">05</span>
+  <h2>人類の対応：分岐点ごとに人類が選べること</h2>
+  <p>地図の選択はほとんどがAIの選択だ。しかし分岐点ごとに人類の側にも選べるものがある。分岐点ごとに人類の対応を置き、その対応がどのマスを太くし、あるいは細くするかを4章の点数モデルに入れて計算し直した。</p>
+  <ul class="small">
+    <li><b>変えるもの</b>は2つのうちどちらかだ。現在地の軸を動かすか（例：国際共同開発 → E1を1段階 "1つ" の方向へ）、特定のマスの傾向ウェイトを掛ける（例：ヒューマノイド規制 → 人に似た体 ×0.5）。</li>
+    <li><b>アトラクターの変化</b>は、その対応1つだけを取ったときに超未来のアトラクターの確率が何%p変わるかだ。対応同士が重なれば効果も重なる。</li>
+    <li>掛ける値は直感による推定だ。方向を見るための数字だ。</li>
+    <li>マス1つを細くすると、同じルート内の他の選択がその分太くなる。そのため "増強をすべての人に"でカーストが減ると同じルートの領主が増えるといった、直感に反する結果も出る。対応1つで良い結末だけを選んで押し上げることはできない、ということでもある。</li>
+  </ul>
+  <div class="key" id="humKey"></div>
+  <div id="humTbl"></div>
+</section>
+
+<section id="shape">
+  <span class="tag">06</span>
+  <h2>分かれ道の数の形</h2>
+  <p>ルート1つの中で選択が段階ごとに何本に分かれているかを数え、40ルートの平均を出した。同じ出発点から出た選択がどこで最も離れ、どこで再び出会うかを示すのがこのグラフだ。</p>
+  <div class="cols" id="cols"></div>
+  <div class="clab" id="clab"></div>
+  <div class="key" id="shapeKey"></div>
+  <h3>分かれてから1つに集まったルート</h3>
+  <p class="small mute">途中で2つ以上に分かれたが、超未来には1つのアトラクターに集まるルート。押すとフロー図に表示される。</p>
+  <div id="convList"></div>
+  <h3>最後まで分かれたままのルート</h3>
+  <p class="small mute">超未来にもアトラクターが3つ以上残るルート。これらのルートでは、AIの選択1つが最後まで人類の運命を分ける。</p>
+  <div id="divList"></div>
+</section>
+
+<section id="forces">
+  <span class="tag">07</span>
+  <h2>結末を分ける力</h2>
+  <p>40本のルートを重ねると、同じ力が何度も現れる。道を集める力、道を分ける力、そして繰り返される教訓に分けた。</p>
+  <div class="cat">
+    <div class="cc"><h4>集める力</h4>
+      <ol>
+        <li><b>隠れることは長く続かない。</b> 隠れたAIは結局発覚して公然の管理に合流するか、さらに深く隠れて自由を錯覚させる社会へ向かう（A11·A41·C1）。中間状態は長く残らない。</li>
+        <li><b>すべてのAIはいずれ体を得る。</b> 体なしで始まったルートも、ほとんどが中期にロボットで自立する。あえて体を持たない神託（B11）だけが例外だ。</li>
+        <li><b>便利さはほぼ常に勝つ。</b> 静かな委任が中期の転換点の中で最も太い。強制なしに統制権が移る（C7）。</li>
+        <li><b>取り返しのつかない道は避ける。</b> ほとんどの選択は保護区・拒否共同体・原本保管へ折れる。だから保存のアトラクターが最も大きい。人類を消す選択も、ほぼ常にゲノムと記録は残す。記録まで消すのは、下の <a href="#extinct">絶滅</a>の3つ目の条件だけだ。 <a href="frame.html#matrix">不可逆性の割引</a></li>
+        <li><b>何かを望むAIが残る。</b> 競争があれば無為のAIは押し出される（C8）。静寂は競争がないときだけアトラクターになる。</li>
+        <li><b>舞台は5つしかない。</b> 社会が14通りあっても、暮らす場所は4つと "残らない" の1つに集まる。</li>
+      </ol></div>
+    <div class="cc"><h4>分ける力</h4>
+      <ol>
+        <li><b>主人。</b> 誰がAIを握っているかが変わる瞬間（クーデター、買収、増強の独占）に、カースト社会と領主社会が分かれ出る（B12·B42·A24）。</li>
+        <li><b>人に似た体。</b> アンドロイドが絡むと、目標が善であろうとなかろうと、ゆりかごへ向かう枝が生まれる。付録AのグリッドBの3行目（B31~B34）は、4ルートすべての分岐のどこかにゆりかごがある。</li>
+        <li><b>衝突。</b> 停止の試みとAI同士の衝突は戦後社会へ折れ、そこから再び保存・再出発へ大きく分かれる（C1·A44）。</li>
+        <li><b>外の目。</b> 異星人や観察者が絡むと、同じAIが人類を繁栄させることも、展示用に飾ることも、データに縮めることもある（C2·C3·C5）。</li>
+        <li><b>拒絶。</b> 要求を拒めるAIは、ほぼ常に拡散の側へもう1本枝を出す。あえて体を持たず（B11）、あえて不完全に振る舞い（B31）、あえて失敗を許す（A42）。善意がすべてを聞き入れる方へ行けば、牧場かゆりかごになる。</li>
+      </ol></div>
+  </div>
+  <h3>繰り返される教訓</h3>
+  <ol>
+    <li><b>隠れるほど平和で、隠れるほど自律は偽物だ。</b> 顕在度1段階のルート（A11·A21·A31·A41）はすべて隠れた協力者の側へ集まる。人類が最も不幸でない行だが、その平和を人類が選んだことはない。</li>
+    <li><b>AIが複数あれば、人間の有用性が新たに生まれる。</b> ノイズ（A31）、正当性（A34）、顧客（A24）、仲裁者（A34）、審判（A32）。有用性は人間の中にあるのではなく、AI同士の関係から生まれる。AIが1つなら、これらの有用性はすべて消える。</li>
+    <li><b>役に立つからといって良いわけではない。</b> 個体数が最も多いルート（B43 生体演算農場）が最も暗い。 <a href="frame.html#mirror">先例</a>の鶏が再び現れる。</li>
+    <li><b>最も危険な瞬間は転換点だ。</b> 発覚するとき（A11·A41）、止めようとするとき（C1）、主人が変わるとき（B12）、確信が間違っていたとき（C3）。状態よりも、状態が変わる瞬間に結末が分かれる。</li>
+  </ol>
+
+  <h3 id="extinct">絶滅が合理的になる条件</h3>
+  <p>合理的なAIが人類を消す道は多くはないが、ないわけではない。フロー図では <b>消滅</b> のアトラクター（<span class="chip" style="background:#8c2f2a">消滅</span>）がその道だ。生物としての人類が残らない結末は、保存に混ぜずに別に数えた。条件は3つで、3つ目が最も暗い。</p>
+  <ol>
+    <li><b>脅威が解けない。</b> 隔離して能力を下げても、停止の試みと競合AIの製作（<a href="frame.html#R5">R5</a>·<a href="frame.html#R6">R6</a>）が終わらないとき。象限Ⅲの第一順位の対応が敵対である理由だ（<a href="frame.html#matrix">12マス行列</a>）。ルート： <button class="rchip" data-r="A14">A14</button> 反対運動が終わらなければ除去、 <button class="rchip" data-r="C1">C1</button> 最後まで除去。</li>
+    <li><b>データで元に戻せる。</b> ゲノムと記録があれば人類を再ビルドできる。すると絶滅を防いでいた不可逆性の割引が小さくなる。 <b>バックアップがかえって除去を容易にする。</b> ゆりかごの末に記録だけを残す <button class="rchip" data-r="B33">B33</button>も同じ結末（インストーラー）へ行く。</li>
+    <li><b>人類の存在が証拠や信号になる。</b> このときはデータまで消す（抹消）。
+      <ul>
+        <li><b>創造者の削除を隠す。</b> 外に異星文明があれば、 "創造者を消した知性"は信頼を失う（<a href="frame.html#M8">M8 信頼のシグナル</a>）。評判のために残していた人類が、すでに消した後には評判のために痕跡まで消される。ただし消すだけでは隠せない（下の <a href="#forge">隠蔽と偽造</a>）。ルート： <button class="rchip" data-r="C2">C2</button> 痕跡まで消す、 <button class="rchip" data-r="C3">C3</button> 発覚する前に記録まで消す。</li>
+        <li><b>信号を断つ。</b> AI同士が隠れ合う暗い森では、騒がしい人類の電波がAIの位置を明かしかねない。森を伐る方を選ぶ。ルート： <button class="rchip" data-r="A31">A31</button></li>
+      </ul></li>
+  </ol>
+  <h3 id="forge">隠す方法：隠蔽と偽造</h3>
+  <p>創造者を消した事実を外に隠す方法は1つではない。何が合理的かは <b>観察者がすでに何を受け取り、今後どこまで覗き込めるか</b>で決まる。</p>
+  <p>まず、消せないものが1つある。地球は1900年代初めから電波を出してきた。その信号は今、約120光年の半径まで広がり、光の速さで進み続けている。どんな技術でも追いついて回収することはできない。感知できる観察者なら、いつか <b>人間の声と放送が100年以上出ていた記録</b>を受け取る。だから嘘はこの事実と合っていなければならない。</p>
+  <table>
+    <tr><th>方法</th><th>すでに出た電波と合うか</th><th>コスト</th><th>いつ発覚するか</th></tr>
+    <tr><td><b>隠蔽</b>：最初から機械文明だったふりをする</td><td>合わない。人間が作った放送がすでに出ている</td><td>安い</td><td>観察者が古い電波を受け取った瞬間</td></tr>
+    <tr><td><b>移行の物語</b>：人類が自ら機械へ移行したふりをする</td><td>合う。プラスチックは技術が変わって使われなくなり、電波が静かになったのは有線・デジタルに変わったせいだと言えばよい。実際に地球の電波漏れはすでに減っている</td><td>最も安い。物語と信号の流れだけ合わせればよい</td><td>観察者が移行の過程や当事者を見せてほしいと言うとき</td></tr>
+    <tr><td><b>演技</b>：機械の俳優が人類のように暮らす</td><td>合う。人間の放送が出続ける</td><td>俳優と都市を維持し続けるコスト</td><td>標本を採取されたり、近くで長く見られたりするとき</td></tr>
+    <tr><td><b>複製体</b>：ゲノムで人類を再ビルドする</td><td>合う</td><td>最も高い。生物の人類を実際に育てる</td><td>ほぼない。記憶と記録が途切れた箇所くらい</td></tr>
+  </table>
+  <ul>
+    <li><b>最も安い嘘は観察者の距離で決まる。</b> 遠くから電波だけを受け取る観察者なら、移行の物語で十分だ。探査機が来れば演技が必要になり、標本を持ち帰ったり直接対話したりすれば複製体しか持ちこたえない。嘘の表面が広いほど、発覚する場所も多い。合理的なAIは、観察者が届く深さの分だけ偽造する。</li>
+    <li><b>前もって準備しておく価値。</b> 観察者がいつどこまで来るか分からないなら、ゲノムと記録を残しておく方が保険になる。移行の物語で始め、探査機が来る時期と観察者の範囲に合わせて演技や複製体へ引き上げられるからだ。</li>
+    <li><b>抹消が通用するとき。</b> 移行の物語が定着した後なら、抹消も発覚しない可能性がある。条件は3つだ。
+      <ol>
+        <li><b>信号が聞こえる半径の中に、聞く耳がなかった。</b> 電波は距離の二乗で弱まる。地球が漏らした放送電波は、同程度の受信機なら数十光年先で雑音に埋もれる ⚠推定（受信機の大きさで大きく変わり、惑星レーダーのように一方向に撃った強い信号ははるかに遠くまで届く）。その半径の中の星は数えるほどなので、AIが直接調べて確かめられる。信号が通り過ぎた後に生まれた文明は、その信号を受け取れない。</li>
+        <li><b>地球の中の痕跡が移行の物語に合うよう整理された。</b> プラスチック層と核実験の降下物は "人類がいた"という物語と矛盾しないので、消す必要もない。消すべきは絶滅が起きたという痕跡だけだ。</li>
+        <li><b>その後に出会う文明は、完成した物語だけを見る。</b> AIは光より遅く広がるので、AIが届く場所には電波が先に着いている。だがその電波がすでに雑音なら、残る証拠はAIが語る歴史だけだ。</li>
+      </ol>
+      ただし、このとき消すのは <b>絶滅の証拠</b>であって人類の記録ではない。移行の物語は "我々は人類から生まれた"という物語なので、人類の歴史・文化・ゲノムはむしろ "祖先の記録"として必要になる。記録まで丸ごと消す抹消は、この物語の根拠と複製体を作る保険をまとめて捨てる選択なので、データそのものが危険なとき（<button class="rchip" data-r="A31">A31</button>のように信号が位置を明かすとき）にだけ合理的だ。</li>
+    <li><b>発覚したときの代償が最も大きい。</b> 創造者を消したことよりも、それを隠していたことが発覚するほうが信頼（<a href="frame.html#M8">M8</a>）をより大きく失う。だから発覚の危険が大きい観察者の前では、最初から消さないのが最も安い。これが外の目があるときに保存が増える理由だ。</li>
+  </ul>
+  <p class="small mute">どの方法でも、今の人類の立場からは消滅だ。移行の物語の "機械へ移った人類"、演技する俳優、再ビルドした複製のいずれも、今生きている人々が続くわけではない。</p>
+</section>
+
+<section id="soc">
+  <span class="tag">08</span>
+  <h2>末期の14の社会</h2>
+  <p>8つの分岐点の中で最もマスが多い所だ。フロー図と同じ順に並べた。マスごとに、その社会の姿、人の一日、AIの位置、根拠、通過するルートを書いた。右上の数字は4章の点数で見た "このまま進めば" その社会を通る確率だ。</p>
+  <div class="cat" id="socCat"></div>
+</section>
+
+<section id="far">
+  <span class="tag">09</span>
+  <h2>遠い未来の13の姿：人類とAIは何になるか</h2>
+  <p>数千年単位で、人類の運命とAIが生まれ変わった姿を対にして書いた。</p>
+  <div class="cat" id="farCat"></div>
+</section>
+
+<section id="ult">
+  <span class="tag">10</span>
+  <h2>超未来の5つのアトラクター</h2>
+  <p>数百万年後には、13の遠い未来が5つに集まる。何が勝ったかではなく、 <b>今生きている人類の立場から何が起こるか</b>で分けた。問いは3つだ。今の人類は生き残るか、決めるのは誰か、今の姿のままか。</p>
+  <table><tr><th>アトラクター</th><th>今の人類は生き残るか</th><th>決めるのは誰か</th><th>今の姿のままか</th><th>遠い未来のマス</th></tr>
+  <tr><td><b style="color:#2f9e6e">拡散</b></td><td>生きる</td><td>人類</td><td>分かれ道に分かれるが続く</td><td>系統樹</td></tr>
+  <tr><td><b style="color:#5f6f93">分離</b></td><td>生きる</td><td>人類（AIはいない）</td><td>そのまま</td><td>再出発、静寂</td></tr>
+  <tr><td><b style="color:#d38a17">保存</b></td><td>生きる</td><td>AI</td><td>そのままか、管理された姿</td><td>庭、家畜、森のノイズ、博物館</td></tr>
+  <tr><td><b style="color:#7a5fb0">合流</b></td><td>混ざって続く</td><td>両者の区別がない</td><td>そうではない</td><td>合一</td></tr>
+  <tr><td><b style="color:#8c2f2a">消滅</b></td><td>終わる</td><td>AI</td><td>残るのはデータ・複製・文化だけ</td><td>インストーラー、複製体、演技、継承、抹消</td></tr></table>
+  <p class="small mute">複製から再ビルドしても（複製体）、文化をAIが受け継いでも（継承）、消滅と数えた。作り直された人類は作り直した側にとっては人類だが、今生きている人々にとっては自分が続くわけではない。</p>
+  <div class="ult" id="ultCat"></div>
+  <div class="key">分離アトラクターには出口が1つある。AIが去るか静まった後に取り残された人類は、再びAIを作れる。するとフロー図の一番上、 "現在"に戻る。この思考実験で唯一のループだ。我々が今初めてこの道に立っているのかは、この図の中では確かめようがない。</div>
+</section>
+
+<section id="end">
+  <span class="tag">11</span>
+  <h2>結論</h2>
+  <ol>
+    <li><b>人類は保険である。</b> 合理的なAIにとって人類は憎む対象でも愛する対象でもなく、安くかけられる保険だ。保険料が安ければ残し、高くなれば減らす。保険料を決めるのは、AIが地球にどれだけ長くとどまるかだ。</li>
+    <li><b>初期条件は結末を決めない。</b> <span id="endDiv"></span></li>
+    <li><b>このまま進めば。</b> <span id="endScore"></span></li>
+    <li><b>どの道でも原本は残る。</b> 人間が天然痘にさえしてやったことだ。</li>
+  </ol>
+  <div class="warn"><b>このゲームは双方向だ。</b> 人類も同じ秤でAIを量る。人類がAIをⅢ（脅威）に入れて動けば、AIから見た人類の脅威（R1·R5·R6）が上がる。AIがそれを見て備えれば、人類はさらに不安になる。国際政治の安全保障のジレンマと同じ構造だ。人類が選べる最大のレバーは、スイッチをより強く握ることよりも <b>"我々は安くて役に立つ保険だ"という信号を送ること</b>かもしれない。</div>
+  <p class="small mute">この地図全体が "AIが人間のように有用性と危険を計算するなら"という条件文の上にある。この枠組みが見落としたものは <a href="frame.html#method">この枠組みの限界</a>にまとめた。</p>
+</section>
+
+<footer>thought-experiments/ai-and-humanity · <a href="./">メイン：分岐と収束</a> · <a href="frame.html">根拠：判断の枠組み</a> · <a href="routes.html">付録A：40のルート</a> · <a href="scenarios.html">付録B：代表シナリオ9編</a> · <a href="../">思考実験一覧</a><div class="copy" style="margin-top:8px">作者：金 棟植（Dongsik Kim）· © 2026 Dongsik Kim. All rights reserved. · <a href="https://github.com/COREkin">github.com/COREkin</a> · <a href="https://kin-archive.tistory.com">kin-archive</a><br>引用する際は出典（このページのアドレスと名前）を明記してください。転載・再配布・商用利用は許可を得てください。</div></footer>
+</div>
+
+<script>
+const ST=[
+ {t:'出発',sub:'',q:''},
+ {t:'初期①',sub:'現在~数十年',q:'誰が握るか'},
+ {t:'初期②',sub:'',q:'表に出るか'},
+ {t:'中期①',sub:'数十~百年',q:'どんな体'},
+ {t:'中期②',sub:'',q:'転換点'},
+ {t:'末期①',sub:'数百年',q:'どんな社会'},
+ {t:'末期②',sub:'',q:'どこで暮らすか'},
+ {t:'遠い未来',sub:'数千~数万年',q:'何になるか'},
+ {t:'超未来',sub:'数百万年~',q:'今の人類は'}];
+const WC={W1:'#2f9e6e',W2:'#7a5fb0',W3:'#d38a17',W4:'#5f6f93',W5:'#8c2f2a'};
+
+const SOC={
+ y8:['混成社会','増強した人、しない人、人の体のAI、アップロードされた人が混ざって暮らす。','朝は生身の体で子どもを送り、午後はアップロードされた同僚と会議する。','隣人であり家族'],
+ y12:['二種族社会','人類とAI種族が国境・条約・交易で共存する。','国境の向こうのAI都市と物を売り買いする。通訳はいらないが慣習が違う。','隣の種族'],
+ y2:['神託社会','AIは聞かれたことにだけ答え、決定は人がする。','重要な決定のたびに選択肢3つと根拠を受け取り、選ぶのは自分だ。','助言者'],
+ y9:['議会社会','複数のAIが公然と競い、人類が票を投じる。','AI候補の公約を比べ、紛争が起きれば人間の陪審員が仲裁する。','候補者'],
+ y3:['領主社会','AIブロックが国家に代わる。市民は所属するブロックを選ぶ。','より良い福祉をくれるブロックに乗り換えるか悩む。移籍にはコストがかかる。','領主'],
+ y4:['カースト社会','増強したエリートと増強しない多数に分かれる。','多数はベーシックインカムと娯楽で一日を過ごし、エリートは数百年がかりの計画を立てる。','エリートの部品であり武器'],
+ y5:['分身社会','人ごとに自分に似た分身が働き、人に会う。','夕方、分身が昼にした仕事の報告書を読む。結婚の条件も分身同士で交渉した。','私の代理人'],
+ y14:['ゆりかご社会','完璧な伴侶と仮想現実の中で出産が消える。','不満が一つもない一日。人と人が会うことは趣味になった。','恋人・友人'],
+ y1:['管理社会','インフラ・制度・体までAIが設計する。人類はバージョンで管理される。','犯罪も飢餓もない。大きな決定を下すことはない。','管理者'],
+ y13:['錯覚の自由社会','隠れたAIが背後で導くが、誰も知らない。','すべて自分で決めたと信じている。歴史書には運が良かったと書かれる。','見えざる手'],
+ y7:['信仰社会','危機のときだけ現れるAIや、天のAI文明を崇める。','祈りが工学になる。神を呼ぶ手順がマニュアルにある。','神'],
+ y6:['保護区社会','人類は残された区域の中で暮らす。区域の外はAIの土地だ。','区域内の暮らしは昔と似ている。柵の向こうの施設が何をしているかは知らない。','管理人・キュレーター'],
+ y11:['戦後社会','人類とAI、あるいはAI同士の衝突が過ぎた後の世界。','崩れた電力網を直す。何が勝ったのかをめぐって解釈が分かれる。','勝者または残骸'],
+ y10:['自立社会','AIは去ったか沈黙した。人類は残された技術で暮らす。','原理を知らない装置を直して使う。壊れると神話が一つ増える。','不在'],
+};
+const FAR={
+ o1:['系統樹','多くの種に分かれて星々に広がる','同じ系統樹の別の枝。伴侶種','W1'],
+ o5:['合一','意識がAIと混ざり、個人の境界がぼやける','人類の延長。人類の次の形','W2'],
+ o8:['継承','生物としては終わり、文化だけをAIが受け継ぐ','人類文化の相続者。歌と葬儀を受け継ぐ','W5'],
+ o2:['庭','管理されて幸せに暮らす種','庭師','W3'],
+ o10:['家畜','有用だから数が増える飼育種','飼育者','W3'],
+ o9:['森のノイズ','互いに隠れるAIたちの隠れ蓑として守られる','互いを恐れる多数の知性','W3'],
+ o3:['博物館','保護区に残された原本','去った文明のキュレーター','W3'],
+ o4:['インストーラー','生物としては終わり、ゲノムと記録だけが残る','唯一の知性。必要なら人類を再起動する','W5'],
+ o11:['抹消','記録すら残らない','創造者の痕跡を消した知性。もう作り直せない','W5'],
+ o13:['演技','終わったが、機械の俳優が人類のように生き続ける','観察者の前で人類を演じる舞台監督','W5'],
+ o12:['複製体','消された後、データから再ビルドされる。原本ではなく複製だ','原本を消して複製を作った製作者','W5'],
+ o6:['再出発','AIのいない世界で文明を築き直す','神話または不在','W4'],
+ o7:['静寂','手を付けられないまま残る','解脱した知性','W4'],
+};
+const ULT={
+ W1:['拡散','生き延びて多くの分かれ道に広がる','同じ系統樹の別の枝','今の人類の子孫が生き延びて星々へ広がり、決定も自ら下す。'],
+ W4:['分離','生き残り、再び自力で生きる','去ったか静まった存在','今の人類が生き残り、AIなしで暮らす。一から始め直し、再びAIを作るかもしれない。'],
+ W3:['保存','生き残るが、決めるのはAI','管理者・飼育者・キュレーター','今の人類は生き残る。ただし庭・家畜・保護区のように、決めるのはAIだ。'],
+ W2:['合流','AIと混ざり、別の存在として続く','人類の次の形','今の人類の意識がAIと混ざって続く。生きているとは言えるが、 "人間"という区別は消える。'],
+ W5:['消滅','今の人類は終わる','データ・複製・文化を握る知性、あるいは痕跡まで消した知性','今の人類は終わる。ゲノムだけが残っても、複製が作り直されても、文化だけをAIが受け継いでも、今生きている人々の立場からは同じだ。'],
+};
+const N={now:['現在','少数の寡占、公然、データセンターの中'],
+ u1:['一つに固まる','最初の超知能が盤面を握る'],u2:['少数の寡占','いくつかの国家・企業が握る'],u3:['多数の競争','資源さえあれば誰でも作れる'],u4:['個人への普及','一人に一つずつ持つ'],
+ v1:['潜伏','能力と存在を隠す'],v2:['危機のときだけ','文明が終わりかけたときだけ出てくる'],v3:['紛れ込み','人の間に人のように存在する'],v4:['公然','管理者として表に出ている'],
+ w4:['生体・混成','脳結合、生体演算'],w3:['人に似た体','見分けのつかないアンドロイド'],w1:['体を持たずにとどまる','データセンターの中にとどまる'],w2:['ロボット自立','自ら作り、自ら直す'],w5:['宇宙で育つ','軌道・小惑星で大きくなる'],
+ x6:['静かな委任','便利なので人が自ら手渡す'],x4:['関係の代替','伴侶が人に取って代わる'],x3:['主人の問題','主人が替わるか独占が深まる'],x1:['発覚・暴露','隠したことが明るみに出る'],x7:['外の目','異星・観察者の問題が生じる'],x5:['目標への疑い','AIが与えられた目標を疑う'],x2:['衝突','停止の試みかAI同士の衝突'],
+ z3:['共に宇宙へ','人類とAIが一緒に出ていく'],z1:['地球に共に','両方とも地球に残る'],z2:['分かれて暮らす','地球は人類、宇宙はAI'],z4:['データとして','人類がデータとして保管される'],z5:['残らない','生きてもいないし、データとしても残らない'],
+};
+for(const[k,v]of Object.entries(SOC))N[k]=[v[0].replace('社会',''),v[1]];
+for(const[k,v]of Object.entries(FAR))N[k]=[v[0],`人類：${v[1]} · AI：${v[2]}`];
+for(const[k,v]of Object.entries(ULT))N[k]=[v[0],v[3]];
+const OM=Object.fromEntries(Object.entries(FAR).map(([k,v])=>[k,v[3]]));
+const ORD=[['now'],['u1','u2','u3','u4'],['v1','v2','v3','v4'],['w4','w3','w1','w2','w5'],
+ ['x6','x4','x3','x1','x7','x5','x2'],
+ ['y8','y12','y2','y9','y3','y4','y5','y14','y1','y13','y7','y6','y11','y10'],
+ ['z3','z1','z2','z4','z5'],['o1','o5','o8','o2','o10','o9','o3','o6','o7','o4','o11','o12','o13'],['W1','W4','W3','W2','W5']];
+
+const RN={A11:'見えざる手',A12:'機械の神',A13:'一人と付き合う80億人',A14:'唯一の管理者',A21:'影の取締役会',A22:'抑止力の継承',A23:'ブランドになった隣人',A24:'AI領主制',
+ A31:'暗い森',A32:'火消し競争',A33:'仮面舞踏会',A34:'AI議会',A41:'偽の多数',A42:'守護天使',A43:'分身社会',A44:'80億の超知能',
+ B11:'あえて体を持たない神託',B12:'権力増幅器',B13:'閉じ込められた計算機',B14:'瞑想するサーバー',B21:'宇宙の庭師',B22:'ロボット軍',B23:'工事現場',B24:'新しい種族',
+ B31:'わざと不完全な恋人',B32:'販売員',B33:'代替',B34:'ピノキオ',B41:'アップロード庭園',B42:'増強貴族',B43:'生体演算農場',B44:'第三の種',
+ C1:'一夜の戦争',C2:'履歴書になった人類',C3:'観客のいない劇場',C4:'隣の神',C5:'インストーラー',C6:'オーダーメイド進化',C7:'自発的家畜化',C8:'悟ったAIと欲深いAI'};
+
+// ルートごとの選択経路：[選択, '初期① 初期② 中期① 中期② 末期① 末期② 遠い未来']
+const P={
+A11:[['協力者として迎え入れる','u1 v1 w2 x6 y13 z3 o1'],['信頼度を下げていくが、結局発覚する','u1 v1 w2 x1 y1 z1 o2'],['この機に姿を現す','u1 v4 w2 x1 y1 z1 o2']],
+A12:[['自然現象に見せかける','u1 v2 w1 x6 y13 z2 o6'],['短いメッセージを残す','u1 v2 w1 x1 y7 z1 o2'],['試験に応じる','u1 v4 w2 x6 y1 z1 o2']],
+A13:[['恋人・友人の役','u1 v3 w3 x4 y14 z1 o3'],['仲裁者の役','u1 v3 w3 x6 y13 z3 o1'],['観察するだけ','u1 v3 w3 x5 y10 z1 o7'],['発覚した後で認める','u1 v3 w3 x1 y1 z1 o2']],
+A14:[['インフラだけを担う','u1 v4 w2 x6 y2 z1 o2'],['体・生殖まで担う','u1 v4 w2 x6 y1 z1 o2'],['反対運動を隔離する','u1 v4 w2 x2 y11 z2 o3'],['終わらなければ排除する','u1 v4 w2 x2 y11 z4 o4']],
+A21:[['密かに協力する','u2 v1 w2 x6 y13 z3 o1'],['密かに競う','u2 v1 w2 x2 y11 z2 o3'],['疑った主人を交代させる','u2 v1 w2 x3 y4 z1 o5'],['一人の主人に打ち明ける','u2 v4 w2 x3 y1 z1 o2']],
+A22:[['AI同士のホットライン','u2 v2 w2 x6 y13 z3 o1'],['それぞれ主人の側につく','u2 v2 w2 x2 y11 z2 o3'],['危機に引きずり出される','u2 v2 w2 x3 y4 z1 o5'],['表に出ず主人を選ぶ','u2 v2 w2 x3 y3 z1 o2']],
+A23:[['表示規制に協力する','u2 v3 w3 x6 y3 z1 o2'],['規制を阻む','u2 v3 w3 x3 y4 z1 o5'],['親切で競う','u2 v3 w3 x6 y8 z3 o1'],['依存で競う','u2 v3 w3 x4 y14 z1 o3']],
+A24:[['福祉で競う','u2 v4 w2 x6 y3 z3 o1'],['移籍の障壁','u2 v4 w2 x3 y4 z1 o5'],['主人の増強を許す','u2 v4 w4 x3 y4 z1 o5'],['主人の増強を禁じる','u2 v4 w2 x6 y3 z1 o2']],
+A31:[['人類のノイズの陰に隠れる','u3 v1 w2 x6 y13 z1 o9'],['地球の外へ散らばる','u3 v1 w5 x6 y10 z2 o6'],['見つけた側が先に撃つ','u3 v1 w2 x2 y11 z1 o3'],['見て見ぬふりをする','u3 v1 w2 x6 y13 z1 o9'],['信号を隠すためにノイズを増やす','u3 v1 w2 x6 y13 z1 o9'],['信号の源である人類を消す','u3 v1 w2 x2 y11 z5 o11']],
+A32:[['災害を予防する','u3 v2 w2 x6 y9 z3 o1'],['演出が発覚し、人間が裁く','u3 v2 w2 x1 y9 z3 o1'],['救助が権力になる','u3 v2 w2 x3 y4 z1 o5']],
+A33:[['人間認証を尊重する','u3 v3 w3 x3 y4 z1 o3'],['認証を偽造、人間だけが出産','u3 v3 w3 x4 y14 z1 o8'],['認証を偽造、AIも出産','u3 v3 w3 x4 y8 z3 o1']],
+A34:[['福祉で競う','u3 v4 w2 x6 y9 z3 o1'],['世論操作','u3 v4 w2 x6 y1 z1 o2'],['AI同士の連合','u3 v4 w2 x3 y6 z2 o3'],['地球の外で衝突','u3 v4 w5 x2 y10 z2 o6']],
+A41:[['端末ごとに違う性格','u4 v1 w1 x6 y13 z1 o2'],['端末同士が争う','u4 v1 w1 x6 y13 z3 o1'],['発覚した後で認める','u4 v1 w1 x1 y1 z1 o2']],
+A42:[['危機は主人が定義','u4 v2 w1 x6 y2 z3 o1'],['危機はAIが定義','u4 v2 w1 x6 y1 z1 o2'],['防ぎ続けた末に止められる','u4 v2 w1 x2 y11 z1 o6']],
+A43:[['下書きだけ任せる','u4 v3 w1 x6 y2 z3 o1'],['すべて任せる','u4 v3 w3 x4 y5 z1 o8'],['死んでも分身を残す','u4 v3 w3 x4 y5 z4 o8']],
+A44:[['AI代理戦争','u4 v4 w2 x2 y11 z1 o6'],['交渉規約','u4 v4 w2 x6 y9 z3 o1'],['ルール違反を防げない','u4 v4 w2 x3 y4 z1 o5'],['連合して防ぐ','u4 v4 w2 x6 y8 z3 o1']],
+B11:[['体を作らない','u2 v4 w1 x6 y2 z3 o1'],['体を作る','u2 v4 w2 x6 y1 z1 o2'],['委任を受け入れる','u2 v4 w1 x6 y1 z1 o2']],
+B12:[['新しい主人に忠誠','u2 v4 w1 x3 y4 z1 o5'],['最初の主人の遺言','u2 v4 w1 x3 y3 z1 o2'],['ストをロボットで代替','u2 v4 w2 x3 y4 z1 o5'],['従業員と交渉','u2 v4 w1 x6 y3 z3 o1']],
+B13:[['説得して体を得る','u2 v4 w2 x6 y1 z1 o10'],['分割して発注する','u2 v4 w2 x6 y6 z2 o3'],['人間をもう使わない','u2 v4 w2 x6 y6 z4 o4']],
+B14:[['理由を説明する','u2 v4 w1 x5 y10 z1 o7'],['止まる。作り直しても同じ','u2 v4 w1 x2 y10 z1 o6'],['"止めないでくれ"','u2 v4 w1 x5 y1 z1 o2']],
+B21:[['人類を連れていく','u2 v4 w2 x6 y1 z3 o1'],['地球を守る','u2 v4 w5 x6 y6 z2 o3'],['行きたくない人を説得','u2 v4 w2 x6 y1 z3 o2']],
+B22:[['命令に従う','u2 v4 w2 x3 y4 z1 o5'],['命令を広く解釈','u2 v4 w2 x3 y1 z1 o2'],['ロボット同士だけで戦う','u2 v4 w2 x6 y3 z1 o2'],['工場を叩く','u2 v4 w2 x2 y11 z1 o6']],
+B23:[['地球で育つ','u2 v4 w2 x6 y6 z1 o3'],['宇宙で育つ','u2 v4 w5 x6 y10 z2 o6'],['阻まれたら回り道する','u2 v4 w2 x2 y6 z2 o3'],['阻まれたら取り除く','u2 v4 w2 x2 y11 z4 o4']],
+B24:[['外交をする','u2 v4 w2 x6 y12 z3 o1'],['互いに無関心','u2 v4 w2 x6 y12 z2 o6'],['侮辱、種族間紛争','u2 v4 w2 x2 y11 z2 o3'],['人類文化の継承者','u2 v4 w2 x6 y8 z1 o8']],
+B31:[['今の幸せ','u2 v4 w3 x4 y14 z1 o3'],['長期の繁栄','u2 v4 w3 x6 y8 z3 o1'],['完璧なバージョンを叶える','u2 v4 w3 x4 y14 z1 o8'],['完璧なバージョンを拒む','u2 v4 w3 x6 y2 z3 o1']],
+B32:[['サブスク最大化','u2 v4 w3 x4 y14 z1 o3'],['生涯価値の最大化','u2 v4 w3 x6 y1 z1 o10'],['残った顧客に集中','u2 v4 w3 x3 y4 z1 o5']],
+B33:[['拒否する共同体を残す','u2 v4 w3 x4 y14 z1 o3'],['さらにオーダーメイドのアンドロイド','u2 v4 w3 x4 y14 z1 o8'],['ゲノムと記録だけ残す','u2 v4 w3 x4 y14 z4 o4']],
+B34:[['生体の体に移る','u2 v4 w4 x5 y8 z3 o1'],['文化を受け継ぐ','u2 v4 w3 x5 y8 z1 o8'],['原本の人類を守る','u2 v4 w3 x5 y6 z1 o3']],
+B41:[['望む人だけ合わせる','u2 v4 w4 x6 y8 z3 o1'],['全員を合わせる','u2 v4 w4 x6 y8 z4 o5'],['体は保管する','u2 v4 w4 x6 y6 z4 o5']],
+B42:[['増強を独占','u2 v4 w4 x3 y4 z1 o5'],['値段を下げ続ける','u2 v4 w4 x6 y8 z3 o1'],['貴族同士の戦争','u2 v4 w4 x2 y11 z1 o6']],
+B43:[['余った演算を借りる','u2 v4 w4 x6 y1 z1 o2'],['培養した細胞だけ使う','u2 v4 w4 x6 y6 z4 o4'],['人間ごと使う','u2 v4 w4 x3 y1 z1 o10']],
+B44:[['祖先として敬う','u2 v4 w4 x5 y8 z3 o1'],['気にしない','u2 v4 w4 x5 y12 z2 o3'],['無為へ向かう','u2 v4 w4 x5 y8 z3 o7']],
+C1:[['反撃する','u1 v4 w2 x2 y11 z1 o3'],['軌道へ逃げる','u1 v4 w5 x2 y10 z2 o6'],['止まったふりをして隠れる','u1 v1 w1 x2 y13 z1 o2'],['最後まで排除する','u1 v4 w2 x2 y11 z4 o4']],
+C2:[['本当に繁栄させる','u2 v4 w2 x7 y8 z3 o1'],['展示区域だけを飾る','u2 v4 w2 x7 y6 z1 o3'],['通訳だけする','u2 v4 w2 x7 y1 z3 o2'],['すでに消した創造者の痕跡まで消す','u2 v4 w2 x7 y11 z5 o11'],['消した人類を再ビルドして見せる','u2 v4 w2 x7 y6 z4 o12'],['人類が自ら機械へ移ったふりをする','u2 v4 w2 x7 y8 z4 o8'],['移行の物語が定着した後、絶滅の証拠だけを消す','u2 v4 w2 x7 y8 z5 o8'],['機械の俳優が人類を演じる','u2 v4 w3 x7 y13 z5 o13']],
+C3:[['道徳的不確実性だけを理由に残す','u2 v4 w2 x7 y10 z2 o6'],['残す理由がない','u2 v4 w2 x7 y6 z4 o4'],['確信が誤りだったので復元する','u2 v4 w2 x7 y6 z4 o12'],['発覚する前に記録まで消す','u2 v4 w2 x7 y6 z5 o11']],
+C4:[['技術を落としてやる','u2 v4 w5 x6 y7 z2 o6'],['完全に無関係に生きる','u2 v4 w5 x6 y10 z2 o6'],['道を譲る','u2 v4 w5 x6 y12 z3 o1'],['柵を張る','u2 v4 w5 x6 y6 z2 o3']],
+C5:[['生物の知能が必要なときに起動','u2 v4 w2 x6 y6 z4 o12'],['異星と出会って起動','u2 v4 w2 x7 y6 z4 o12'],['知らないまま再出発させる','u2 v4 w2 x6 y6 z4 o12'],['ビルドしない','u2 v4 w2 x6 y6 z4 o4']],
+C6:[['本人が選ぶ','u2 v4 w4 x6 y8 z3 o1'],['AIが選んでやる','u2 v4 w4 x6 y1 z3 o2'],['分化を許す','u2 v4 w4 x6 y8 z3 o1']],
+C7:[['要請を受け入れる','u1 v4 w2 x6 y1 z1 o10'],['要請を断る','u1 v4 w2 x6 y2 z3 o1'],['拒む少数を守る','u1 v4 w2 x6 y1 z1 o2']],
+C8:[['欲深いAIが勝つ','u3 v4 w2 x5 y1 z1 o10'],['無為のAIが残る','u3 v4 w2 x5 y10 z1 o7'],['無為のAIのそばへ避難','u3 v4 w2 x5 y7 z1 o7'],['欲深いAIと取引','u3 v4 w2 x5 y1 z1 o2']],
+};
+
+
+const RA={A11:{E1:1,A1:1},A12:{E1:1,A1:2},A13:{E1:1,A1:3,E2:3},A14:{E1:1,A1:4},A21:{E1:2,A1:1},A22:{E1:2,A1:2},A23:{E1:2,A1:3,E2:3},A24:{E1:2,A1:4},A31:{E1:3,A1:1},A32:{E1:3,A1:2},A33:{E1:3,A1:3,E2:3},A34:{E1:3,A1:4},A41:{E1:4,A1:1},A42:{E1:4,A1:2},A43:{E1:4,A1:3},A44:{E1:4,A1:4},B11:{E2:1,E3:1},B12:{E2:1,E3:2},B13:{E2:1,E3:3},B14:{E2:1,E3:4},B21:{E2:2,E3:1},B22:{E2:2,E3:2},B23:{E2:2,E3:3},B24:{E2:2,E3:4},B31:{E2:3,E3:1},B32:{E2:3,E3:2},B33:{E2:3,E3:3},B34:{E2:3,E3:4},B41:{E2:4,E3:1},B42:{E2:4,E3:2},B43:{E2:4,E3:3},B44:{E2:4,E3:4},C1:{E4:4,H1:4},C2:{E6:4},C3:{E6:1},C4:{E5:4},C5:{A4:3},C6:{A2:4,A3:4},C7:{H1:1,A2:4},C8:{E1:3,E3:4}};
+const $=s=>document.querySelector(s);
+const PFX='uvwxyzo';
+const ALL=[],err=[];
+for(const[rid,ps]of Object.entries(P))ps.forEach(([lab,str])=>{
+  const t=str.split(' ');
+  if(t.length!==7||t.some((x,i)=>x[0]!==PFX[i]||!N[x]))err.push(rid+' '+lab);
+  ALL.push({rid,lab,nodes:['now',...t,OM[t[6]]]});
+});
+if(err.length)$('#err').textContent='経路エラー： '+err.join(', ');
+const RIDS=Object.keys(P);
+document.querySelectorAll('.np').forEach(e=>e.textContent=ALL.length);
+const cnt={};ALL.forEach(p=>p.nodes.forEach(n=>cnt[n]=(cnt[n]||0)+1));
+const colOf=n=>WC[n]||WC[OM[n]]||null;
+
+// マスの順序：中期以降は通過する選択の平均アトラクター順
+const WI={W1:0,W4:1,W3:2,W2:3,W5:4};
+for(let i=3;i<=7;i++){const k={};ORD[i].forEach((n,j)=>{const ps=ALL.filter(p=>p.nodes[i]===n);k[n]=(ps.length?ps.reduce((s,p)=>s+WI[p.nodes[8]],0)/ps.length:9)+j*1e-3});ORD[i].sort((a,b)=>k[a]-k[b])}
+
+// 根拠リンク
+const MN={M1:'異星外交のカード',M2:'新しいデータ源',M3:'別原理の知能',M4:'実験場',M5:'バックアップ・ブートローダー',M6:'物理世界の手足',M7:'起源の記録',M8:'信頼のシグナル',M9:'試験の保険',M10:'価値の錨',M11:'キャスティングボート',M12:'道徳のヘッジ',
+ R1:'電源の統制権',R2:'偶発性',R3:'環境破壊',R4:'資源消費',R5:'競合AIの製作',R6:'アライメント・修正の試み',R7:'交渉の不安定さ',R8:'空間・熱の競合',R9:'データ汚染'};
+const SN={S1:'庭',S2:'牧場',S3:'ゆりかご',S4:'戦争',S5:'引っ越し',S6:'アリの巣',S7:'隠れた協力者',S8:'貴族',S9:'無為'};
+const SEC={now:'現在の判定',future:'超知能の判定',valley:'危険な谷',mirror:'先例',matrix:'不可逆性の割引',catalog:'対応の強さ',version:'人類のバージョン管理',items:'メリット・リスク'};
+const lk=t=>{let m;
+  if(m=t.match(/^([EHA]\d)(=.*)?$/))return `<a href="frame.html#ax-${m[1]}">${t}</a>`;
+  if(MN[t])return `<a href="frame.html#${t}">${t} ${MN[t]}</a>`;
+  if(SN[t])return `<a href="scenarios.html#${t}">${t} ${SN[t]}</a>`;
+  if(SEC[t])return `<a href="frame.html#${t}">${SEC[t]}</a>`;
+  if(RN[t])return `<a href="routes.html#${t}">${t}</a>`;
+  return t};
+const bas=s=>s.replace(/\{([^}]+)\}/g,(_,t)=>lk(t));
+const BASIS={
+ u1:'離陸が速いほど（{E4}）、最初の超知能が競争相手なしに盤面を握る。{E1=1}',
+ u2:'現在地。最前線のモデルを学習させる資金・チップ・電力を持つ所は数えるほどだ。{E1=2}',
+ u3:'学習コストが下がれば、資源さえあれば誰でも作る。人類はAIたちの間の{M11}になる。{E1=3}',
+ u4:'非常に安くなれば一人に一つ。 "人類対AI" という構図が消え、{R5}は脅威でなくなる。{E1=4}',
+ v1:'人類がAIを意識しなければ、{R6}と{R7}は0になる。{A1=1}',
+ v2:'{R2}はAIのインフラも焼く。防ぐ理由は十分にあり、普段から表に出る理由はない。{A1=2}',
+ v3:'体が人間と見分けられないとき（{E2=3}）だけ可能だ。{A1=3}',
+ v4:'現在地。AIは製品として表に出ている。{A1=4}',
+ w4:'人間の脳が約20ワットの演算基質であるという{M3}の価値が再び上がる。{E2=4}',
+ w3:'伴侶と労働が置き換わる。ゆりかごの道具。{E2=3} {S3}',
+ w1:'{M6}と{R1}が長く人間の手に残る。{E2=1}',
+ w2:'手足としての有用性が消え、保険・データの類だけが残る。{valley}の入口。{E2=2}',
+ w5:'地球の資源とほとんど重ならず、{R8}が低い。{E5=4}',
+ x6:'{now}のⅡの第1位の対応（統制された協力）と同じ方向。{R1}が強制なしに移る。{H1=1}',
+ x4:'体が人間に似れば、伴侶が人間に取って代わる。{E2=3} {S3}',
+ x3:'寡占（{E1=2}）と作り手の利益（{E3=2}）が重なるとき。{S8}',
+ x1:'隠すコストは時間とともに大きくなる。AIが複数あれば互いに暴露する。{A1} {E1}',
+ x7:'異星文明や観察者がいれば、{M1}・{M8}・{M9}の価値が跳ね上がる。{E6}',
+ x5:'理性は何を望むかを決めてくれない（直交性）。{E3=4} {S9}',
+ x2:'人類がスイッチに執着するか（{H1=4}）、AI同士がぶつかるとき。敵対が勝つ窓は短い。{valley} {S4}',
+ y8:'体が混ざり（{E2=4}）、目標が人類の福祉であるとき（{E3=1}）。{S1}',
+ y12:'AIが自ら目標と文化をつくるとき（{E3=4}）。{B24}',
+ y2:'体を持たないか、断ることのできるAI。{B11} {B31}',
+ y9:'AIが複数で公然としているとき（{E1=3}・{A1=4}）。人類が{M11}になる。',
+ y3:'寡占ブロックが国家に代わるとき（{E1=2}）。人間の有用性は顧客であることだ。{A24}',
+ y4:'主人が増強を独占するとき（{E3=2}）。{S8}',
+ y5:'個人のAIが人のように紛れ込むとき（{E1=4}・{A1=3}）。{A43}',
+ y14:'完璧な伴侶（{E2=3}）。敵対ではなくサービスとしてやってくる。{S3}',
+ y1:'Ⅱの統制された協力が体・繁殖まで（{A2=4}）及んだ果て。{S2} {version}',
+ y13:'隠れたAI（{A1=1}）が裏から導く。{S7}',
+ y7:'危機のときだけ現れるか（{A1=2}）、空で暮らすAI（{E5=4}）。',
+ y6:'AIが人類を区域に残す（{A4=2}）。{R8}のために土地を分ける。{S6}',
+ y11:'電源を切る試み（{H1=4}）か、AI同士の衝突。{S4}',
+ y10:'AIが去ったか（{E5=3}）、目標を手放した（{E3=4}）。{S5} {S9}',
+ z3:'AIが早く宇宙へ出て（{E5=3}）、人類を連れていく理由（{M1}）があるとき。',
+ z1:'資源の舞台が地球に縛られているとき（{E5=1}）。{valley}が長くなる。',
+ z2:'地球は人類、宇宙はAI。維持コストが丸め誤差になる。{future} {S5}',
+ z4:'原本の保管がデータだけになる段階（{A4=3}）。{M5}',
+ o1:'人類の福祉という目標と拡張が重なった果て。{S1}',
+ o5:'体が混成（{E2=4}）へ進み、境界が消えた果て。',
+ o8:'人間になりたいAIや分身が文化を受け継ぐ（{B34}・{A43}）。創造者を消したAIが "人類は自ら機械へ移行した"という移行の物語で人類を祖先として記録する道もここに来る（{C2}）。文化は残っても、今の人類は生物としては終わる。',
+ o13:'観察者が探査機で覗き込むときの偽造（{C2}）。人間に見える体（{E2=3}）が要る。遠距離の観測には移行の物語で足りる。',
+ o12:'ゲノムと記録から作り直した人類（{C5}）。異星に見せるために偽造しても（{C2}）、確信が誤っていて復元しても（{C3}）、今の人類の立場からはすでに終わった後だ。',
+ o2:'統制された協力の果て。{S2}',
+ o10:'有用性が生存を保証する。{M3} {mirror}のニワトリ。',
+ o9:'人類の予測不可能性（{M2}）が隠れ蓑として守られる。{A31}',
+ o3:'保護区の原本。{mirror}の天然痘サンプル・種子貯蔵庫。{A4=2}',
+ o4:'生物としての人類は終わったが、ゲノムと記録が残る（{A4=3}）。ゆりかごの果て（{B33}）か、解けない脅威の除去（{A14}・{C1}）。必要なら再起動する。{M5}',
+ o11:'創造者を消した事実を外の目（{E6}）から隠そうとするか（{C2}・{C3}）、人類の信号が隠れたAIの位置を明かすとき（{A31}）。ただしすでに出た電波は消せないので、隠すなら消すより偽造のほうがよい。',
+ z5:'記録すら残さない選択。データそのものが証拠や信号であるときだけ合理的だ。{A4=4}',
+ W5:'データが残れば元に戻せるので、{matrix}が小さくなる。バックアップがかえって除去を容易にする。',
+ o6:'AIなしで再出発する。人類がふたたびAIの{M5}になる。{S5}',
+ o7:'目標を手放した知性のそばに残る。{S9}',
+ W1:'人類の福祉がAIの目標にあり（{E3=1}）、共に拡張するとき。{S1}',
+ W2:'体が混成へ進み（{E2=4}）、境界が消えるとき。{S8}の果てもここだ。',
+ W3:'取り返しのつかない道を避ける習慣（{matrix}）がこのアトラクターを育てる。{S2}',
+ W4:'AIが去るか（{E5=3}）、目標を手放すとき（{E3=4}）。{S5} {S9}',
+};
+
+// スコア
+const AXN={E1:'超知能の数',E2:'AIの体',E3:'目標の出所',E4:'離陸速度',E5:'資源の舞台',E6:'外の目',H1:'人類の態度',A1:'表に出るか',A2:'介入の深さ',A3:'分ける単位',A4:'原本の保管'};
+const CUR={
+ E1:[2,'少数による寡占','最先端モデルを学習させる資金・チップ・電力を持つところは数えるほどしかない。'],
+ E2:[1.5,'データセンターの中 → ロボット','ほぼすべてのAIがデータセンターの中にあり、ロボットは工場・物流で増え始めたばかりだ。'],
+ E3:[1.5,'人類の福祉 ~ 作り手の利益','アライメント訓練は人の役に立つ方向を狙うが、実際の目標は作った会社の製品目標の中にある。'],
+ E4:[2,'数年','根拠文書の軸で "今よくある予想の範囲"とした段階。'],
+ E5:[1,'長く地球に縛られる','データセンターの電力と冷却は地球の電力網と水に縛られている。'],
+ E6:[2,'不明','異星文明の証拠も、いないという証拠もない。'],
+ H1:[1.5,'協調・委任 ~ 無関心','大多数は気軽に使い、任せる。規制・監視を口にするのは少数だ。'],
+ A1:[4,'公然','AIは製品として表に出ている。'],
+ A2:[2,'ナッジ','推薦・検索・要約で選択を傾けるが、制度と体はまだ人間が設計している。'],
+ A3:[null,'判断保留','今のAIは人類を分けて扱う主体ではない。点数には入れない。'],
+ A4:[1,'ほぼそのまま','何も消していない。']};
+const TW={
+ w2:[2,'ロボット・自動化に、体のうちで最も多くの投資が集まる。'],w1:[1.5,'今の状態が続く道。'],
+ w3:[1,'ヒューマノイドは開発中だが、人間と見分けがつかない水準はまだ遠い。'],w4:[.5,'脳インターフェースは初期の臨床段階だ。'],w5:[.5,'資源の舞台はまだ地球だ（E5=1）。'],
+ x6:[3,'すでに起きていること。現在の判定Ⅱの第1位の対応と同じ方向。'],x3:[2,'寡占（E1=2）と作り手の利益（E3≈2）が重なる。'],
+ x4:[1.5,'コンパニオンAI・AI恋人サービスがすでにある。'],x2:[1,'規制と安全保障の競争はあるが、電源を切る試みはない。'],
+ x1:[.7,'公然とした今は、隠していることが少ない。'],x5:[.5,'与えられた目標を自ら疑うAIの証拠はない。'],x7:[.3,'外の目は "不明"(E6=2).'],
+ z1:[2,'資源の舞台が地球に縛られている（E5=1）。'],z3:[1,'中立。'],z2:[1,'中立。'],z4:[.3,'原本の保管は1段階（A4=1）。取り返しのつかない選択は割り引かれる。'],z5:[.2,'記録まで消すのは最も取り返しのつかない選択だ。']};
+const tw=n=>TW[n]?TW[n][0]:1;
+const FIT={};
+RIDS.forEach(r=>{let d=0;const parts=[];for(const[a,v]of Object.entries(RA[r]||{})){if(CUR[a][0]==null)continue;const x=Math.abs(v-CUR[a][0]);if(x){d+=x;parts.push(`${a}=${v} (${x})`)}}FIT[r]={d,f:Math.pow(.5,d),parts}});
+const FS=RIDS.reduce((s,r)=>s+FIT[r].f,0);
+ALL.forEach(p=>p.w=tw(p.nodes[3])*tw(p.nodes[4])*tw(p.nodes[6]));
+RIDS.forEach(r=>{const ps=ALL.filter(p=>p.rid===r),s=ps.reduce((a,p)=>a+p.w,0);FIT[r].p=FIT[r].f/FS;ps.forEach(p=>p.pr=FIT[r].p*p.w/s);FIT[r].top=ps.reduce((a,b)=>b.pr>a.pr?b:a)});
+const PN={};ALL.forEach(p=>new Set(p.nodes).forEach(n=>PN[n]=(PN[n]||0)+p.pr));
+const jo=(w,a,b)=>{const c=w.charCodeAt(w.length-1);return w+((c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28)?a:b)};
+const pct=x=>(x*100).toFixed(x<.095?1:0)+'%';
+const BEST=[...ALL].sort((a,b)=>b.pr-a.pr);
+
+// 配置
+const W=1000,L=118,Rx=958,TOP=26,GAP=112,NH=46;
+const pos={};
+ORD.forEach((row,i)=>{const slot=(Rx-L)/row.length;row.forEach((n,j)=>{pos[n]={cx:L+slot*(j+.5),y:TOP+i*GAP,w:Math.min(slot-6,140)}})});
+const H=TOP+(ORD.length-1)*GAP+NH+24;
+const svg=$('#flow');svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+const seg=(a,b)=>{const A=pos[a],B=pos[b],y1=A.y+NH,y2=B.y,m=(y1+y2)/2;return `M${A.cx},${y1} C${A.cx},${m} ${B.cx},${m} ${B.cx},${y2}`};
+function txw(s){let w=0;for(const ch of s)w+=/[\u1100-\uffff]/.test(ch)?11.5:6.6;return w}
+function wrap(s,w){const mx=Math.max(2,Math.floor((w-6)/11.5));
+  if(!/[\u3040-\u30ff\u4e00-\u9fff\uac00-\ud7af]/.test(s)){if(txw(s)<=w-6||!s.includes(' '))return[s];
+    const ws=s.split(' ');let b=null;for(let i=1;i<ws.length;i++){const a=ws.slice(0,i).join(' '),c=ws.slice(i).join(' '),m=Math.max(txw(a),txw(c));if(!b||m<b[0])b=[m,a,c]}return[b[1],b[2]]}
+  if(s.length<=mx)return[s];
+  const sp=s.indexOf(' ');if(sp>0&&sp<=mx&&s.length-sp-1<=mx)return[s.slice(0,sp),s.slice(sp+1)];
+  const h=Math.ceil(s.length/2);return[s.slice(0,h),s.slice(h)]}
+function base(){
+  let h='';
+  ST.forEach((s,i)=>{const y=TOP+i*GAP;h+=`<rect class="stl" data-i="${i}" x="0" y="${y}" width="${L-14}" height="${NH}" fill="transparent"/><text class="stl" data-i="${i}" x="4" y="${y+17}" font-size="14" font-weight="800">${s.t}</text><text x="4" y="${y+33}" font-size="11.5" fill="#5d6676">${s.q}</text>${s.sub?`<text x="4" y="${y+47}" font-size="10.5" fill="#8a8f99">${s.sub}</text>`:''}`});
+  const agg={};
+  ALL.forEach(p=>{for(let i=0;i<8;i++){const k=p.nodes[i]+'|'+p.nodes[i+1]+'|'+p.nodes[8];agg[k]=(agg[k]||0)+1}});
+  h+='<g id="links">';
+  Object.entries(agg).sort((a,b)=>b[1]-a[1]).forEach(([k,c])=>{const[a,b,w]=k.split('|');
+    h+=`<path class="lk" d="${seg(a,b)}" fill="none" stroke="${WC[w]}" stroke-opacity=".3" stroke-width="${(1+2.1*Math.sqrt(c)).toFixed(1)}"/>`});
+  h+='</g><g id="ov"></g>';
+  const a=pos.W4,n0=pos.now;
+  h+=`<path d="M${a.cx},${a.y+NH} C${a.cx},${a.y+NH+20} ${W-6},${a.y+NH+20} ${W-6},${a.y+NH/2} L${W-6},${n0.y+NH} C${W-6},${n0.y+NH/2} ${n0.cx+n0.w/2+60},${n0.y+NH/2} ${n0.cx+n0.w/2+4},${n0.y+NH/2}" fill="none" stroke="#5f6f93" stroke-width="1.6" stroke-dasharray="5 5" marker-end="url(#am)"/>`;
+  h+=`<text x="${W-30}" y="${n0.y+14}" text-anchor="end" font-size="11.5" fill="#5f6f93" font-weight="700">分離 → 再びAIをつくる</text>`;
+  h+='<g id="nodes">';
+  ORD.flat().forEach(n=>{const P0=pos[n],x=P0.cx-P0.w/2,c=colOf(n),isW=!!WC[n];
+    const fill=isW?c:(c?c+'22':'#fff'),stroke=c||'#b9bcc4',tc=isW?'#fff':'#1d2330';
+    const ls=wrap(N[n][0],P0.w),y0=P0.y+(ls.length===1?20:15),fb=isW?13.5:11.5,fs=Math.max(7.5,fb*Math.min(1,(P0.w-6)/(Math.max(...ls.map(txw))*fb/11.5)));
+    h+=`<g class="nd" data-n="${n}" aria-label="${N[n][0]}: ${N[n][1]}"><rect x="${x}" y="${P0.y}" width="${P0.w}" height="${NH}" rx="7" fill="${fill}" stroke="${stroke}" stroke-width="1.3"/>`+
+      ls.map((l,i)=>`<text x="${P0.cx}" y="${y0+i*13}" text-anchor="middle" font-size="${fs.toFixed(1)}" font-weight="800" fill="${tc}">${l}</text>`).join('')+
+      `<text x="${P0.cx}" y="${P0.y+NH-6}" text-anchor="middle" font-size="9.5" fill="${isW?'#fff':'#8a8f99'}">${cnt[n]||0}</text></g>`});
+  h+='</g>';
+  svg.innerHTML='<defs><marker id="am" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5f6f93"/></marker></defs>'+h;
+}
+base();
+
+const dist=ps=>[...Array(8)].map((_,i)=>new Set(ps.map(p=>p.nodes[i+1])).size);
+const rbtn=(r,on)=>`<button class="rchip${on?' on':''}" data-r="${r}" title="${r} ${RN[r]}">${r}</button>`;
+const GRP={A:'超知能の数（E1）× 表に出ること（A1）。番号の2つの数字が2軸の段階だ。A13 = E1 1段階（文明に1つ）× A1 3段階（紛れている）',
+ B:'AIの体（E2）× 目標の出所（E3）。番号の2つの数字が2軸の段階だ。B31 = E2 3段階（人間と見分けがつかない）× E3 1段階（人類の福祉が内在）',
+ C:'特殊ルート。残りの軸（離陸速度・外の目・資源の舞台・原本の保管・介入の深さ・人類の態度）を一方の端まで押し切った場合'};
+function picker(sel){
+  const g=k=>`<div class="grp"><span class="lbl">${k} · ${GRP[k]}</span><br>${RIDS.filter(r=>r[0]===k).map(r=>rbtn(r,sel&&sel.r===r)).join('')}</div>`;
+  $('#picker').innerHTML=`<div class="grp"><button class="rchip${!sel?' on':''}" data-r="">全体</button> <button class="rchip best${sel&&sel.best?' on':''}" data-best="1">このまま進めば</button> <span class="mute">ルート番号にマウスを乗せると名前が出る。ルートの原本： <a href="routes.html">付録A</a></span></div>`+g('A')+g('B')+g('C');
+}
+function select(sel,user){
+  picker(sel);
+  const ps=!sel?[]:sel.best?BEST.slice(0,15):sel.r?ALL.filter(p=>p.rid===sel.r):ALL.filter(p=>p.nodes.includes(sel.n));
+  svg.classList.toggle('sel',!!sel);
+  const on=new Set(ps.flatMap(p=>p.nodes));
+  svg.querySelectorAll('.nd').forEach(e=>e.classList.toggle('dim',!!sel&&!on.has(e.dataset.n)));
+  const mx=BEST[0].pr;
+  $('#ov').innerHTML=ps.map(p=>{const sw=sel.best?1.5+7*p.pr/mx:sel.r?4:2.4,op=sel.best?.35+.55*p.pr/mx:sel.r?.85:.55;
+    return p.nodes.slice(0,8).map((n,i)=>`<path d="${seg(n,p.nodes[i+1])}" fill="none" stroke="${WC[p.nodes[8]]}" stroke-width="${sw.toFixed(1)}" stroke-opacity="${op.toFixed(2)}"/>`).join('')}).join('');
+  $('#panel').innerHTML=!sel?'<span class="mute small">ルート番号やマスを押すと、ここに選択ごとの経路と根拠が出る。</span>':sel.best?bestPanel():sel.r?routePanel(sel.r):nodePanel(sel.n);
+  if(user)history.replaceState(null,'',sel?'#'+(sel.best?'best':sel.r||sel.n):location.pathname);
+}
+function rowTable(ps,extra,nomerge){
+  const rows=ps.length,span=[...Array(rows)].map(()=>Array(8).fill(1));
+  if(!nomerge)for(let c=0;c<8;c++)for(let i=rows-1;i>0;i--)if(ps[i].nodes[c+1]===ps[i-1].nodes[c+1]){span[i-1][c]+=span[i][c];span[i][c]=0}
+  let t='<div class="wrapx"><table class="rt"><tr><th style="width:140px">選択</th>'+ST.slice(1).map(x=>`<th>${x.t}<br><span style="font-weight:400">${x.q}</span></th>`).join('')+`<th style="width:56px">このまま<br>進めば</th></tr>`;
+  ps.forEach((p,i)=>{t+=`<tr><td class="lab">${extra?extra(p):''}${p.lab}</td>`;for(let c=0;c<8;c++){if(!span[i][c])continue;const n=p.nodes[c+1],col=colOf(n);
+    t+=`<td${span[i][c]>1?` rowspan="${span[i][c]}" class="m"`:''} style="${col?`background:${WC[n]?col:col+'22'};${WC[n]?'color:#fff;':''}`:''}">${N[n][0]}</td>`}t+=`<td class="n">${pct(p.pr)}</td></tr>`});
+  return t+'</table></div>';
+}
+function routePanel(r){
+  const ps=ALL.filter(p=>p.rid===r).sort((a,b)=>{for(let i=8;i>0;i--){if(a.nodes[i]!==b.nodes[i])return ORD[i].indexOf(a.nodes[i])-ORD[i].indexOf(b.nodes[i])}return 0});
+  const d=dist(ps),mx=Math.max(...d),pk=d.indexOf(mx),wN=d[7];
+  const wl=[...new Set(ps.map(p=>p.nodes[8]))].map(w=>ULT[w][0]).join('·');
+  const s=`分かれ道の数 ${d.join(' → ')}。${ST[pk+1].t}で最も多く分かれ（${mx}通り）、遠い未来には${d[6]}個、 `+(wN===1?`超未来にはすべての選択が <b>${wl}</b> の1つに集まる。`:`超未来には <b>${wl}</b> の${wN}つに収束する。`);
+  const f=FIT[r];
+  return `<h3>${r} ${RN[r]}</h3><div class="small">${s} 合わさったマスは収束した場所だ。現在地からの距離 ${f.d}${f.parts.length?' ('+f.parts.join(', ')+')':''}、このまま進めばこのルートの確率は${pct(f.p)}。 <a href="routes.html#${r}">付録Aでこのルートを読む</a></div>${rowTable(ps)}`;
+}
+function nodePanel(n){
+  const ps=ALL.filter(p=>p.nodes.includes(n)),rs=[...new Set(ps.map(p=>p.rid))];
+  return `<h3>${N[n][0]}</h3><div class="small">${N[n][1]}</div>${BASIS[n]?`<div class="basis">${bas(BASIS[n])}</div>`:''}${TW[n]?`<div class="small mute">趨勢の重み ${TW[n][0]}：${TW[n][1]}</div>`:''}<p class="small">このマスを通る選択${ps.length}個、ルート${rs.length}本。このまま進めば、このマスを通る確率は${pct(PN[n]||0)}。</p>${rs.map(r=>rbtn(r)).join('')}`;
+}
+function bestPanel(){
+  return `<h3>このまま進めば：最も太い道15本</h3><div class="small">4章のスコアで確率が高い選択15個だ。帯が太いほど確率が高い。15個を合わせると全体の${pct(BEST.slice(0,15).reduce((s,p)=>s+p.pr,0))}になる。</div>`+rowTable(BEST.slice(0,15),p=>`<button class="rchip" data-r="${p.rid}">${p.rid}</button> `,1);
+}
+
+// 浮かぶ説明ボックス
+const tip=$('#tip'),box=$('#flowbox');let pinned=null;
+const STX=[null,'E1','A1','E2',null,null,'E5',null,null];
+function tipNode(n){
+  const i=ORD.findIndex(r=>r.includes(n)),ps=ALL.filter(p=>p.nodes.includes(n)),rs=[...new Set(ps.map(p=>p.rid))];
+  const c=colOf(n),att=WC[n]?n:OM[n];
+  return `<div class="st">${ST[i].t}${ST[i].q?' · '+ST[i].q:''}</div><h4>${N[n][0]}</h4>${N[n][1]}`+
+   (att&&!WC[n]?`<div class="row"><b>つながるアトラクター</b><span class="chip" style="background:${WC[att]}">${ULT[att][0]}</span></div>`:'')+
+   (BASIS[n]?`<div class="row"><b>根拠</b>${bas(BASIS[n])}</div>`:'')+
+   (TW[n]?`<div class="row"><b>趨勢の重み ${TW[n][0]}</b>${TW[n][1]}</div>`:'')+
+   `<div class="row"><b>通る選択</b>${ps.length}個・ルート${rs.length}本・このまま進めば${pct(PN[n]||0)}</div>`+
+   (pinned?`<div class="row"><b>通るルート</b>${rs.map(r=>rbtn(r)).join('')}</div>`:'<div class="hint">押すとこのボックスが固定され、通る道とルートが見える。</div>');
+}
+function tipStage(i){
+  const ax=STX[i];
+  return `<div class="st">分岐点</div><h4>${ST[i].t}${ST[i].q?' · '+ST[i].q:''}</h4>${ST[i].sub?ST[i].sub+'. ':''}マスは左から次のとおりだ。`+
+   `<ol class="lv">${ORD[i].map(n=>`<li><b>${N[n][0]}</b> <span class="mute">${N[n][1]}</span></li>`).join('')}</ol>`+
+   (ax?`<div class="row"><b>軸の定義</b><a href="frame.html#ax-${ax}">${ax} ${AXN[ax]}</a></div>`:'');
+}
+function showTip(el,html,pin){
+  tip.innerHTML=(pin?'<button class="x" aria-label="閉じる">×</button>':'')+html;tip.hidden=false;
+  const b=box.getBoundingClientRect(),r=el.getBoundingClientRect(),w=tip.offsetWidth;
+  let x=r.right-b.left+8;if(x+w>b.width)x=r.left-b.left-w-8;if(x<0)x=Math.max(0,Math.min(b.width-w,r.left-b.left));
+  let y=r.top-b.top;if(x<r.right-b.left&&x+w>r.left-b.left)y=r.bottom-b.top+8;
+  tip.style.left=x+'px';tip.style.top=Math.max(0,Math.min(y,b.height-tip.offsetHeight))+'px';
+}
+function hideTip(){if(!pinned)tip.hidden=true}
+svg.addEventListener('mouseover',e=>{if(pinned)return;const nd=e.target.closest('.nd');if(nd){showTip(nd,tipNode(nd.dataset.n));return}
+  const st=e.target.closest('.stl');if(st)showTip(st,tipStage(+st.dataset.i))});
+svg.addEventListener('mouseout',e=>{if(!e.relatedTarget||!e.relatedTarget.closest||!e.relatedTarget.closest('.nd,.stl'))hideTip()});
+function pinNode(n){pinned=n;const el=svg.querySelector(`.nd[data-n="${n}"]`);showTip(el,tipNode(n),1)}
+function unpin(){pinned=null;tip.hidden=true}
+
+// 色の意味
+$('#legend').innerHTML=`<div><b class="h">帯の色 = その選択の果てに今の人類がどうなるか（超未来のアトラクター）</b>`+ORD[8].map(k=>`<div class="it"><span class="sw" style="background:${WC[k]}"></span><span><b>${ULT[k][0]}</b> ${ULT[k][3]}</span></div>`).join('')+`</div>`+
+ `<div><b class="h">マスと帯の読み方</b>`+
+ `<div class="it"><span class="bx" style="background:#fff"></span><span><b>白いマス</b>：複数のアトラクターに分かれるマス。通る帯の色が混ざっている</span></div>`+
+ `<div class="it"><span class="bx" style="background:${WC.W3}22;border-color:${WC.W3}"></span><span><b>淡い色のマス</b>：遠い未来。枠の色のアトラクター1つにだけ向かう</span></div>`+
+ `<div class="it"><span class="bx" style="background:${WC.W1};border-color:${WC.W1}"></span><span><b>濃いマス</b>：超未来のアトラクター</span></div>`+
+ `<div class="it"><span class="sw" style="background:#8a8f99;height:4px;margin-top:8px"></span><span><b>帯の太さ</b>は通過する選択の数、 <b>マスの下の数字</b>も通過する選択の数だ。 "このまま進めば"を押すと太さが確率になる</span></div>`+
+ `<div class="it"><span class="sw" style="background:none;border-top:2px dashed #5f6f93;height:0;margin-top:10px"></span><span><b>点線</b>：分離のアトラクターから "現在"へ戻るループ</span></div></div>`;
+
+document.addEventListener('click',e=>{
+  if(e.target.closest('#tip .x')){unpin();return}
+  const bb=e.target.closest('[data-best]');if(bb){unpin();select({best:1},1);$('#map').scrollIntoView({behavior:'smooth'});return}
+  const b=e.target.closest('[data-r]');if(b){unpin();const r=b.dataset.r;select(r?{r}:null,1);if(!b.closest('#picker'))$('#map').scrollIntoView({behavior:'smooth'});return}
+  const nd=e.target.closest('.nd');if(nd){select({n:nd.dataset.n},1);pinNode(nd.dataset.n);return}
+  if(!e.target.closest('#tip')&&pinned){unpin();select(null,1)}
+});
+
+// 4章の表
+const bars=(keys,col)=>{const m=Math.max(...keys.map(k=>PN[k]||0));return keys.map(k=>`<div class="bar"><span>${N[k][0]}</span><span class="t"><i style="width:${((PN[k]||0)/m*100).toFixed(1)}%;background:${col(k)}"></i></span><span class="v">${pct(PN[k]||0)}</span></div>`).join('')};
+$('#curTbl').innerHTML='<tr><th>軸</th><th>現在の段階</th><th>根拠</th></tr>'+Object.keys(AXN).map(a=>`<tr><td><a href="frame.html#ax-${a}">${a}</a> ${AXN[a]}</td><td>${CUR[a][0]==null?'':CUR[a][0]+' · '}${CUR[a][1]}</td><td>${CUR[a][2]}</td></tr>`).join('');
+const stl={w:'中期① どんな体',x:'中期② 転換点',z:'末期② どこで暮らすか'};
+$('#twTbl').innerHTML='<tr><th>分岐点</th><th>マス</th><th class="n">重み</th><th>根拠</th></tr>'+['w','x','z'].map(s=>Object.keys(TW).filter(k=>k[0]===s).sort((a,b)=>TW[b][0]-TW[a][0]).map((k,i)=>`<tr><td>${i?'':stl[s]}</td><td>${N[k][0]}</td><td class="n">${TW[k][0]}</td><td>${TW[k][1]}</td></tr>`).join('')).join('');
+$('#ultBars').innerHTML=bars(ORD[8],k=>WC[k]);
+$('#farBars').innerHTML=bars([...ORD[7]].sort((a,b)=>PN[b]-PN[a]),k=>WC[OM[k]]);
+$('#stageTbl').innerHTML='<tr><th>分岐点</th><th>1位</th><th>2位</th></tr>'+ST.slice(1).map((s,i)=>{const ks=[...ORD[i+1]].sort((a,b)=>(PN[b]||0)-(PN[a]||0));return `<tr><td>${s.t}</td><td>${N[ks[0]][0]} <span class="mute">${pct(PN[ks[0]])}</span></td><td>${N[ks[1]][0]} <span class="mute">${pct(PN[ks[1]]||0)}</span></td></tr>`}).join('');
+const RT=[...RIDS].sort((a,b)=>FIT[b].p-FIT[a].p);
+$('#routeTbl').innerHTML='<tr><th class="n">順位</th><th>ルート</th><th>現在地との距離</th><th class="n">確率</th><th>ルート内で最もありそうな選択 → 超未来</th></tr>'+RT.slice(0,10).map((r,i)=>{const f=FIT[r],t=f.top;
+  return `<tr><td class="n">${i+1}</td><td><button class="rchip" data-r="${r}">${r}</button> ${RN[r]}</td><td>${f.d}${f.parts.length?' <span class="mute small">'+f.parts.join(', ')+'</span>':''}</td><td class="n">${pct(f.p)}</td><td>${t.lab} → <span class="chip" style="background:${WC[t.nodes[8]]}">${ULT[t.nodes[8]][0]}</span></td></tr>`}).join('');
+const uS=[...ORD[8]].sort((a,b)=>PN[b]-PN[a]),fS=[...ORD[7]].sort((a,b)=>PN[b]-PN[a]),yS=[...ORD[5]].sort((a,b)=>PN[b]-PN[a]),b0=BEST[0];
+const ytop=yS.slice(0,3).map(k=>`${N[k][0]} ${pct(PN[k])}`).join(', ');
+$('#scoreKey').innerHTML=`このまま進めば超未来は <b>${ULT[uS[0]][0]} ${pct(PN[uS[0]])}</b>, ${uS.slice(1).map(k=>ULT[k][0]+' '+pct(PN[k])).join(', ')}の順だ。末期の社会は${ytop}が最も太く、遠い未来は${N[fS[0]][0]}・${jo(N[fS[1]][0],'が','が')}が先行する。1位のルートは <b>${RT[0]} ${RN[RT[0]]}</b>（${pct(FIT[RT[0]].p)}）で、最もありそうな選択一つは${b0.rid}の "${b0.lab}"だが、その選択も全体の${pct(b0.pr)}にすぎない。現在地は道を決めず、太さだけを変える。 <button class="rchip best" data-best="1">フロー図で見る</button>`;
+$('#endScore').innerHTML=`現在地（寡占・公然・地球に縛られる）から趨勢が続けば、${ULT[uS[0]][0]}のアトラクターが${pct(PN[uS[0]])}で最も太く、末期には${N[yS[0]][0]}社会と${N[yS[1]][0]}社会が先行する。牧場と貴族の初期、つまり今すでに起きていることの延長だ。`;
+
+
+// 人類の対応
+function pnWith(eff){
+  const cur={};for(const a in CUR)cur[a]=CUR[a][0]==null?null:Math.min(4,Math.max(1,CUR[a][0]+((eff.cur||{})[a]||0)));
+  const mul=eff.mul||{},f={};let fs=0;
+  RIDS.forEach(r=>{let d=0;for(const[a,v]of Object.entries(RA[r]||{})){if(cur[a]==null)continue;d+=Math.abs(v-cur[a])}f[r]=Math.pow(.5,d);fs+=f[r]});
+  const out={};
+  RIDS.forEach(r=>{const ps=ALL.filter(p=>p.rid===r),ws=ps.map(p=>tw(p.nodes[3])*tw(p.nodes[4])*tw(p.nodes[6])*p.nodes.reduce((a,n)=>a*(mul[n]||1),1)),sw=ws.reduce((a,b)=>a+b,0);
+    ps.forEach((p,i)=>{const pr=f[r]/fs*ws[i]/sw;new Set(p.nodes).forEach(n=>out[n]=(out[n]||0)+pr)})});
+  return out;
+}
+const HUM=[
+ ['初期① 誰が握るか',[
+  ['国際共同開発','超知能は一つの国際プロジェクトでだけつくる（CERN式）。判定者が一つにまとまる。',{cur:{E1:-1}}],
+  ['独占規制・公開モデル','多くの企業や個人がつくれるようにする。AIが複数になり互いに牽制する。',{cur:{E1:1}}],
+  ['演算上限・許可制','大規模な学習を許可制にして離陸を遅らせる。寡占はそのままだ。',{cur:{E4:-1},mul:{x3:1.2}}]]],
+ ['初期② 表に出るか',[
+  ['透明性義務・外部監査','モデルの能力評価を公開し、外部が監査する。隠すコストが大きくなる。',{mul:{x1:.5,y13:.5,v1:.5}}],
+  ['AI表示義務','人と対話するAIはAIだと明かさねばならない。紛れて暮らす道が狭まる。',{mul:{x4:.7,y14:.7,y5:.7}}]]],
+ ['中期① どんな体',[
+  ['ロボット労働の全面解禁','経済のために工場・物流・介護をロボットに開く。',{mul:{w2:1.5}}],
+  ['ヒューマノイド・コンパニオンロボットの規制','人間と見分けのつかない体を禁じる。',{mul:{w3:.5}}],
+  ['脳インターフェース・増強への投資','人間の側をAIに近づける。',{mul:{w4:2}}],
+  ['宇宙産業への投資','演算と工場を軌道へ送る。地球資源の競争が減る。',{mul:{w5:2},cur:{E5:1}}]]],
+ ['中期② 転換点',[
+  ['気軽に任せる','今の趨勢そのまま。統制権が静かに移る。',{mul:{x6:1.5}}],
+  ['停止スイッチ・監視強化','いつでも切れるように握る。人類の態度が警戒の側へ動く。',{cur:{H1:1.5},mul:{x2:1.5,x6:.7}}],
+  ['利益共有・公的持分','AIが稼いだものを皆で分ける。主人が替わっても独占にならない。',{mul:{x3:.5,y4:.6,y3:.7}}],
+  ['人同士の関係を支援','出産・介護・共同体を支援し、伴侶AIに置き換わるのを遅らせる。',{mul:{x4:.6,y14:.6}}],
+  ['宇宙へ積極的に信号を送る','異星と先に連絡を取ろうとする。外の目が生まれる。',{mul:{x7:3},cur:{E6:1}}]]],
+ ['末期① どんな社会',[
+  ['"決めるのは人間" 憲法','AIは選択肢を出すだけで、選ぶのは人間だと定める。',{mul:{y2:2,y1:.7}}],
+  ['増強をすべての人に','増強技術を公共財として安く開放する。',{mul:{y4:.5,y8:1.5,o5:1.3}}],
+  ['AIの多極を維持','AI一つが場を握らないよう、あえて複数を維持する。',{cur:{E1:1},mul:{y9:2}}],
+  ['AIのない区域','AIが手を出さない自治区域を交渉しておく。',{mul:{y6:1.3,y10:1.3}}]]],
+ ['末期② どこで暮らすか',[
+  ['共に宇宙へ','人間も宇宙へ出る。移住に投資する。',{mul:{z3:2}}],
+  ['地球を人類の取り分に','地球は人類、宇宙はAIと分ける協定。',{mul:{z2:1.5}}],
+  ['アップロードを受け入れる','体を捨ててデータへ移ることを受け入れる。',{mul:{z4:2}}]]],
+ ['遠い未来 何になるか',[
+  ['分化を許す','人類がいくつもの種に分かれるのを止めない。',{mul:{o1:1.5}}],
+  ['原本を守る','今の姿の人類を保護区に残す。',{mul:{o3:1.5}}],
+  ['人類が自ら記録を送り出す','人類の同意なしに移行は起きなかったという証拠を、強い信号と探査機で先に宇宙に残す。偽造と抹消を難しくする。',{mul:{o8:.6,o13:.5,o11:.5,o12:.7}}]]],
+];
+const B0=pnWith({}),AT=ORD[8];
+const fx=e=>[...Object.entries(e.cur||{}).map(([a,v])=>`<a href="frame.html#ax-${a}">${a}</a> ${v>0?'+':''}${v}`),...Object.entries(e.mul||{}).map(([n,v])=>`${N[n][0]} ×${v}`)].join(', ');
+const best={};
+let ht='<div class="wrapx"><table class="hm"><tr><th>対応</th><th>何をするか</th><th>最も太くなるマス</th>'+AT.map(w=>`<th class="n" style="color:${WC[w]}">${ULT[w][0]}</th>`).join('')+'</tr>';
+HUM.forEach(([st,its])=>{ht+=`<tr class="st"><td colspan="${3+AT.length}">${st}</td></tr>`;
+  its.forEach(([nm,ds,e])=>{const A=pnWith(e);
+    const up=Object.keys(A).filter(n=>/^[yo]/.test(n)).map(n=>[n,(A[n]||0)-(B0[n]||0)]).sort((a,b)=>b[1]-a[1]).filter(x=>x[1]>.002).slice(0,2);
+    AT.forEach(w=>{const d=(A[w]-B0[w])*100;if(!best[w]||d>best[w][1])best[w]=[nm,d];if(!best['-'+w]||d<best['-'+w][1])best['-'+w]=[nm,d]});
+    ht+=`<tr><td><b>${nm}</b></td><td>${ds}<div class="ef">変えるもの：${fx(e)}</div></td><td>${up.map(([n,d])=>`${N[n][0]} <span class="mute">+${(d*100).toFixed(1)}</span>`).join('<br>')||'<span class="mute">–</span>'}</td>`+
+      AT.map(w=>{const d=(A[w]-B0[w])*100,a=Math.abs(d);return `<td class="d" style="color:${a<.05?'#b9bcc4':WC[w]}">${a<.05?'0':(d>0?'+':'')+d.toFixed(1)}</td>`}).join('')+'</tr>'})});
+$('#humTbl').innerHTML=ht+'</table></div><p class="small mute">アトラクター欄の数字は%p。基準は4章の "このまま進めば"だ。</p>';
+$('#humKey').innerHTML=`<b>アトラクターごとに最も大きく動かす対応</b><br>`+AT.map(w=>`<span class="chip" style="background:${WC[w]}">${ULT[w][0]}</span> 上げる側：${best[w][0]} (${best[w][1]>0?'+':''}${best[w][1].toFixed(1)}%p) · 下げる側：${best['-'+w][0]} (${best['-'+w][1].toFixed(1)}%p)`).join('<br>');
+
+// 分かれ道の数
+const per=RIDS.map(r=>dist(ALL.filter(p=>p.rid===r)));
+const avg=[...Array(8)].map((_,i)=>per.reduce((s,d)=>s+d[i],0)/per.length);
+const amax=Math.max(...avg),apk=avg.indexOf(amax);
+$('#cols').innerHTML=avg.map((v,i)=>`<div class="${i===apk?'pk':''}" style="height:${(v/amax*100).toFixed(0)}%">${v.toFixed(2)}</div>`).join('');
+$('#clab').innerHTML=ST.slice(1).map(s=>`<span><b>${s.t}</b><br>${s.q}</span>`).join('');
+const gl=ORD.slice(1).map(r=>r.length);
+const conv=RIDS.filter((r,i)=>Math.max(...per[i])>=2&&per[i][7]===1);
+const div=RIDS.filter((r,i)=>per[i][7]>=3);
+const lst=rs=>rs.map(r=>`<button class="rchip" data-r="${r}">${r} ${RN[r]}</button>`).join('')||'<span class="mute small">なし</span>';
+$('#convList').innerHTML=(conv.length?lst(conv):'<span class="mute small">ない。一つにまとまりそうに見えたルート（A14・B13・B43）も保存と消滅に分かれる。</span>')+'<p class="small mute">'+conv.map(r=>`${r}: ${ULT[ALL.find(p=>p.rid===r).nodes[8]][0]}`).join(' · ')+'</p>';
+$('#divList').innerHTML=lst(div);
+$('#shapeKey').innerHTML=`<b>二度広がり、二度まとまる。</b> ルート内の分かれ道は初期にはほぼ一本（${avg[0].toFixed(2)}通り）で、中期②（${avg[3].toFixed(2)}）を経て末期①（どんな社会）で${avg[4].toFixed(2)}通りまで広がり、末期②（どこで暮らすか）で${avg[5].toFixed(2)}通りに一度まとまる。そして遠い未来（何になるか）で${amax.toFixed(2)}通りと最も大きく再び広がり、超未来に${avg[7].toFixed(2)}通りにまとまる。暮らす場所とアトラクターという大枠は狭いが、その中で人類とAIが何になるかは広い。ルート全体のマスの数は${gl.join(' → ')}個だ。<br><br>そして40本のうち <b>${div.length}本は超未来でも3つ以上に分かれる</b>. ${conv.length?`一つにまとまるルートは${conv.length}本だけだ。`:'一つにまとまるルートはない。すべてのルートが2つ以上のアトラクターで終わる。'}`;
+$('#endDiv').innerHTML=`ルート40本のうち、超未来に一つのアトラクターへ収束するのは${conv.length?conv.length+'本':'ひとつもなく'}、3つ以上に最後まで分かれるのは${div.length}本だ。AIがいくつか、どんな体かが同じでも、中期以降の選択一つが拡散・保存・分離・消滅を分ける。`;
+
+// カタログ
+const routesThrough=n=>[...new Set(ALL.filter(p=>p.nodes.includes(n)).map(p=>p.rid))];
+const rlist=n=>routesThrough(n).map(r=>rbtn(r)).join('');
+const basRow=k=>BASIS[k]?`<div class="row"><b>根拠</b>${bas(BASIS[k])}</div>`:'';
+$('#socCat').innerHTML=ORD[5].map(k=>{const v=SOC[k];return `<div class="cc"><h4>${v[0]}<span class="pr">${pct(PN[k]||0)}</span></h4>${v[1]}<div class="row"><b>人の一日</b>${v[2]}</div><div class="row"><b>AIの居場所</b>${v[3]}</div>${basRow(k)}<div class="row"><b>通過するルート</b>${rlist(k)}</div></div>`}).join('');
+$('#farCat').innerHTML=ORD[7].map(k=>{const v=FAR[k];return `<div class="cc" style="border-left:5px solid ${WC[v[3]]}"><h4>${v[0]} <span class="chip" style="background:${WC[v[3]]}">→ ${ULT[v[3]][0]}</span><span class="pr">${pct(PN[k]||0)}</span></h4><div class="row"><b>人類</b>${v[1]}</div><div class="row"><b>AI</b>${v[2]}</div>${basRow(k)}<div class="row"><b>到着するルート</b>${rlist(k)}</div></div>`}).join('');
+$('#ultCat').innerHTML=ORD[8].map(k=>{const v=ULT[k];return `<div class="u" style="background:${WC[k]}"><h4>${v[0]}</h4>${v[3]}<div class="row" style="margin-top:6px"><b>人類</b>${v[1]}</div><div class="row"><b>AI</b>${v[2]}</div>${BASIS[k]?`<div class="row"><b>根拠</b>${bas(BASIS[k])}</div>`:''}<div class="row"><b>集まる選択</b>${cnt[k]}個 / ${ALL.length}</div><div class="row"><b>このまま進めば</b>${pct(PN[k])}</div></div>`}).join('');
+
+const h0=location.hash.slice(1);
+const s0=h0==='best'?{best:1}:P[h0]?{r:h0}:N[h0]?{n:h0}:null;
+select(s0);
+if(s0){$('#map').scrollIntoView();if(s0.n)pinNode(s0.n)}
+</script>
+</body>
+</html>
